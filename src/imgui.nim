@@ -1,3 +1,5 @@
+# Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
+
 ## ImGUI Bindings
 ## ====
 ## WARNING: This is a generated file. Do not edit
@@ -23,7 +25,7 @@ proc currentSourceDir(): string =
   result = currentSourcePath().replace("\\", "/")
   result = result[0 ..< result.rfind("/")]
 
-{.passC: "-I" & currentSourceDir() & "/../cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+{.passC: "-I" & currentSourceDir() & "/../src/imgui/output/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
 
 when not defined(imguiSrc):
   when defined(windows):
@@ -44,6 +46,7 @@ else:
   {.pragma: imgui_header, header: "../ncimgui.h".}
   {.pragma: imgui_lib, nodecl.}
 
+# Enums
 type
   ImDrawCornerFlags* {.pure, size: int32.sizeof.} = enum
     TopLeft = 1
@@ -329,3 +332,22 @@ type
     Popup = 67108864
     Modal = 134217728
     ChildMenu = 268435456
+
+# TypeDefs
+type
+  ImDrawCallback* = int32
+  ImDrawIdx* = uint16
+  ImGuiColumnsFlags* = int32
+  ImGuiID* = uint32
+  ImGuiInputTextCallback* = int32
+  ImGuiSizeCallback* = int32
+  ImS16* = int16
+  ImS32* = int32
+  ImS64* = int64
+  ImS8* = int8
+  ImTextureID* = pointer
+  ImU16* = uint16
+  ImU32* = uint32
+  ImU64* = uint64
+  ImU8* = uint8
+  ImWchar* = uint16
