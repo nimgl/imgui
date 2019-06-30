@@ -341,13 +341,307 @@ type
   ImGuiID* = uint32
   ImGuiInputTextCallback* = int32
   ImGuiSizeCallback* = int32
-  ImS16* = int16
-  ImS32* = int32
-  ImS64* = int64
-  ImS8* = int8
   ImTextureID* = pointer
-  ImU16* = uint16
-  ImU32* = uint32
-  ImU64* = uint64
-  ImU8* = uint8
   ImWchar* = uint16
+
+# Types
+type
+  ImVector*[T] = object # Should I importc a generic?
+    size*: int32
+    capacity*: int32
+    data*: UncheckedArray[T]
+  ImPairData* {.union.} = object
+    val_i*: int32 # Breaking naming convetion to denote "low level"
+    val_f*: float32
+    val_p*: pointer
+  ImPair* {.importc: "Pair", imgui_header.} = object
+    key*: ImGuiID
+    data*: ImPairData
+  ImDrawListSharedData* {.importc: "ImDrawListSharedData", imgui_header.} = object
+  ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
+  CustomRect* {.importc: "CustomRect", imgui_header.} = object
+    iD*: uint32
+    width*: uint16
+    height*: uint16
+    x*: uint16
+    y*: uint16
+    glyphAdvanceX*: float32
+    glyphOffset*: ImVec2
+    font*: ptr ImFont
+  ImColor* {.importc: "ImColor", imgui_header.} = object
+    value*: ImVec4
+  ImDrawChannel* {.importc: "ImDrawChannel", imgui_header.} = object
+    cmdBuffer*: ImVector[ImDrawCmd]
+    idxBuffer*: ImVector[ImDrawIdx]
+  ImDrawCmd* {.importc: "ImDrawCmd", imgui_header.} = object
+    elemCount*: uint32
+    clipRect*: ImVec4
+    textureId*: ImTextureID
+    vtxOffset*: uint32
+    idxOffset*: uint32
+    userCallback*: ImDrawCallback
+    userCallbackData*: pointer
+  ImDrawData* {.importc: "ImDrawData", imgui_header.} = object
+    valid*: bool
+    cmdLists*: ptr ptr ImDrawList
+    cmdListsCount*: int32
+    totalIdxCount*: int32
+    totalVtxCount*: int32
+    displayPos*: ImVec2
+    displaySize*: ImVec2
+    framebufferScale*: ImVec2
+  ImDrawList* {.importc: "ImDrawList", imgui_header.} = object
+    cmdBuffer*: ImVector[ImDrawCmd]
+    idxBuffer*: ImVector[ImDrawIdx]
+    vtxBuffer*: ImVector[ImDrawVert]
+    flags*: ImDrawListFlags
+    data*: ptr ImDrawListSharedData
+    ownerName*: ptr int8
+    vtxCurrentOffset*: uint32
+    vtxCurrentIdx*: uint32
+    vtxWritePtr*: ptr ImDrawVert
+    idxWritePtr*: ptr ImDrawIdx
+    clipRectStack*: ImVector[ImVec4]
+    textureIdStack*: ImVector[ImTextureID]
+    path*: ImVector[ImVec2]
+    splitter*: ImDrawListSplitter
+  ImDrawListSplitter* {.importc: "ImDrawListSplitter", imgui_header.} = object
+    current*: int32
+    count*: int32
+    channels*: ImVector[ImDrawChannel]
+  ImDrawVert* {.importc: "ImDrawVert", imgui_header.} = object
+    pos*: ImVec2
+    uv*: ImVec2
+    col*: uint32
+  ImFont* {.importc: "ImFont", imgui_header.} = object
+    indexAdvanceX*: ImVector[float32]
+    fallbackAdvanceX*: float32
+    fontSize*: float32
+    indexLookup*: ImVector[ImWchar]
+    glyphs*: ImVector[ImFontGlyph]
+    fallbackGlyph*: ptr ImFontGlyph
+    displayOffset*: ImVec2
+    containerAtlas*: ptr ImFontAtlas
+    configData*: ptr ImFontConfig
+    configDataCount*: int16
+    fallbackChar*: ImWchar
+    scale*: float32
+    ascent*: float32
+    descent*: float32
+    metricsTotalSurface*: int32
+    dirtyLookupTables*: bool
+  ImFontAtlas* {.importc: "ImFontAtlas", imgui_header.} = object
+    locked*: bool
+    flags*: ImFontAtlasFlags
+    texID*: ImTextureID
+    texDesiredWidth*: int32
+    texGlyphPadding*: int32
+    texPixelsAlpha8*: ptr uint8
+    texPixelsRGBA32*: ptr uint32
+    texWidth*: int32
+    texHeight*: int32
+    texUvScale*: ImVec2
+    texUvWhitePixel*: ImVec2
+    fonts*: ImVector[ptr ImFont]
+    customRects*: ImVector[CustomRect]
+    configData*: ImVector[ImFontConfig]
+    customRectIds*: array[1, int32]
+  ImFontConfig* {.importc: "ImFontConfig", imgui_header.} = object
+    fontData*: pointer
+    fontDataSize*: int32
+    fontDataOwnedByAtlas*: bool
+    fontNo*: int32
+    sizePixels*: float32
+    oversampleH*: int32
+    oversampleV*: int32
+    pixelSnapH*: bool
+    glyphExtraSpacing*: ImVec2
+    glyphOffset*: ImVec2
+    glyphRanges*: ptr ImWchar
+    glyphMinAdvanceX*: float32
+    glyphMaxAdvanceX*: float32
+    mergeMode*: bool
+    rasterizerFlags*: uint32
+    rasterizerMultiply*: float32
+    name*: array[40, int8]
+    dstFont*: ptr ImFont
+  ImFontGlyph* {.importc: "ImFontGlyph", imgui_header.} = object
+    codepoint*: ImWchar
+    advanceX*: float32
+    x0*: float32
+    y0*: float32
+    x1*: float32
+    y1*: float32
+    u0*: float32
+    v0*: float32
+    u1*: float32
+    v1*: float32
+  ImFontGlyphRangesBuilder* {.importc: "ImFontGlyphRangesBuilder", imgui_header.} = object
+    usedChars*: ImVector[uint32]
+  ImGuiIO* {.importc: "ImGuiIO", imgui_header.} = object
+    configFlags*: ImGuiConfigFlags
+    backendFlags*: ImGuiBackendFlags
+    displaySize*: ImVec2
+    deltaTime*: float32
+    iniSavingRate*: float32
+    iniFilename*: ptr int8
+    logFilename*: ptr int8
+    mouseDoubleClickTime*: float32
+    mouseDoubleClickMaxDist*: float32
+    mouseDragThreshold*: float32
+    keyMap*: array[21, int32]
+    keyRepeatDelay*: float32
+    keyRepeatRate*: float32
+    userData*: pointer
+    fonts*: ptr ImFontAtlas
+    fontGlobalScale*: float32
+    fontAllowUserScaling*: bool
+    fontDefault*: ptr ImFont
+    displayFramebufferScale*: ImVec2
+    mouseDrawCursor*: bool
+    configMacOSXBehaviors*: bool
+    configInputTextCursorBlink*: bool
+    configWindowsResizeFromEdges*: bool
+    configWindowsMoveFromTitleBarOnly*: bool
+    backendPlatformName*: ptr int8
+    backendRendererName*: ptr int8
+    backendPlatformUserData*: pointer
+    backendRendererUserData*: pointer
+    backendLanguageUserData*: pointer
+    getClipboardTextFn*: int32
+    setClipboardTextFn*: int32
+    clipboardUserData*: pointer
+    imeSetInputScreenPosFn*: int32
+    imeWindowHandle*: pointer
+    renderDrawListsFnUnused*: pointer
+    mousePos*: ImVec2
+    mouseDown*: array[5, bool]
+    mouseWheel*: float32
+    mouseWheelH*: float32
+    keyCtrl*: bool
+    keyShift*: bool
+    keyAlt*: bool
+    keySuper*: bool
+    keysDown*: array[512, bool]
+    navInputs*: array[22, float32]
+    wantCaptureMouse*: bool
+    wantCaptureKeyboard*: bool
+    wantTextInput*: bool
+    wantSetMousePos*: bool
+    wantSaveIniSettings*: bool
+    navActive*: bool
+    navVisible*: bool
+    framerate*: float32
+    metricsRenderVertices*: int32
+    metricsRenderIndices*: int32
+    metricsRenderWindows*: int32
+    metricsActiveWindows*: int32
+    metricsActiveAllocations*: int32
+    mouseDelta*: ImVec2
+    mousePosPrev*: ImVec2
+    mouseClickedPos*: array[5, ImVec2]
+    mouseClickedTime*: array[5, float64]
+    mouseClicked*: array[5, bool]
+    mouseDoubleClicked*: array[5, bool]
+    mouseReleased*: array[5, bool]
+    mouseDownOwned*: array[5, bool]
+    mouseDownWasDoubleClick*: array[5, bool]
+    mouseDownDuration*: array[5, float32]
+    mouseDownDurationPrev*: array[5, float32]
+    mouseDragMaxDistanceAbs*: array[5, ImVec2]
+    mouseDragMaxDistanceSqr*: array[5, float32]
+    keysDownDuration*: array[512, float32]
+    keysDownDurationPrev*: array[512, float32]
+    navInputsDownDuration*: array[22, float32]
+    navInputsDownDurationPrev*: array[22, float32]
+    inputQueueCharacters*: ImVector[ImWchar]
+  ImGuiInputTextCallbackData* {.importc: "ImGuiInputTextCallbackData", imgui_header.} = object
+    eventFlag*: ImGuiInputTextFlags
+    flags*: ImGuiInputTextFlags
+    userData*: pointer
+    eventChar*: ImWchar
+    eventKey*: ImGuiKey
+    buf*: ptr int8
+    bufTextLen*: int32
+    bufSize*: int32
+    bufDirty*: bool
+    cursorPos*: int32
+    selectionStart*: int32
+    selectionEnd*: int32
+  ImGuiListClipper* {.importc: "ImGuiListClipper", imgui_header.} = object
+    startPosY*: float32
+    itemsHeight*: float32
+    itemsCount*: int32
+    stepNo*: int32
+    displayStart*: int32
+    displayEnd*: int32
+  ImGuiOnceUponAFrame* {.importc: "ImGuiOnceUponAFrame", imgui_header.} = object
+    refFrame*: int32
+  ImGuiPayload* {.importc: "ImGuiPayload", imgui_header.} = object
+    data*: pointer
+    dataSize*: int32
+    sourceId*: ImGuiID
+    sourceParentId*: ImGuiID
+    dataFrameCount*: int32
+    dataType*: array[32+1, int8]
+    preview*: bool
+    delivery*: bool
+  ImGuiSizeCallbackData* {.importc: "ImGuiSizeCallbackData", imgui_header.} = object
+    userData*: pointer
+    pos*: ImVec2
+    currentSize*: ImVec2
+    desiredSize*: ImVec2
+  ImGuiStorage* {.importc: "ImGuiStorage", imgui_header.} = object
+    data*: ImVector[ImPair]
+  ImGuiStyle* {.importc: "ImGuiStyle", imgui_header.} = object
+    alpha*: float32
+    windowPadding*: ImVec2
+    windowRounding*: float32
+    windowBorderSize*: float32
+    windowMinSize*: ImVec2
+    windowTitleAlign*: ImVec2
+    windowMenuButtonPosition*: ImGuiDir
+    childRounding*: float32
+    childBorderSize*: float32
+    popupRounding*: float32
+    popupBorderSize*: float32
+    framePadding*: ImVec2
+    frameRounding*: float32
+    frameBorderSize*: float32
+    itemSpacing*: ImVec2
+    itemInnerSpacing*: ImVec2
+    touchExtraPadding*: ImVec2
+    indentSpacing*: float32
+    columnsMinSpacing*: float32
+    scrollbarSize*: float32
+    scrollbarRounding*: float32
+    grabMinSize*: float32
+    grabRounding*: float32
+    tabRounding*: float32
+    tabBorderSize*: float32
+    buttonTextAlign*: ImVec2
+    selectableTextAlign*: ImVec2
+    displayWindowPadding*: ImVec2
+    displaySafeAreaPadding*: ImVec2
+    mouseCursorScale*: float32
+    antiAliasedLines*: bool
+    antiAliasedFill*: bool
+    curveTessellationTol*: float32
+    colors*: array[48, ImVec4]
+  ImGuiTextBuffer* {.importc: "ImGuiTextBuffer", imgui_header.} = object
+    buf*: ImVector[int8]
+  ImGuiTextFilter* {.importc: "ImGuiTextFilter", imgui_header.} = object
+    inputBuf*: array[256, int8]
+    filters*: ImVector[TextRange]
+    countGrep*: int32
+  ImVec2* {.importc: "ImVec2", imgui_header.} = object
+    x*: float32
+    y*: float32
+  ImVec4* {.importc: "ImVec4", imgui_header.} = object
+    x*: float32
+    y*: float32
+    z*: float32
+    w*: float32
+  TextRange* {.importc: "TextRange", imgui_header.} = object
+    b*: ptr int8
+    e*: ptr int8

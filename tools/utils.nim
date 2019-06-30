@@ -1,7 +1,5 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
-import tables
-
 const srcHeader* = """
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
@@ -50,4 +48,20 @@ else:
     compile: "private/cimgui/imgui/imgui_widgets.cpp".}
   {.pragma: imgui_header, header: "../ncimgui.h".}
   {.pragma: imgui_lib, nodecl.}
+"""
+
+const notDefinedStructs* = """
+  ImVector*[T] = object # Should I importc a generic?
+    size*: int32
+    capacity*: int32
+    data*: UncheckedArray[T]
+  ImPairData* {.union.} = object
+    val_i*: int32 # Breaking naming convetion to denote "low level"
+    val_f*: float32
+    val_p*: pointer
+  ImPair* {.importc: "Pair", imgui_header.} = object
+    key*: ImGuiID
+    data*: ImPairData
+  ImDrawListSharedData* {.importc: "ImDrawListSharedData", imgui_header.} = object
+  ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
 """
