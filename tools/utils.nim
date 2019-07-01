@@ -39,7 +39,6 @@ when not defined(imguiSrc):
     const imgui_dll* = "cimgui.so"
   {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
-  {.pragma: imgui_lib, dynlib: imgui_dll, cdecl.}
 else:
   {.compile: "private/cimgui/cimgui.cpp",
     compile: "private/cimgui/imgui/imgui.cpp",
@@ -47,7 +46,6 @@ else:
     compile: "private/cimgui/imgui/imgui_demo.cpp",
     compile: "private/cimgui/imgui/imgui_widgets.cpp".}
   {.pragma: imgui_header, header: "../ncimgui.h".}
-  {.pragma: imgui_lib, nodecl.}
 """
 
 const notDefinedStructs* = """
@@ -65,3 +63,29 @@ const notDefinedStructs* = """
   ImDrawListSharedData* {.importc: "ImDrawListSharedData", imgui_header.} = object
   ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
 """
+
+const preProcs* = """
+# Procs
+when not defined(imguiSrc):
+  {.push dynlib: imgui_dll, cdecl, discardable.}
+else:
+  {.push nodecl, discardable.}
+"""
+
+let reservedWordsDictionary* = [
+"end", "type", "out"
+]
+
+let blackListProc* = [
+"ImVector_back", "ImVector_begin", "ImVector_ImWchar_back",
+"ImVector_ImWchar_begin", "ImVector_ImWchar_capacity", "ImVector_ImWchar_clear",
+"ImVector_ImWchar_contains", "ImVector_ImWchar_destroy",
+"ImVector_ImWchar_empty", "ImVector_ImWchar_end", "ImVector_ImWchar_erase",
+"ImVector_ImWchar_erase_unsorted", "ImVector_ImWchar_front",
+"ImVector_ImWchar_index_from_ptr", "ImVector_ImWchar_insert",
+"ImVector_ImWchar_pop_back", "ImVector_ImWchar_push_back",
+"ImVector_ImWchar_push_front", "ImVector_ImWchar_reserve",
+"ImVector_ImWchar_reserve", "ImVector_ImWchar_resize", "ImVector_ImWchar_size",
+"ImVector_ImWchar_size_in_bytes", "ImVector_ImWchar_swap",
+"ImVector_ImWchar__grow_capacity"
+]
