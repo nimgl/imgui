@@ -73,7 +73,7 @@ else:
 """
 
 let reservedWordsDictionary* = [
-"end", "type", "out"
+"end", "type", "out", "in"
 ]
 
 let blackListProc* = [

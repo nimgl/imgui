@@ -49,8 +49,12 @@ proc translateType(name: string): string =
   result = result.replace("double", "float64")
   result = result.replace("short", "int16")
   result = result.replace("_Simple", "")
-  if not name.contains("Wchar"):
-    result = result.replace("char", "int8")
+  if name.contains("char") and not name.contains("Wchar"):
+    if depth > 0:
+      result = result.replace("char", "cstring")
+      depth.dec
+    else:
+      result = result.replace("char", "int8")
   if depth > 0 and result.contains("void"):
     result = result.replace("void", "pointer")
     depth.dec
@@ -170,8 +174,6 @@ proc genProcs(output: var string) =
         else:
           funcname = variation["funcname"].getStr()
       else:
-        if variation.contains("constructor"):
-          echo "{name}\n{obj.pretty}".fmt
         funcname = variation["cimguiname"].getStr()
         #funcname = funcname.rsplit("_", 1)[1]
 
@@ -209,7 +211,9 @@ proc genProcs(output: var string) =
 
         if argType.contains('[') and not argType.contains("ImVector["):
           let arrayData = argType.translateArray()
-          argType = "array[{arrayData[0]}, {arrayData[1]}]".fmt
+          if arrayData[1].contains("cstringconst"):
+            echo "{name}\n{obj.pretty}".fmt
+          argType = "var array[{arrayData[0]}, {arrayData[1]}]".fmt
 
         if argName == "..." or argType == "..." or argType == "va_list":
           isVarArgs = true
@@ -226,7 +230,10 @@ proc genProcs(output: var string) =
       output.add(argRet)
 
       # Pragmas
-      output.add(" {" & ".importc: \"{variation[\"cimguiname\"].getStr()}\"".fmt)
+      var pragmaName = variation["cimguiname"].getStr()
+      if variation.contains("ov_cimguiname"):
+        pragmaName = variation["ov_cimguiname"].getStr()
+      output.add(" {" & ".importc: \"{pragmaName}\"".fmt)
       if isVarArgs:
         output.add(", varargs")
       output.add(".}")
