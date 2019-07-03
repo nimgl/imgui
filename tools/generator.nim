@@ -6,6 +6,8 @@ import os, strutils, streams, json, strformat,
 var enums: HashSet[string]
 var enumsCount: Table[string, int]
 
+proc translateType(name: string): string # translateProc needs this
+
 proc uncapitalize(str: string): string =
   if str.len < 1:
     result = ""
@@ -19,20 +21,45 @@ proc isUpper(str: string): bool =
   return true
 
 proc translateProc(name: string): string =
-  "int32"
+  var nameSplit = name.replace(";", "").split("(*)", 1)
+  let procType = nameSplit[0].translateType()
 
-proc translateArray(name: string): (string, string) =
+  nameSplit[1] = nameSplit[1][1 ..< nameSplit[1].len - 1]
+  var argsSplit = nameSplit[1].split(',')
+  var argSeq: seq[tuple[name: string, kind: string]]
+  for arg in argsSplit:
+    let argPieces = arg.rsplit(' ', 1)
+    var argName = argPieces[1]
+    var argType = argPieces[0]
+    if argName.contains('*'):
+      argType.add('*')
+      argName = argName.replace("*", "")
+    if reservedWordsDictionary.contains(argName):
+      argName = "`{argName}`".fmt
+    argType = argType.translateType()
+    argSeq.add((name: argName, kind: argType))
+
+  result = "proc("
+  for arg in argSeq:
+    result.add("{arg.name}: {arg.kind}, ".fmt)
+  if argSeq.len > 0:
+    result = result[0 ..< result.len - 2]
+  result.add("): {procType} {{.cdecl.}}".fmt)
+
+proc translateArray(name: string): tuple[size: string, name: string] =
   let nameSplit = name.rsplit('[', 1)
   var arraySize = nameSplit[1]
   arraySize = arraySize[0 ..< arraySize.len - 1]
   if arraySize.contains("COUNT"):
     arraySize = $enumsCount[arraySize]
-  result[0] = arraySize
-  result[1] = nameSplit[0]
+  result.size = arraySize
+  result.name = nameSplit[0]
 
 proc translateType(name: string): string =
   if name.contains("(") and name.contains(")"):
     return name.translateProc()
+  if name == "const char* const[]":
+    return "ptr cstring"
 
   result = name.replace("const ", "")
   result = result.replace("unsigned ", "u")
@@ -44,15 +71,18 @@ proc translateType(name: string): string =
   result = result.replace("&", "")
 
   result = result.replace("int", "int32")
+  result = result.replace("size_t", "uint") # uint matches pointer size just like size_t
   result = result.replace("int3264_t", "int64")
   result = result.replace("float", "float32")
   result = result.replace("double", "float64")
   result = result.replace("short", "int16")
   result = result.replace("_Simple", "")
-  if name.contains("char") and not name.contains("Wchar"):
+  if result.contains("char") and not result.contains("Wchar"):
     if depth > 0:
       result = result.replace("char", "cstring")
       depth.dec
+      if result.startsWith("u"):
+        result = result[1 ..< result.len]
     else:
       result = result.replace("char", "int8")
   if depth > 0 and result.contains("void"):
@@ -109,7 +139,7 @@ proc genEnums(output: var string) =
       output.add("    {v} = {k}\n".fmt)
 
 proc genTypeDefs(output: var string) =
-  # This must run after genEnums
+  # Must be run after genEnums
   let file = readFile("src/imgui/private/cimgui/generator/output/typedefs_dict.json")
   let data = file.parseJson()
 
@@ -124,11 +154,12 @@ proc genTypeDefs(output: var string) =
     output.add("  {name}* = {obj.getStr().translateType()}\n".fmt)
 
 proc genTypes(output: var string) =
-  # This must run after genEnums
+  # Does not add a `type` keyword
+  # Must be run after genEnums
   let file = readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json")
   let data = file.parseJson()
 
-  output.add("\n# Types\ntype\n")
+  output.add("\n")
   output.add(notDefinedStructs)
 
   for name, obj in data["structs"].pairs:
@@ -194,9 +225,11 @@ proc genProcs(output: var string) =
       if reservedWordsDictionary.contains(funcname):
         funcname = "`{funcname}`".fmt
 
-      output.add("proc {funcname}*(".fmt)
+      output.add("proc {funcname}*".fmt)
 
+      var isGeneric = false
       var isVarArgs = variation.contains("isvararg") and variation["isvararg"].getBool()
+      var argsOutput = ""
       # Args
       for arg in variation["argsT"]:
         var argName = arg["name"].getStr()
@@ -209,24 +242,33 @@ proc genProcs(output: var string) =
         if reservedWordsDictionary.contains(argName):
           argName = "`{argName}`".fmt
 
-        if argType.contains('[') and not argType.contains("ImVector["):
+        if argType.contains('[') and not argType.contains("ImVector[") and not argType.contains("UncheckedArray["):
           let arrayData = argType.translateArray()
           if arrayData[1].contains("cstringconst"):
             echo "{name}\n{obj.pretty}".fmt
           argType = "var array[{arrayData[0]}, {arrayData[1]}]".fmt
+        argType = argType.replace(" {.cdecl.}", "")
 
         if argName == "..." or argType == "..." or argType == "va_list":
           isVarArgs = true
           continue
-        output.add("{argName}: {argType}, ".fmt)
+        if argType == "T" or argType == "ptr T":
+          isGeneric = true
+
+        argsOutput.add("{argName}: {argType}, ".fmt)
       if variation["argsT"].len > 0:
-        output = output[0 ..< output.len - 2]
-      output.add("): ")
+        argsOutput = argsOutput[0 ..< argsOutput.len - 2]
 
       # Ret
       var argRet = "void"
       if variation.contains("ret"):
         argRet = variation["ret"].getStr().translateType()
+      if argRet == "T" or argRet == "ptr T":
+        isGeneric = true
+
+      output.add(if isGeneric: "[T](" else: "(")
+      output.add(argsOutput)
+      output.add("): ")
       output.add(argRet)
 
       # Pragmas
@@ -242,7 +284,7 @@ proc genProcs(output: var string) =
 
       # Checking if it doesn't exist already
       let outSplit = output.rsplit("\n", 3)
-      if outSplit[1] == outSplit[2]:
+      if outSplit[1] == outSplit[2] or outSplit[1].split('{')[0] == outSplit[2].split('{')[0]:
         output = "{outSplit[0]}\n{outSplit[1]}\n".fmt
 
   output.add("\n{.pop.}\n")

@@ -73,19 +73,20 @@ else:
 """
 
 let reservedWordsDictionary* = [
-"end", "type", "out", "in"
+"end", "type", "out", "in", "ptr", "ref"
 ]
 
 let blackListProc* = [
-"ImVector_back", "ImVector_begin", "ImVector_ImWchar_back",
-"ImVector_ImWchar_begin", "ImVector_ImWchar_capacity", "ImVector_ImWchar_clear",
-"ImVector_ImWchar_contains", "ImVector_ImWchar_destroy",
-"ImVector_ImWchar_empty", "ImVector_ImWchar_end", "ImVector_ImWchar_erase",
-"ImVector_ImWchar_erase_unsorted", "ImVector_ImWchar_front",
-"ImVector_ImWchar_index_from_ptr", "ImVector_ImWchar_insert",
-"ImVector_ImWchar_pop_back", "ImVector_ImWchar_push_back",
-"ImVector_ImWchar_push_front", "ImVector_ImWchar_reserve",
-"ImVector_ImWchar_reserve", "ImVector_ImWchar_resize", "ImVector_ImWchar_size",
+# This case is already covered by ImDrawIdx
+"ImVector_ImWchar_back", "ImVector_ImWchar_begin", "ImVector_ImWchar_capacity",
+"ImVector_ImWchar_clear", "ImVector_ImWchar_contains",
+"ImVector_ImWchar_destroy", "ImVector_ImWchar_empty", "ImVector_ImWchar_end",
+"ImVector_ImWchar_erase", "ImVector_ImWchar_erase_unsorted",
+"ImVector_ImWchar_front", "ImVector_ImWchar_index_from_ptr",
+"ImVector_ImWchar_insert", "ImVector_ImWchar_pop_back",
+"ImVector_ImWchar_push_back", "ImVector_ImWchar_push_front",
+"ImVector_ImWchar_reserve", "ImVector_ImWchar_reserve",
+"ImVector_ImWchar_resize", "ImVector_ImWchar_size",
 "ImVector_ImWchar_size_in_bytes", "ImVector_ImWchar_swap",
-"ImVector_ImWchar__grow_capacity"
+"ImVector_ImWchar__grow_capacity",
 ]
