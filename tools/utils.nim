@@ -40,11 +40,11 @@ when not defined(imguiSrc):
   {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
 else:
-  {.compile: "private/cimgui/cimgui.cpp",
-    compile: "private/cimgui/imgui/imgui.cpp",
-    compile: "private/cimgui/imgui/imgui_draw.cpp",
-    compile: "private/cimgui/imgui/imgui_demo.cpp",
-    compile: "private/cimgui/imgui/imgui_widgets.cpp".}
+  {.compile: "imgui/private/cimgui/cimgui.cpp",
+    compile: "imgui/private/cimgui/imgui/imgui.cpp",
+    compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
+    compile: "imgui/private/cimgui/imgui/imgui_demo.cpp",
+    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp".}
   {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 """
 
