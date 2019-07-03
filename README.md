@@ -1,7 +1,5 @@
 [![docs](https://img.shields.io/badge/docs-passing-4caf50.svg?style=flat-square)](https://nimgl.dev/docs)
 
-# WIP
-
 # ImGui Bindings for Nim [![Nimble](https://raw.githubusercontent.com/yglukhov/nimble-tag/master/nimble.png)](https://github.com/nim-lang/nimble)
 
 Separated module from [NimGL](https://nimgl.dev/). In order to mantain small
