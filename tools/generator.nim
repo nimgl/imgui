@@ -78,7 +78,9 @@ proc translateType(name: string): string =
   result = result.replace("short", "int16")
   result = result.replace("_Simple", "")
   if result.contains("char") and not result.contains("Wchar"):
-    if depth > 0:
+    if result.contains("uchar"):
+      result = "cuchar"
+    elif depth > 0:
       result = result.replace("char", "cstring")
       depth.dec
       if result.startsWith("u"):
@@ -104,10 +106,10 @@ proc translateType(name: string): string =
     result = result["ImVector_".len ..< result.len]
     result = "ImVector[{result}]".fmt
 
-  if depth < 1:
-    return
   for d in 0 ..< depth:
     result = "ptr " & result
+    if result == "ptr ptr ImDrawList":
+      result = "UncheckedArray[ptr ImDrawList]"
 
 proc genEnums(output: var string) =
   let file = readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json")
@@ -119,7 +121,9 @@ proc genEnums(output: var string) =
     let enumName = name[0 ..< name.len - 1]
     output.add("  {enumName}* {{.pure, size: int32.sizeof.}} = enum\n".fmt)
     enums.incl(enumName)
-    var table: OrderedTable[int, string]
+    var table: Table[int, string]
+    if name == "ImGuiConfigFlags_":
+      echo "RESET!"
     for data in obj:
       var dataName = data["name"].getStr()
       dataName = dataName.replace("__", "_")
@@ -134,8 +138,13 @@ proc genEnums(output: var string) =
         echo "Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue} skipping...".fmt
         continue
       table[dataValue] = dataName
-    table.sort(system.cmp)
+
+    var tableOrder: OrderedTable[int, string] # Weird error where data is erased if used directly
     for k, v in table.pairs:
+      tableOrder[k] = v
+    tableOrder.sort(system.cmp)
+
+    for k, v in tableOrder.pairs:
       output.add("    {v} = {k}\n".fmt)
 
 proc genTypeDefs(output: var string) =
@@ -234,6 +243,26 @@ proc genProcs(output: var string) =
       for arg in variation["argsT"]:
         var argName = arg["name"].getStr()
         var argType = arg["type"].getStr().translateType()
+        var argDefault = ""
+        if variation.contains("defaults") and variation["defaults"].kind == JObject and
+           variation["defaults"].contains(argName):
+          argDefault = variation["defaults"][argName].getStr()
+          argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(255)<<16)|((ImU32)(255)<<8)|((ImU32)(255)<<0))", "high(uint32)")
+          argDefault = argDefault.replace("FLT_MAX", "high(float32)")
+          argDefault = argDefault.replace("((void*)0)", "nil")
+          argDefault = argDefault.replace("sizeof(float)", "sizeof(float32).int32")
+          argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All.int32")
+
+          if argDefault.startsWith("ImVec"):
+            let letters = ['x', 'y', 'z', 'w']
+            var argPices = argDefault[7 ..< argDefault.len - 1].split(',')
+            argDefault = argDefault[0 ..< 7]
+            for p in 0 ..< argPices.len:
+              argDefault.add("{letters[p]}: {argPices[p]}, ".fmt)
+            argDefault = argDefault[0 ..< argDefault.len - 2] & ")"
+
+          if argType.startsWith("ImGui") and not argType.contains("Callback"):
+            argDefault.add(".{argType}".fmt)
 
         if argName.startsWith("_"):
           argName = argName[1 ..< argName.len]
@@ -255,7 +284,10 @@ proc genProcs(output: var string) =
         if argType == "T" or argType == "ptr T":
           isGeneric = true
 
-        argsOutput.add("{argName}: {argType}, ".fmt)
+        if argDefault == "":
+          argsOutput.add("{argName}: {argType}, ".fmt)
+        else:
+          argsOutput.add("{argName}: {argType} = {argDefault}, ".fmt)
       if variation["argsT"].len > 0:
         argsOutput = argsOutput[0 ..< argsOutput.len - 2]
 
