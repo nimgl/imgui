@@ -19,7 +19,7 @@ var
   gClientApi = igGlfwClientApi_Unkown
   gTime: float64 = 0.0f
   gMouseJustPressed: array[5, bool]
-  gMouseCursors: array[ImGuiMouseCursor.high.int32, GLFWCursor]
+  gMouseCursors: array[ImGuiMouseCursor.high.int32 + 1, GLFWCursor]
 
   # Store previous callbacks so they can be chained
   gPrevMouseButtonCallback: glfwMouseButtonProc = nil
@@ -196,7 +196,7 @@ proc igGlfwNewFrame*() =
   # @TODO: gamepad mapping
 
 proc igGlfwShutdown*() =
-  for i in 0 ..< ImGuiMouseCursor.high.int32:
+  for i in 0 ..< ImGuiMouseCursor.high.int32 + 1:
     glfwDestroyCursor(gMouseCursors[i])
     gMouseCursors[i] = nil
   gClientApi = igGlfwClientApi_Unkown

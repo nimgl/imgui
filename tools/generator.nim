@@ -122,8 +122,6 @@ proc genEnums(output: var string) =
     output.add("  {enumName}* {{.pure, size: int32.sizeof.}} = enum\n".fmt)
     enums.incl(enumName)
     var table: Table[int, string]
-    if name == "ImGuiConfigFlags_":
-      echo "RESET!"
     for data in obj:
       var dataName = data["name"].getStr()
       dataName = dataName.replace("__", "_")
@@ -177,16 +175,19 @@ proc genTypes(output: var string) =
     output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
       var memberName = member["name"].getStr()
+      var memberImGuiName = memberName
       if memberName.startsWith("_"):
         memberName = memberName[1 ..< memberName.len]
+      if memberName.isUpper():
+        memberName = memberName.normalize()
       memberName = memberName.uncapitalize()
 
       if not memberName.contains("["):
         if not member.contains("template_type"):
-          output.add("    {memberName}*: {member[\"type\"].getStr().translateType()}\n".fmt)
+          output.add("    {memberName}* {{.importc: \"{memberImGuiName}\".}}: {member[\"type\"].getStr().translateType()}\n".fmt)
         else:
           # Assuming all template_type containers are ImVectors
-          output.add("    {memberName}*: ImVector[{member[\"template_type\"].getStr().translateType()}]\n".fmt)
+          output.add("    {memberName}* {{.importc: \"{memberImGuiName}\".}}: ImVector[{member[\"template_type\"].getStr().translateType()}]\n".fmt)
         continue
 
       let arrayData = memberName.translateArray()
@@ -224,12 +225,10 @@ proc genProcs(output: var string) =
 
       if funcname.isUpper():
         funcname = funcname.normalize()
-      else:
-        funcname = funcname.uncapitalize()
+      funcname = funcname.uncapitalize()
 
       if funcname.startsWith("_"):
         funcname = funcname[1 ..< funcname.len]
-      funcname = funcname.uncapitalize()
 
       if reservedWordsDictionary.contains(funcname):
         funcname = "`{funcname}`".fmt
@@ -266,6 +265,8 @@ proc genProcs(output: var string) =
 
         if argName.startsWith("_"):
           argName = argName[1 ..< argName.len]
+        if argName.isUpper():
+          argName = argName.normalize()
         argName = argName.uncapitalize()
 
         if reservedWordsDictionary.contains(argName):

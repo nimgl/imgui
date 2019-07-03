@@ -28,7 +28,7 @@ proc currentSourceDir(): string =
   result = currentSourcePath().replace("\\", "/")
   result = result[0 ..< result.rfind("/")]
 
-{.passC: "-I" & currentSourceDir() & "/../src/imgui/output/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+{.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
 
 when not defined(imguiSrc):
   when defined(windows):
@@ -45,20 +45,20 @@ else:
     compile: "private/cimgui/imgui/imgui_draw.cpp",
     compile: "private/cimgui/imgui/imgui_demo.cpp",
     compile: "private/cimgui/imgui/imgui_widgets.cpp".}
-  {.pragma: imgui_header, header: "../ncimgui.h".}
+  {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 """
 
 const notDefinedStructs* = """
   ImVector*[T] = object # Should I importc a generic?
-    size*: int32
-    capacity*: int32
-    data*: UncheckedArray[T]
+    size* {.importc: "Size".}: int32
+    capacity* {.importc: "Capacity".}: int32
+    data* {.importc: "Data".}: UncheckedArray[T]
   ImPairData* {.union.} = object
-    val_i*: int32 # Breaking naming convetion to denote "low level"
-    val_f*: float32
-    val_p*: pointer
+    val_i* {.importc: "val_i".}: int32 # Breaking naming convetion to denote "low level"
+    val_f* {.importc: "val_f".}: float32
+    val_p* {.importc: "val_p".}: pointer
   ImPair* {.importc: "Pair", imgui_header.} = object
-    key*: ImGuiID
+    key* {.importc: "key".}: ImGuiID
     data*: ImPairData
   ImDrawListSharedData* {.importc: "ImDrawListSharedData", imgui_header.} = object
   ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
