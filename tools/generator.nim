@@ -175,23 +175,26 @@ proc genTypes(output: var string) =
     output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
       var memberName = member["name"].getStr()
-      var memberImGuiName = memberName
+      var memberImGuiName = "{{.importc: \"{memberName}\".}}".fmt
       if memberName.startsWith("_"):
         memberName = memberName[1 ..< memberName.len]
       if memberName.isUpper():
         memberName = memberName.normalize()
       memberName = memberName.uncapitalize()
 
+      if memberImGuiName.contains('['):
+        memberImGuiName = memberImGuiName[0 ..< memberImGuiName.find('[')] & "\".}"
+
       if not memberName.contains("["):
         if not member.contains("template_type"):
-          output.add("    {memberName}* {{.importc: \"{memberImGuiName}\".}}: {member[\"type\"].getStr().translateType()}\n".fmt)
+          output.add("    {memberName}* {memberImGuiName}: {member[\"type\"].getStr().translateType()}\n".fmt)
         else:
           # Assuming all template_type containers are ImVectors
-          output.add("    {memberName}* {{.importc: \"{memberImGuiName}\".}}: ImVector[{member[\"template_type\"].getStr().translateType()}]\n".fmt)
+          output.add("    {memberName}* {memberImGuiName}: ImVector[{member[\"template_type\"].getStr().translateType()}]\n".fmt)
         continue
 
       let arrayData = memberName.translateArray()
-      output.add("    {arrayData[1]}*: array[{arrayData[0]}, {member[\"type\"].getStr().translateType()}]\n".fmt)
+      output.add("    {arrayData[1]}* {memberImGuiName}: array[{arrayData[0]}, {member[\"type\"].getStr().translateType()}]\n".fmt)
 
 proc genProcs(output: var string) =
   let file = readFile("src/imgui/private/cimgui/generator/output/definitions.json")

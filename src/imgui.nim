@@ -502,7 +502,7 @@ type
     fonts* {.importc: "Fonts".}: ImVector[ptr ImFont]
     customRects* {.importc: "CustomRects".}: ImVector[CustomRect]
     configData* {.importc: "ConfigData".}: ImVector[ImFontConfig]
-    customRectIds*: array[1, int32]
+    customRectIds* {.importc: "CustomRectIds".}: array[1, int32]
   ImFontConfig* {.importc: "ImFontConfig", imgui_header.} = object
     fontData* {.importc: "FontData".}: pointer
     fontDataSize* {.importc: "FontDataSize".}: int32
@@ -520,7 +520,7 @@ type
     mergeMode* {.importc: "MergeMode".}: bool
     rasterizerFlags* {.importc: "RasterizerFlags".}: uint32
     rasterizerMultiply* {.importc: "RasterizerMultiply".}: float32
-    name*: array[40, int8]
+    name* {.importc: "Name".}: array[40, int8]
     dstFont* {.importc: "DstFont".}: ptr ImFont
   ImFontGlyph* {.importc: "ImFontGlyph", imgui_header.} = object
     codepoint* {.importc: "Codepoint".}: ImWchar
@@ -546,7 +546,7 @@ type
     mouseDoubleClickTime* {.importc: "MouseDoubleClickTime".}: float32
     mouseDoubleClickMaxDist* {.importc: "MouseDoubleClickMaxDist".}: float32
     mouseDragThreshold* {.importc: "MouseDragThreshold".}: float32
-    keyMap*: array[21, int32]
+    keyMap* {.importc: "KeyMap".}: array[21, int32]
     keyRepeatDelay* {.importc: "KeyRepeatDelay".}: float32
     keyRepeatRate* {.importc: "KeyRepeatRate".}: float32
     userData* {.importc: "UserData".}: pointer
@@ -572,15 +572,15 @@ type
     imeWindowHandle* {.importc: "ImeWindowHandle".}: pointer
     renderDrawListsFnUnused* {.importc: "RenderDrawListsFnUnused".}: pointer
     mousePos* {.importc: "MousePos".}: ImVec2
-    mouseDown*: array[5, bool]
+    mouseDown* {.importc: "MouseDown".}: array[5, bool]
     mouseWheel* {.importc: "MouseWheel".}: float32
     mouseWheelH* {.importc: "MouseWheelH".}: float32
     keyCtrl* {.importc: "KeyCtrl".}: bool
     keyShift* {.importc: "KeyShift".}: bool
     keyAlt* {.importc: "KeyAlt".}: bool
     keySuper* {.importc: "KeySuper".}: bool
-    keysDown*: array[512, bool]
-    navInputs*: array[22, float32]
+    keysDown* {.importc: "KeysDown".}: array[512, bool]
+    navInputs* {.importc: "NavInputs".}: array[22, float32]
     wantCaptureMouse* {.importc: "WantCaptureMouse".}: bool
     wantCaptureKeyboard* {.importc: "WantCaptureKeyboard".}: bool
     wantTextInput* {.importc: "WantTextInput".}: bool
@@ -596,21 +596,21 @@ type
     metricsActiveAllocations* {.importc: "MetricsActiveAllocations".}: int32
     mouseDelta* {.importc: "MouseDelta".}: ImVec2
     mousePosPrev* {.importc: "MousePosPrev".}: ImVec2
-    mouseClickedPos*: array[5, ImVec2]
-    mouseClickedTime*: array[5, float64]
-    mouseClicked*: array[5, bool]
-    mouseDoubleClicked*: array[5, bool]
-    mouseReleased*: array[5, bool]
-    mouseDownOwned*: array[5, bool]
-    mouseDownWasDoubleClick*: array[5, bool]
-    mouseDownDuration*: array[5, float32]
-    mouseDownDurationPrev*: array[5, float32]
-    mouseDragMaxDistanceAbs*: array[5, ImVec2]
-    mouseDragMaxDistanceSqr*: array[5, float32]
-    keysDownDuration*: array[512, float32]
-    keysDownDurationPrev*: array[512, float32]
-    navInputsDownDuration*: array[22, float32]
-    navInputsDownDurationPrev*: array[22, float32]
+    mouseClickedPos* {.importc: "MouseClickedPos".}: array[5, ImVec2]
+    mouseClickedTime* {.importc: "MouseClickedTime".}: array[5, float64]
+    mouseClicked* {.importc: "MouseClicked".}: array[5, bool]
+    mouseDoubleClicked* {.importc: "MouseDoubleClicked".}: array[5, bool]
+    mouseReleased* {.importc: "MouseReleased".}: array[5, bool]
+    mouseDownOwned* {.importc: "MouseDownOwned".}: array[5, bool]
+    mouseDownWasDoubleClick* {.importc: "MouseDownWasDoubleClick".}: array[5, bool]
+    mouseDownDuration* {.importc: "MouseDownDuration".}: array[5, float32]
+    mouseDownDurationPrev* {.importc: "MouseDownDurationPrev".}: array[5, float32]
+    mouseDragMaxDistanceAbs* {.importc: "MouseDragMaxDistanceAbs".}: array[5, ImVec2]
+    mouseDragMaxDistanceSqr* {.importc: "MouseDragMaxDistanceSqr".}: array[5, float32]
+    keysDownDuration* {.importc: "KeysDownDuration".}: array[512, float32]
+    keysDownDurationPrev* {.importc: "KeysDownDurationPrev".}: array[512, float32]
+    navInputsDownDuration* {.importc: "NavInputsDownDuration".}: array[22, float32]
+    navInputsDownDurationPrev* {.importc: "NavInputsDownDurationPrev".}: array[22, float32]
     inputQueueCharacters* {.importc: "InputQueueCharacters".}: ImVector[ImWchar]
   ImGuiInputTextCallbackData* {.importc: "ImGuiInputTextCallbackData", imgui_header.} = object
     eventFlag* {.importc: "EventFlag".}: ImGuiInputTextFlags
@@ -640,7 +640,7 @@ type
     sourceId* {.importc: "SourceId".}: ImGuiID
     sourceParentId* {.importc: "SourceParentId".}: ImGuiID
     dataFrameCount* {.importc: "DataFrameCount".}: int32
-    dataType*: array[32+1, int8]
+    dataType* {.importc: "DataType".}: array[32+1, int8]
     preview* {.importc: "Preview".}: bool
     delivery* {.importc: "Delivery".}: bool
   ImGuiSizeCallbackData* {.importc: "ImGuiSizeCallbackData", imgui_header.} = object
@@ -684,11 +684,11 @@ type
     antiAliasedLines* {.importc: "AntiAliasedLines".}: bool
     antiAliasedFill* {.importc: "AntiAliasedFill".}: bool
     curveTessellationTol* {.importc: "CurveTessellationTol".}: float32
-    colors*: array[48, ImVec4]
+    colors* {.importc: "Colors".}: array[48, ImVec4]
   ImGuiTextBuffer* {.importc: "ImGuiTextBuffer", imgui_header.} = object
     buf* {.importc: "Buf".}: ImVector[int8]
   ImGuiTextFilter* {.importc: "ImGuiTextFilter", imgui_header.} = object
-    inputBuf*: array[256, int8]
+    inputBuf* {.importc: "InputBuf".}: array[256, int8]
     filters* {.importc: "Filters".}: ImVector[TextRange]
     countGrep* {.importc: "CountGrep".}: int32
   ImVec2* {.importc: "ImVec2", imgui_header.} = object
