@@ -301,6 +301,8 @@ proc genProcs(output: var string) =
       var argRet = "void"
       if variation.contains("ret"):
         argRet = variation["ret"].getStr().translateType()
+      elif variation.contains("constructor"):
+        argRet = "ptr " & name.split("_")[0]
       if argRet == "T" or argRet == "ptr T":
         isGeneric = true
 
