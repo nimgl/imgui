@@ -53,6 +53,13 @@ const notDefinedStructs* = """
     size* {.importc: "Size".}: int32
     capacity* {.importc: "Capacity".}: int32
     data* {.importc: "Data".}: UncheckedArray[T]
+  ImGuiStoragePairData* {.union.} = object
+    val_i* {.importc: "val_i".}: int32 # Breaking naming convetion to denote "low level"
+    val_f* {.importc: "val_f".}: float32
+    val_p* {.importc: "val_p".}: pointer
+  ImGuiStoragePair* {.importc: "ImGuiStoragePair", imgui_header.} = object
+    key* {.importc: "key".}: ImGuiID
+    data*: ImGuiStoragePairData
   ImPairData* {.union.} = object
     val_i* {.importc: "val_i".}: int32 # Breaking naming convetion to denote "low level"
     val_f* {.importc: "val_f".}: float32

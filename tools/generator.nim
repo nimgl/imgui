@@ -106,6 +106,8 @@ proc translateType(name: string): string =
     result = result["ImVector_".len ..< result.len]
     result = "ImVector[{result}]".fmt
 
+  result = result.replace("ImGuiStorageImPair", "ImGuiStoragePair")
+
   for d in 0 ..< depth:
     result = "ptr " & result
     if result == "ptr ptr ImDrawList":
@@ -170,7 +172,7 @@ proc genTypes(output: var string) =
   output.add(notDefinedStructs)
 
   for name, obj in data["structs"].pairs:
-    if name == "Pair":
+    if name == "Pair" or name == "ImGuiStoragePair":
       continue
     output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
@@ -253,7 +255,7 @@ proc genProcs(output: var string) =
           argDefault = argDefault.replace("FLT_MAX", "high(float32)")
           argDefault = argDefault.replace("((void*)0)", "nil")
           argDefault = argDefault.replace("sizeof(float)", "sizeof(float32).int32")
-          argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All.int32")
+          argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All")
 
           if argDefault.startsWith("ImVec"):
             let letters = ['x', 'y', 'z', 'w']
