@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.72.0"
+version     = "1.73.0"
 author      = "Leonardo Mariscal"
 description = "ImGui bindings for Nim"
 license     = "MIT"
@@ -9,7 +9,7 @@ skipDirs    = @["tests"]
 
 # Dependencies
 
-requires "nim >= 0.20.0"
+requires "nim >= 1.0.0" # 1.0.0 promises that it will have backward compatibility
 
 task gen, "Generate bindings from source":
   exec("nim c -r tools/generator.nim")
