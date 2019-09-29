@@ -1,4 +1,4 @@
-# Copyright 2018, NimGL contributors.
+# Copyright 2019, NimGL contributors.
 
 import imgui, imgui/[impl_opengl, impl_glfw]
 import nimgl/[opengl, glfw]

@@ -27,7 +27,7 @@ proc currentSourceDir(): string {.compileTime.} =
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
 
-when not defined(imguiSrc):
+when not defined(cpp) or defined(cimguiDll):
   when defined(windows):
     const imgui_dll* = "cimgui.dll"
   elif defined(macosx):
@@ -719,7 +719,7 @@ type
     w* {.importc: "w".}: float32
 
 # Procs
-when not defined(imguiSrc):
+when not defined(cpp) or defined(cimguiDll):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
   {.push nodecl, discardable.}
