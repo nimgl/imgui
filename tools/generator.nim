@@ -1,7 +1,7 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
-import os, strutils, streams, json, strformat,
-       tables, algorithm, sets, ./utils
+import strutils, json, strformat, tables,
+       algorithm, sets, ./utils
 
 var enums: HashSet[string]
 var enumsCount: Table[string, int]
@@ -334,6 +334,7 @@ proc igGenerate*() =
   output.genTypeDefs()
   output.genTypes()
   output.genProcs()
+  output.add("\n" & cherryTheme)
 
   writeFile("src/imgui.nim", output)
 
