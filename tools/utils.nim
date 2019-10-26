@@ -29,8 +29,10 @@ proc currentSourceDir(): string {.compileTime.} =
   result = result[0 ..< result.rfind("/")]
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+when defined(linux):
+  {.passL: "-Xlinker -rpath .".}
 
-when not defined(cpp) or defined(cimguiDll):
+when not defined(cpp) or defined(cimguiDLL):
   when defined(windows):
     const imgui_dll* = "cimgui.dll"
   elif defined(macosx):
@@ -73,7 +75,7 @@ const notDefinedStructs* = """
 
 const preProcs* = """
 # Procs
-when not defined(cpp) or defined(cimguiDll):
+when not defined(cpp) or defined(cimguiDLL):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
   {.push nodecl, discardable.}
