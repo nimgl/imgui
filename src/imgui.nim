@@ -3,7 +3,7 @@
 ## ImGUI Bindings
 ## ====
 ## WARNING: This is a generated file. Do not edit
-## Any edits will be overwritten by the genearator.
+## Any edits will be overwritten by the generator.
 ##
 ## The aim is to achieve as much compatibility with C as possible.
 ## Optional helper functions have been created as a submodule
