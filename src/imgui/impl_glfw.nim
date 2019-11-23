@@ -21,6 +21,8 @@ var
   gMouseJustPressed: array[5, bool]
   gMouseCursors: array[ImGuiMouseCursor.high.int32 + 1, GLFWCursor]
 
+  igGLFWCaptureMouse*: bool = true
+
   # Store previous callbacks so they can be chained
   gPrevMouseButtonCallback: GLFWMousebuttonFun = nil
   gPrevScrollCallback: GLFWScrollFun = nil
@@ -140,9 +142,10 @@ proc igGlfwInitForOpenGL*(window: GLFWwindow, installCallbacks: bool): bool =
 
 proc igGlfwUpdateMousePosAndButtons() =
   let io = igGetIO()
-  for i in 0 ..< io.mouseDown.len:
-    io.mouseDown[i] = gMouseJustPressed[i] or gWindow.getMouseButton(i.int32) != 0
-    gMouseJustPressed[i] = false
+  if igGLFWCaptureMouse:
+    for i in 0 ..< io.mouseDown.len:
+      io.mouseDown[i] = gMouseJustPressed[i] or gWindow.getMouseButton(i.int32) != 0
+      gMouseJustPressed[i] = false
 
   let mousePosBackup = io.mousePos
   io.mousePos = ImVec2(x: -high(float32), y: -high(float32))
