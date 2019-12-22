@@ -174,6 +174,11 @@ proc genTypes(output: var string) =
   for name, obj in data["structs"].pairs:
     if name == "Pair" or name == "ImGuiStoragePair":
       continue
+
+    if name == "ImDrawChannel":
+      output.add("  ImDrawChannel* {.importc: \"ImDrawChannel\", imgui_header.} = ptr object\n")
+      continue
+
     output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
       var memberName = member["name"].getStr()

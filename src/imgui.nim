@@ -430,9 +430,7 @@ type
   ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
   ImColor* {.importc: "ImColor", imgui_header.} = object
     value* {.importc: "Value".}: ImVec4
-  ImDrawChannel* {.importc: "ImDrawChannel", imgui_header.} = object
-    cmdBuffer* {.importc: "_CmdBuffer".}: ImVector[ImDrawCmd]
-    idxBuffer* {.importc: "_IdxBuffer".}: ImVector[ImDrawIdx]
+  ImDrawChannel* {.importc: "ImDrawChannel", imgui_header.} = ptr object
   ImDrawCmd* {.importc: "ImDrawCmd", imgui_header.} = object
     elemCount* {.importc: "ElemCount".}: uint32
     clipRect* {.importc: "ClipRect".}: ImVec4
