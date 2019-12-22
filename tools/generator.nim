@@ -205,10 +205,12 @@ proc genProcs(output: var string) =
   output.add("\n{preProcs}\n".fmt)
 
   for name, obj in data.pairs:
+    var isNonUDT = false
+    var nonUDTNumber = 0
     for variation in obj:
       if variation.contains("nonUDT"):
-        # If you need UDT support please let me know, and some examples.
-        continue
+        nonUDTNumber.inc
+        isNonUDT = true
       if blackListProc.contains(variation["cimguiname"].getStr()):
         continue
 
@@ -222,6 +224,11 @@ proc genProcs(output: var string) =
       else:
         funcname = variation["cimguiname"].getStr()
         #funcname = funcname.rsplit("_", 1)[1]
+
+      if isNonUDT:
+        funcname = funcname & "NonUDT"
+        if nonUDTNumber != 1:
+          funcname = funcname & $nonUDTNumber
 
       if variation.contains("constructor"):
         if funcname.startsWith("ImVector"):

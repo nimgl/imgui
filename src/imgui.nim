@@ -726,6 +726,8 @@ else:
   {.push nodecl, discardable.}
 
 proc hsv*(self: ptr ImColor, h: float32, s: float32, v: float32, a: float32 = 1.0f): ImColor {.importc: "ImColor_HSV".}
+proc hSVNonUDT*(pOut: ptr ImColor, self: ptr ImColor, h: float32, s: float32, v: float32, a: float32 = 1.0f): void {.importc: "ImColor_HSV_nonUDT".}
+proc hSVNonUDT2*(self: ptr ImColor, h: float32, s: float32, v: float32, a: float32 = 1.0f): ImColor {.importc: "ImColor_HSV_nonUDT2".}
 proc newImColor*(): void {.importc: "ImColor_ImColor".}
 proc newImColor*(r: int32, g: int32, b: int32, a: int32 = 255): void {.importc: "ImColor_ImColorInt".}
 proc newImColor*(rgba: uint32): void {.importc: "ImColor_ImColorU32".}
@@ -774,7 +776,11 @@ proc clear*(self: ptr ImDrawList): void {.importc: "ImDrawList_Clear".}
 proc clearFreeMemory*(self: ptr ImDrawList): void {.importc: "ImDrawList_ClearFreeMemory".}
 proc cloneOutput*(self: ptr ImDrawList): ptr ImDrawList {.importc: "ImDrawList_CloneOutput".}
 proc getClipRectMax*(self: ptr ImDrawList): ImVec2 {.importc: "ImDrawList_GetClipRectMax".}
+proc getClipRectMaxNonUDT*(pOut: ptr ImVec2, self: ptr ImDrawList): void {.importc: "ImDrawList_GetClipRectMax_nonUDT".}
+proc getClipRectMaxNonUDT2*(self: ptr ImDrawList): ImVec2 {.importc: "ImDrawList_GetClipRectMax_nonUDT2".}
 proc getClipRectMin*(self: ptr ImDrawList): ImVec2 {.importc: "ImDrawList_GetClipRectMin".}
+proc getClipRectMinNonUDT*(pOut: ptr ImVec2, self: ptr ImDrawList): void {.importc: "ImDrawList_GetClipRectMin_nonUDT".}
+proc getClipRectMinNonUDT2*(self: ptr ImDrawList): ImVec2 {.importc: "ImDrawList_GetClipRectMin_nonUDT2".}
 proc newImDrawList*(shared_data: ptr ImDrawListSharedData): void {.importc: "ImDrawList_ImDrawList".}
 proc pathArcTo*(self: ptr ImDrawList, center: ImVec2, radius: float32, a_min: float32, a_max: float32, num_segments: int32 = 10): void {.importc: "ImDrawList_PathArcTo".}
 proc pathArcToFast*(self: ptr ImDrawList, center: ImVec2, radius: float32, a_min_of_12: int32, a_max_of_12: int32): void {.importc: "ImDrawList_PathArcToFast".}
@@ -848,6 +854,8 @@ proc addGlyph*(self: ptr ImFont, c: ImWchar, x0: float32, y0: float32, x1: float
 proc addRemapChar*(self: ptr ImFont, dst: ImWchar, src: ImWchar, overwrite_dst: bool = true): void {.importc: "ImFont_AddRemapChar".}
 proc buildLookupTable*(self: ptr ImFont): void {.importc: "ImFont_BuildLookupTable".}
 proc calcTextSizeA*(self: ptr ImFont, size: float32, max_width: float32, wrap_width: float32, text_begin: cstring, text_end: cstring = nil, remaining: ptr cstring = nil): ImVec2 {.importc: "ImFont_CalcTextSizeA".}
+proc calcTextSizeANonUDT*(pOut: ptr ImVec2, self: ptr ImFont, size: float32, max_width: float32, wrap_width: float32, text_begin: cstring, text_end: cstring = nil, remaining: ptr cstring = nil): void {.importc: "ImFont_CalcTextSizeA_nonUDT".}
+proc calcTextSizeANonUDT2*(self: ptr ImFont, size: float32, max_width: float32, wrap_width: float32, text_begin: cstring, text_end: cstring = nil, remaining: ptr cstring = nil): ImVec2 {.importc: "ImFont_CalcTextSizeA_nonUDT2".}
 proc calcWordWrapPositionA*(self: ptr ImFont, scale: float32, text: cstring, text_end: cstring, wrap_width: float32): cstring {.importc: "ImFont_CalcWordWrapPositionA".}
 proc clearOutputData*(self: ptr ImFont): void {.importc: "ImFont_ClearOutputData".}
 proc findGlyph*(self: ptr ImFont, c: ImWchar): ptr ImFontGlyph {.importc: "ImFont_FindGlyph".}
@@ -993,6 +1001,8 @@ proc igButton*(label: cstring, size: ImVec2 = ImVec2(x: 0, y: 0)): bool {.import
 proc igCalcItemWidth*(): float32 {.importc: "igCalcItemWidth".}
 proc igCalcListClipping*(items_count: int32, items_height: float32, out_items_display_start: ptr int32, out_items_display_end: ptr int32): void {.importc: "igCalcListClipping".}
 proc igCalcTextSize*(text: cstring, text_end: cstring = nil, hide_text_after_double_hash: bool = false, wrap_width: float32 = -1.0f): ImVec2 {.importc: "igCalcTextSize".}
+proc igCalcTextSizeNonUDT*(pOut: ptr ImVec2, text: cstring, text_end: cstring = nil, hide_text_after_double_hash: bool = false, wrap_width: float32 = -1.0f): void {.importc: "igCalcTextSize_nonUDT".}
+proc igCalcTextSizeNonUDT2*(text: cstring, text_end: cstring = nil, hide_text_after_double_hash: bool = false, wrap_width: float32 = -1.0f): ImVec2 {.importc: "igCalcTextSize_nonUDT2".}
 proc igCaptureKeyboardFromApp*(want_capture_keyboard_value: bool = true): void {.importc: "igCaptureKeyboardFromApp".}
 proc igCaptureMouseFromApp*(want_capture_mouse_value: bool = true): void {.importc: "igCaptureMouseFromApp".}
 proc igCheckbox*(label: cstring, v: ptr bool): bool {.importc: "igCheckbox".}
@@ -1005,6 +1015,8 @@ proc igColorConvertFloat4ToU32*(`in`: ImVec4): uint32 {.importc: "igColorConvert
 proc igColorConvertHSVtoRGB*(h: float32, s: float32, v: float32, out_r: float32, out_g: float32, out_b: float32): void {.importc: "igColorConvertHSVtoRGB".}
 proc igColorConvertRGBtoHSV*(r: float32, g: float32, b: float32, out_h: float32, out_s: float32, out_v: float32): void {.importc: "igColorConvertRGBtoHSV".}
 proc igColorConvertU32ToFloat4*(`in`: uint32): ImVec4 {.importc: "igColorConvertU32ToFloat4".}
+proc igColorConvertU32ToFloat4NonUDT*(pOut: ptr ImVec4, `in`: uint32): void {.importc: "igColorConvertU32ToFloat4_nonUDT".}
+proc igColorConvertU32ToFloat4NonUDT2*(`in`: uint32): ImVec4 {.importc: "igColorConvertU32ToFloat4_nonUDT2".}
 proc igColorEdit3*(label: cstring, col: var array[3, float32], flags: ImGuiColorEditFlags = 0.ImGuiColorEditFlags): bool {.importc: "igColorEdit3".}
 proc igColorEdit4*(label: cstring, col: var array[4, float32], flags: ImGuiColorEditFlags = 0.ImGuiColorEditFlags): bool {.importc: "igColorEdit4".}
 proc igColorPicker3*(label: cstring, col: var array[3, float32], flags: ImGuiColorEditFlags = 0.ImGuiColorEditFlags): bool {.importc: "igColorPicker3".}
@@ -1054,19 +1066,31 @@ proc igGetColumnOffset*(column_index: int32 = -1): float32 {.importc: "igGetColu
 proc igGetColumnWidth*(column_index: int32 = -1): float32 {.importc: "igGetColumnWidth".}
 proc igGetColumnsCount*(): int32 {.importc: "igGetColumnsCount".}
 proc igGetContentRegionAvail*(): ImVec2 {.importc: "igGetContentRegionAvail".}
+proc igGetContentRegionAvailNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetContentRegionAvail_nonUDT".}
+proc igGetContentRegionAvailNonUDT2*(): ImVec2 {.importc: "igGetContentRegionAvail_nonUDT2".}
 proc igGetContentRegionMax*(): ImVec2 {.importc: "igGetContentRegionMax".}
+proc igGetContentRegionMaxNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetContentRegionMax_nonUDT".}
+proc igGetContentRegionMaxNonUDT2*(): ImVec2 {.importc: "igGetContentRegionMax_nonUDT2".}
 proc igGetCurrentContext*(): ptr ImGuiContext {.importc: "igGetCurrentContext".}
 proc igGetCursorPos*(): ImVec2 {.importc: "igGetCursorPos".}
+proc igGetCursorPosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetCursorPos_nonUDT".}
+proc igGetCursorPosNonUDT2*(): ImVec2 {.importc: "igGetCursorPos_nonUDT2".}
 proc igGetCursorPosX*(): float32 {.importc: "igGetCursorPosX".}
 proc igGetCursorPosY*(): float32 {.importc: "igGetCursorPosY".}
 proc igGetCursorScreenPos*(): ImVec2 {.importc: "igGetCursorScreenPos".}
+proc igGetCursorScreenPosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetCursorScreenPos_nonUDT".}
+proc igGetCursorScreenPosNonUDT2*(): ImVec2 {.importc: "igGetCursorScreenPos_nonUDT2".}
 proc igGetCursorStartPos*(): ImVec2 {.importc: "igGetCursorStartPos".}
+proc igGetCursorStartPosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetCursorStartPos_nonUDT".}
+proc igGetCursorStartPosNonUDT2*(): ImVec2 {.importc: "igGetCursorStartPos_nonUDT2".}
 proc igGetDragDropPayload*(): ptr ImGuiPayload {.importc: "igGetDragDropPayload".}
 proc igGetDrawData*(): ptr ImDrawData {.importc: "igGetDrawData".}
 proc igGetDrawListSharedData*(): ptr ImDrawListSharedData {.importc: "igGetDrawListSharedData".}
 proc igGetFont*(): ptr ImFont {.importc: "igGetFont".}
 proc igGetFontSize*(): float32 {.importc: "igGetFontSize".}
 proc igGetFontTexUvWhitePixel*(): ImVec2 {.importc: "igGetFontTexUvWhitePixel".}
+proc igGetFontTexUvWhitePixelNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetFontTexUvWhitePixel_nonUDT".}
+proc igGetFontTexUvWhitePixelNonUDT2*(): ImVec2 {.importc: "igGetFontTexUvWhitePixel_nonUDT2".}
 proc igGetForegroundDrawList*(): ptr ImDrawList {.importc: "igGetForegroundDrawList".}
 proc igGetFrameCount*(): int32 {.importc: "igGetFrameCount".}
 proc igGetFrameHeight*(): float32 {.importc: "igGetFrameHeight".}
@@ -1076,14 +1100,26 @@ proc igGetID*(str_id_begin: cstring, str_id_end: cstring): ImGuiID {.importc: "i
 proc igGetID*(ptr_id: pointer): ImGuiID {.importc: "igGetIDPtr".}
 proc igGetIO*(): ptr ImGuiIO {.importc: "igGetIO".}
 proc igGetItemRectMax*(): ImVec2 {.importc: "igGetItemRectMax".}
+proc igGetItemRectMaxNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectMax_nonUDT".}
+proc igGetItemRectMaxNonUDT2*(): ImVec2 {.importc: "igGetItemRectMax_nonUDT2".}
 proc igGetItemRectMin*(): ImVec2 {.importc: "igGetItemRectMin".}
+proc igGetItemRectMinNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectMin_nonUDT".}
+proc igGetItemRectMinNonUDT2*(): ImVec2 {.importc: "igGetItemRectMin_nonUDT2".}
 proc igGetItemRectSize*(): ImVec2 {.importc: "igGetItemRectSize".}
+proc igGetItemRectSizeNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectSize_nonUDT".}
+proc igGetItemRectSizeNonUDT2*(): ImVec2 {.importc: "igGetItemRectSize_nonUDT2".}
 proc igGetKeyIndex*(imgui_key: ImGuiKey): int32 {.importc: "igGetKeyIndex".}
 proc igGetKeyPressedAmount*(key_index: int32, repeat_delay: float32, rate: float32): int32 {.importc: "igGetKeyPressedAmount".}
 proc igGetMouseCursor*(): ImGuiMouseCursor {.importc: "igGetMouseCursor".}
 proc igGetMouseDragDelta*(button: int32 = 0, lock_threshold: float32 = -1.0f): ImVec2 {.importc: "igGetMouseDragDelta".}
+proc igGetMouseDragDeltaNonUDT*(pOut: ptr ImVec2, button: int32 = 0, lock_threshold: float32 = -1.0f): void {.importc: "igGetMouseDragDelta_nonUDT".}
+proc igGetMouseDragDeltaNonUDT2*(button: int32 = 0, lock_threshold: float32 = -1.0f): ImVec2 {.importc: "igGetMouseDragDelta_nonUDT2".}
 proc igGetMousePos*(): ImVec2 {.importc: "igGetMousePos".}
+proc igGetMousePosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetMousePos_nonUDT".}
+proc igGetMousePosNonUDT2*(): ImVec2 {.importc: "igGetMousePos_nonUDT2".}
 proc igGetMousePosOnOpeningCurrentPopup*(): ImVec2 {.importc: "igGetMousePosOnOpeningCurrentPopup".}
+proc igGetMousePosOnOpeningCurrentPopupNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetMousePosOnOpeningCurrentPopup_nonUDT".}
+proc igGetMousePosOnOpeningCurrentPopupNonUDT2*(): ImVec2 {.importc: "igGetMousePosOnOpeningCurrentPopup_nonUDT2".}
 proc igGetScrollMaxX*(): float32 {.importc: "igGetScrollMaxX".}
 proc igGetScrollMaxY*(): float32 {.importc: "igGetScrollMaxY".}
 proc igGetScrollX*(): float32 {.importc: "igGetScrollX".}
@@ -1098,12 +1134,20 @@ proc igGetTime*(): float64 {.importc: "igGetTime".}
 proc igGetTreeNodeToLabelSpacing*(): float32 {.importc: "igGetTreeNodeToLabelSpacing".}
 proc igGetVersion*(): cstring {.importc: "igGetVersion".}
 proc igGetWindowContentRegionMax*(): ImVec2 {.importc: "igGetWindowContentRegionMax".}
+proc igGetWindowContentRegionMaxNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetWindowContentRegionMax_nonUDT".}
+proc igGetWindowContentRegionMaxNonUDT2*(): ImVec2 {.importc: "igGetWindowContentRegionMax_nonUDT2".}
 proc igGetWindowContentRegionMin*(): ImVec2 {.importc: "igGetWindowContentRegionMin".}
+proc igGetWindowContentRegionMinNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetWindowContentRegionMin_nonUDT".}
+proc igGetWindowContentRegionMinNonUDT2*(): ImVec2 {.importc: "igGetWindowContentRegionMin_nonUDT2".}
 proc igGetWindowContentRegionWidth*(): float32 {.importc: "igGetWindowContentRegionWidth".}
 proc igGetWindowDrawList*(): ptr ImDrawList {.importc: "igGetWindowDrawList".}
 proc igGetWindowHeight*(): float32 {.importc: "igGetWindowHeight".}
 proc igGetWindowPos*(): ImVec2 {.importc: "igGetWindowPos".}
+proc igGetWindowPosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetWindowPos_nonUDT".}
+proc igGetWindowPosNonUDT2*(): ImVec2 {.importc: "igGetWindowPos_nonUDT2".}
 proc igGetWindowSize*(): ImVec2 {.importc: "igGetWindowSize".}
+proc igGetWindowSizeNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetWindowSize_nonUDT".}
+proc igGetWindowSizeNonUDT2*(): ImVec2 {.importc: "igGetWindowSize_nonUDT2".}
 proc igGetWindowWidth*(): float32 {.importc: "igGetWindowWidth".}
 proc igImage*(user_texture_id: ImTextureID, size: ImVec2, uv0: ImVec2 = ImVec2(x: 0, y: 0), uv1: ImVec2 = ImVec2(x: 1, y: 1), tint_col: ImVec4 = ImVec4(x: 1, y: 1, z: 1, w: 1), border_col: ImVec4 = ImVec4(x: 0, y: 0, z: 0, w: 0)): void {.importc: "igImage".}
 proc igImageButton*(user_texture_id: ImTextureID, size: ImVec2, uv0: ImVec2 = ImVec2(x: 0, y: 0), uv1: ImVec2 = ImVec2(x: 1, y: 1), frame_padding: int32 = -1, bg_col: ImVec4 = ImVec4(x: 0, y: 0, z: 0, w: 0), tint_col: ImVec4 = ImVec4(x: 1, y: 1, z: 1, w: 1)): bool {.importc: "igImageButton".}
