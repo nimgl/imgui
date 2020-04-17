@@ -120,7 +120,9 @@ proc genEnums(output: var string) =
   output.add("\n# Enums\ntype\n")
 
   for name, obj in data["enums"].pairs:
-    let enumName = name[0 ..< name.len - 1]
+    var enumName = name
+    if enumName.endsWith("_"):
+      enumName = name[0 ..< name.len - 1]
     output.add("  {enumName}* {{.pure, size: int32.sizeof.}} = enum\n".fmt)
     enums.incl(enumName)
     var table: Table[int, string]
@@ -172,7 +174,7 @@ proc genTypes(output: var string) =
   output.add(notDefinedStructs)
 
   for name, obj in data["structs"].pairs:
-    if name == "Pair" or name == "ImGuiStoragePair":
+    if name == "Pair" or name == "ImGuiStoragePair" or name == "ImGuiStyleMod":
       continue
 
     if name == "ImDrawChannel":
@@ -182,6 +184,8 @@ proc genTypes(output: var string) =
     output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
       var memberName = member["name"].getStr()
+      if memberName == "Ptr":
+        memberName = "`ptr`"
       var memberImGuiName = "{{.importc: \"{memberName}\".}}".fmt
       if memberName.startsWith("_"):
         memberName = memberName[1 ..< memberName.len]

@@ -55,6 +55,12 @@ const notDefinedStructs* = """
     size* {.importc: "Size".}: int32
     capacity* {.importc: "Capacity".}: int32
     data* {.importc: "Data".}: UncheckedArray[T]
+  ImGuiStyleModBackup* {.union.} = object
+    backup_int* {.importc: "BackupInt".}: int32 # Breaking naming convetion to denote "low level"
+    backup_float* {.importc: "BackupFloat".}: float32
+  ImGuiStyleMod* {.importc: "ImGuiStyleMod", imgui_header.} = object
+    varIdx* {.importc: "VarIdx".}: ImGuiStyleVar
+    backup*: ImGuiStyleModBackup
   ImGuiStoragePairData* {.union.} = object
     val_i* {.importc: "val_i".}: int32 # Breaking naming convetion to denote "low level"
     val_f* {.importc: "val_f".}: float32
@@ -69,8 +75,15 @@ const notDefinedStructs* = """
   ImPair* {.importc: "Pair", imgui_header.} = object
     key* {.importc: "key".}: ImGuiID
     data*: ImPairData
-  ImDrawListSharedData* {.importc: "ImDrawListSharedData", imgui_header.} = object
-  ImGuiContext* {.importc: "ImGuiContext", imgui_header.} = object
+
+  # Undefined data types in cimgui
+
+  ImDrawListPtr* = object
+  ImChunkStream* = ptr object
+  STB_TexteditState* {.importc: "STB_TexteditState", imgui_header.} = object
+  ImPool* = object
+
+  #
 """
 
 const preProcs* = """
