@@ -198,6 +198,7 @@ type
     NoArrowButton = 32
     NoPreview = 64
   ImGuiCond* {.pure, size: int32.sizeof.} = enum
+    Default = 0
     Always = 1
     Once = 2
     FirstUseEver = 4
