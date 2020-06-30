@@ -52,6 +52,8 @@ proc translateArray(name: string): tuple[size: string, name: string] =
   arraySize = arraySize[0 ..< arraySize.len - 1]
   if arraySize.contains("COUNT"):
     arraySize = $enumsCount[arraySize]
+  if arraySize == "(0xFFFF+1)/4096/8": # If more continue to appear automate it
+    arraySize = "2"
   result.size = arraySize
   result.name = nameSplit[0]
 
@@ -201,7 +203,11 @@ proc genTypes(output: var string) =
           output.add("    {memberName}* {memberImGuiName}: {member[\"type\"].getStr().translateType()}\n".fmt)
         else:
           # Assuming all template_type containers are ImVectors
-          output.add("    {memberName}* {memberImGuiName}: ImVector[{member[\"template_type\"].getStr().translateType()}]\n".fmt)
+          var templateType = member["template_type"].getStr()
+          if templateType == "ImGui*OrIndex":
+            templateType = "ImGuiPtrOrIndex"
+          templateType = templateType.translateType()
+          output.add("    {memberName}* {memberImGuiName}: ImVector[{templateType}]\n".fmt)
         continue
 
       let arrayData = memberName.translateArray()
@@ -268,10 +274,14 @@ proc genProcs(output: var string) =
            variation["defaults"].contains(argName):
           argDefault = variation["defaults"][argName].getStr()
           argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(255)<<16)|((ImU32)(255)<<8)|((ImU32)(255)<<0))", "high(uint32)")
+          argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(0)<<16)|((ImU32)(0)<<8)|((ImU32)(255)<<0))", "4278190335'u32")
           argDefault = argDefault.replace("FLT_MAX", "high(float32)")
           argDefault = argDefault.replace("((void*)0)", "nil")
           argDefault = argDefault.replace("sizeof(float)", "sizeof(float32).int32")
           argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All")
+          argDefault = argDefault.replace("ImGuiPopupPositionPolicy_Default", "ImGuiPopupPositionPolicy.Default")
+          argDefault = argDefault.replace("ImGuiPopupFlags_None", "ImGuiPopupFlags.None")
+          argDefault = argDefault.replace("ImGuiNavHighlightFlags_TypeDefault", "ImGuiNavHighlightFlags.TypeDefault")
 
           if argDefault.startsWith("ImVec"):
             let letters = ['x', 'y', 'z', 'w']
@@ -319,6 +329,8 @@ proc genProcs(output: var string) =
         argRet = variation["ret"].getStr().translateType()
       if argRet == "T" or argRet == "ptr T":
         isGeneric = true
+      if argRet == "explicit":
+        argRet = "ptr ImVec2ih" # Ugly solution for a temporal problem
 
       output.add(if isGeneric: "[T](" else: "(")
       output.add(argsOutput)
