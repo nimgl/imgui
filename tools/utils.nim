@@ -80,8 +80,8 @@ const notDefinedStructs* = """
 
   ImDrawListPtr* = object
   ImChunkStream* = ptr object
-  STB_TexteditState* {.importc: "STB_TexteditState", imgui_header.} = object
   ImPool* = object
+  ImVectorImGuiColumns* {.importc: "ImVector_ImGuiColumns".} = object
 
   #
 """

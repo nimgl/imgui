@@ -1,10 +1,13 @@
 import imgui, strformat
-igDebugCheckVersionAndDataLayout(igGetVersion(), ImGuiIO.sizeof().uint32,
+
+let version = igGetVersion()
+
+igDebugCheckVersionAndDataLayout(version, ImGuiIO.sizeof().uint32,
                                  ImGuiStyle.sizeof().uint32, ImVec2.sizeof().uint32,
                                  ImVec4.sizeof().uint32, ImDrawVert.sizeof().uint32,
                                  ImDrawIdx.sizeof().uint32).assert()
 
-echo "CreateContext() - {igGetVersion()}".fmt
+echo "CreateContext() - {version}".fmt
 igCreateContext(nil)
 let io = igGetIO()
 
@@ -25,7 +28,7 @@ for i in 0 ..< 20:
 
   var f = 0.0f
   igText("Hello World!")
-  igSliderFloat("float", f.addr, 0.0f, 1.0f, "%.3f", 1.0f)
+  igSliderFloat("float", f.addr, 0.0f, 1.0f, "%.3f")
   igText("Applicaton average %.3f ms/frame (%.1f FPS)", 1000.0f / io.framerate, io.framerate)
   igShowDemoWindow(nil)
 

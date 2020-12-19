@@ -161,6 +161,7 @@ tests/tmath
 tests/topengl
 tools/generator
 tests/test
+tests/tnull
 imgui.ini
 docs/
 

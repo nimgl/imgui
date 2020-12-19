@@ -207,7 +207,13 @@ proc genTypes(output: var string) =
           if templateType == "ImGui*OrIndex":
             templateType = "ImGuiPtrOrIndex"
           templateType = templateType.translateType()
-          output.add("    {memberName}* {memberImGuiName}: ImVector[{templateType}]\n".fmt)
+
+          if templateType == "ImGuiTabBar": # Hope I don't regret this hardocoded if
+            output.add("    {memberName}* {memberImGuiName}: ptr ImPool\n".fmt)
+          elif templateType == "ImGuiColumns":
+            output.add("    {memberName}* {memberImGuiName}: ImVectorImGuiColumns\n".fmt)
+          else:
+            output.add("    {memberName}* {memberImGuiName}: ImVector[{templateType}]\n".fmt)
         continue
 
       let arrayData = memberName.translateArray()
@@ -273,10 +279,14 @@ proc genProcs(output: var string) =
         if variation.contains("defaults") and variation["defaults"].kind == JObject and
            variation["defaults"].contains(argName):
           argDefault = variation["defaults"][argName].getStr()
+          argDefault = argDefault.replace("4294967295", "high(uint32)")
           argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(255)<<16)|((ImU32)(255)<<8)|((ImU32)(255)<<0))", "high(uint32)")
-          argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(0)<<16)|((ImU32)(0)<<8)|((ImU32)(255)<<0))", "4278190335'u32")
+          argDefault = argDefault.replace("(((ImU32)(255)<<24)|((ImU32)(0)<<16)|((ImU32)(0)<<8)|((ImU32)(255)<<0))", "4278190335")
+          argDefault = argDefault.replace("4278190335", "4278190335'u32")
           argDefault = argDefault.replace("FLT_MAX", "high(float32)")
           argDefault = argDefault.replace("((void*)0)", "nil")
+          argDefault = argDefault.replace("NULL", "nil")
+          argDefault = argDefault.replace("~0", "-1")
           argDefault = argDefault.replace("sizeof(float)", "sizeof(float32).int32")
           argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All")
           argDefault = argDefault.replace("ImGuiPopupPositionPolicy_Default", "ImGuiPopupPositionPolicy.Default")
