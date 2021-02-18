@@ -25,10 +25,14 @@ proc translateProc(name: string): string =
   let procType = nameSplit[0].translateType()
 
   nameSplit[1] = nameSplit[1][1 ..< nameSplit[1].len - 1]
+  var isVarArgs = false
   var argsSplit = nameSplit[1].split(',')
   var argSeq: seq[tuple[name: string, kind: string]]
   for arg in argsSplit:
     let argPieces = arg.rsplit(' ', 1)
+    if argPieces[0] == "...":
+      isVarArgs = true
+      continue
     var argName = argPieces[1]
     var argType = argPieces[0]
     if argName.contains('*'):
@@ -44,7 +48,10 @@ proc translateProc(name: string): string =
     result.add("{arg.name}: {arg.kind}, ".fmt)
   if argSeq.len > 0:
     result = result[0 ..< result.len - 2]
-  result.add("): {procType} {{.cdecl.}}".fmt)
+  if isVarArgs:
+    result.add("): {procType} {{.cdecl.}}".fmt)
+  else:
+    result.add("): {procType} {{.cdecl, varargs.}}".fmt)
 
 proc translateArray(name: string): tuple[size: string, name: string] =
   let nameSplit = name.rsplit('[', 1)
@@ -93,6 +100,8 @@ proc translateType(name: string): string =
     result = result.replace("void", "pointer")
     depth.dec
 
+  result = result.replace("ImBitArray", "ImU32")
+  result = result.replace("ImGuiWindowPtr", "ptr ImGuiWindow")
   result = result.replace("ImS8", "int8") # Doing it a little verbose to avoid issues in the future.
   result = result.replace("ImS16", "int16")
   result = result.replace("ImS32", "int32")
@@ -188,6 +197,8 @@ proc genTypes(output: var string) =
       var memberName = member["name"].getStr()
       if memberName == "Ptr":
         memberName = "`ptr`"
+      if memberName == "Type":
+        memberName = "`type`"
       var memberImGuiName = "{{.importc: \"{memberName}\".}}".fmt
       if memberName.startsWith("_"):
         memberName = memberName[1 ..< memberName.len]
@@ -286,6 +297,7 @@ proc genProcs(output: var string) =
           argDefault = argDefault.replace("FLT_MAX", "high(float32)")
           argDefault = argDefault.replace("((void*)0)", "nil")
           argDefault = argDefault.replace("NULL", "nil")
+          argDefault = argDefault.replace("-FLT_MIN", "0")
           argDefault = argDefault.replace("~0", "-1")
           argDefault = argDefault.replace("sizeof(float)", "sizeof(float32).int32")
           argDefault = argDefault.replace("ImDrawCornerFlags_All", "ImDrawCornerFlags.All")

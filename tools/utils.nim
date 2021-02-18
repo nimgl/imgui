@@ -81,6 +81,8 @@ const notDefinedStructs* = """
   ImDrawListPtr* = object
   ImChunkStream* = ptr object
   ImPool* = object
+  ImSpanAllocator* = object # A little lost here. It is referenced in imgui_internal.h
+  ImSpan* = object # ^^
   ImVectorImGuiColumns* {.importc: "ImVector_ImGuiColumns".} = object
 
   #
