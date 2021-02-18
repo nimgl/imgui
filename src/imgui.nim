@@ -43,7 +43,8 @@ else:
     compile: "imgui/private/cimgui/imgui/imgui.cpp",
     compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
     compile: "imgui/private/cimgui/imgui/imgui_demo.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp".}
+    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp",
+    compile: "imgui/private/cimgui/imgui/imgui_tables.cpp".}
   {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 
 # Enums
