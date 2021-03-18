@@ -313,7 +313,7 @@ proc genProcs(output: var string) =
               argDefault.add("{letters[p]}: {argPices[p]}, ".fmt)
             argDefault = argDefault[0 ..< argDefault.len - 2] & ")"
 
-          if argType.startsWith("ImGui") and not argType.contains("Callback"):
+          if (argType.startsWith("ImGui") or argType.startsWith("Im")) and not argType.contains("Callback"):
             argDefault.add(".{argType}".fmt)
 
         if argName.startsWith("_"):
