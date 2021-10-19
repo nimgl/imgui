@@ -8,6 +8,9 @@
 
 import ../imgui, nimgl/glfw
 
+when defined(windows):
+  import nimgl/glfw/native
+
 type
   GlfwClientApi = enum
     igGlfwClientApiUnkown
@@ -115,8 +118,8 @@ proc igGlfwInit(window: GLFWwindow, installCallbacks: bool, clientApi: GlfwClien
     io.setClipboardTextFn = igGlfwSetClipboardText
     io.getClipboardTextFn = igGlfwGetClipboardText
   io.clipboardUserData = gWindow
-  # when defined windows:
-  #   io.imeWindowHandle = gWindow.getWin32Window()
+  when defined windows:
+    io.imeWindowHandle = gWindow.getWin32Window()
 
   gMouseCursors[ImGuiMouseCursor.Arrow.int32] = glfwCreateStandardCursor(GLFWArrowCursor)
   gMouseCursors[ImGuiMouseCursor.TextInput.int32] = glfwCreateStandardCursor(GLFWIbeamCursor)

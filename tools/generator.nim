@@ -88,7 +88,7 @@ proc translateType(name: string): string =
   result = result.replace("_Simple", "")
   if result.contains("char") and not result.contains("Wchar"):
     if result.contains("uchar"):
-      result = "cuchar"
+      result = "uint8"
     elif depth > 0:
       result = result.replace("char", "cstring")
       depth.dec
@@ -313,7 +313,7 @@ proc genProcs(output: var string) =
               argDefault.add("{letters[p]}: {argPices[p]}, ".fmt)
             argDefault = argDefault[0 ..< argDefault.len - 2] & ")"
 
-          if (argType.startsWith("ImGui") or argType.startsWith("Im")) and not argType.contains("Callback"):
+          if (argType.startsWith("ImGui") or argType.startsWith("Im")) and not argType.contains("Callback") and not argType.contains("ImVec"): # Ugly hack, should fix later
             argDefault.add(".{argType}".fmt)
 
         if argName.startsWith("_"):
@@ -375,7 +375,7 @@ proc genProcs(output: var string) =
       if outSplit[1] == outSplit[2] or outSplit[1].split('{')[0] == outSplit[2].split('{')[0]:
         output = "{outSplit[0]}\n{outSplit[1]}\n".fmt
 
-  output.add("\n{.pop.}\n")
+  output.add("\n{postProcs}\n".fmt)
 
 proc igGenerate*() =
   var output = srcHeader

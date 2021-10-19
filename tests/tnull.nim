@@ -11,7 +11,7 @@ echo "CreateContext() - {version}".fmt
 igCreateContext(nil)
 let io = igGetIO()
 
-var text_pixels: ptr cuchar = nil
+var text_pixels: ptr uint8 = nil
 var text_w: int32
 var text_h: int32
 io.fonts.getTexDataAsRGBA32(text_pixels.addr, text_w.addr, text_h.addr, nil)

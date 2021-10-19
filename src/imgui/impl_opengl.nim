@@ -60,7 +60,7 @@ proc igOpenGL3CheckShader(handle: uint32, desc: string) =
 
 proc igOpenGL3CreateFontsTexture() =
   let io = igGetIO()
-  var text_pixels: ptr cuchar
+  var text_pixels: ptr uint8
   var text_w: int32
   var text_h: int32
   io.fonts.getTexDataAsRGBA32(text_pixels.addr, text_w.addr, text_h.addr)

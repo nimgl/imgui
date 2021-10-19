@@ -91,10 +91,16 @@ const notDefinedStructs* = """
 
 const preProcs* = """
 # Procs
+{.push warning[HoleEnumConv]: off.}
 when not defined(cpp) or defined(cimguiDLL):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
   {.push nodecl, discardable.}
+"""
+
+const postProcs* = """
+{.pop.} # push dynlib / nodecl, etc...
+{.pop.} # push warning[HoleEnumConv]: off
 """
 
 let reservedWordsDictionary* = [
