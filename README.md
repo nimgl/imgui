@@ -62,14 +62,8 @@ The PRs and new feature development will occur in each binding's repo.
 
 ## Usage
 
-```nim
-import imgui
-
-igText("Hello World")
-
-var f: float32
-igSliderFloat("float", f, 0.0f, 1.0f)
-```
+See the [examples](https://github.com/nimgl/nimgl/blob/master/examples/timgui.nim) in the main
+repository for usage.
 
 Check out the references and doc in order to understand ImGui usage.
 
