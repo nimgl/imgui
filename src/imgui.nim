@@ -1932,7 +1932,7 @@ else:
 
 proc clearAllBits*(self: ptr uint32): void {.importc: "ImBitArray_ClearAllBits".}
 proc clearBit*(self: ptr uint32, n: int32): void {.importc: "ImBitArray_ClearBit".}
-proc newImBitArray*(): void {.importc: "ImBitArray_ImBitArray".}
+proc newImBitArray*(): ptr uint32 {.importc: "ImBitArray_ImBitArray".}
 proc setAllBits*(self: ptr uint32): void {.importc: "ImBitArray_SetAllBits".}
 proc setBit*(self: ptr uint32, n: int32): void {.importc: "ImBitArray_SetBit".}
 proc setBitRange*(self: ptr uint32, n: int32, n2: int32): void {.importc: "ImBitArray_SetBitRange".}
@@ -1955,15 +1955,15 @@ proc ptr_from_offset*[T](self: ptr ImChunkStream, off: int32): ptr T {.importc: 
 proc size*(self: ptr ImChunkStream): int32 {.importc: "ImChunkStream_size".}
 proc swap*(self: ptr ImChunkStream, rhs: ptr ImChunkStream): void {.importc: "ImChunkStream_swap".}
 proc hSVNonUDT*(pOut: ptr ImColor, h: float32, s: float32, v: float32, a: float32 = 1.0f): void {.importc: "ImColor_HSV".}
-proc newImColor*(): void {.importc: "ImColor_ImColor_Nil".}
-proc newImColor*(r: int32, g: int32, b: int32, a: int32 = 255): void {.importc: "ImColor_ImColor_Int".}
-proc newImColor*(rgba: uint32): void {.importc: "ImColor_ImColor_U32".}
-proc newImColor*(r: float32, g: float32, b: float32, a: float32 = 1.0f): void {.importc: "ImColor_ImColor_Float".}
-proc newImColor*(col: ImVec4): void {.importc: "ImColor_ImColor_Vec4".}
+proc newImColor*(): ptr ImColor {.importc: "ImColor_ImColor_Nil".}
+proc newImColor*(r: int32, g: int32, b: int32, a: int32 = 255): ptr ImColor {.importc: "ImColor_ImColor_Int".}
+proc newImColor*(rgba: uint32): ptr ImColor {.importc: "ImColor_ImColor_U32".}
+proc newImColor*(r: float32, g: float32, b: float32, a: float32 = 1.0f): ptr ImColor {.importc: "ImColor_ImColor_Float".}
+proc newImColor*(col: ImVec4): ptr ImColor {.importc: "ImColor_ImColor_Vec4".}
 proc setHSV*(self: ptr ImColor, h: float32, s: float32, v: float32, a: float32 = 1.0f): void {.importc: "ImColor_SetHSV".}
 proc destroy*(self: ptr ImColor): void {.importc: "ImColor_destroy".}
 proc getTexID*(self: ptr ImDrawCmd): ImTextureID {.importc: "ImDrawCmd_GetTexID".}
-proc newImDrawCmd*(): void {.importc: "ImDrawCmd_ImDrawCmd".}
+proc newImDrawCmd*(): ptr ImDrawCmd {.importc: "ImDrawCmd_ImDrawCmd".}
 proc destroy*(self: ptr ImDrawCmd): void {.importc: "ImDrawCmd_destroy".}
 proc clear*(self: ptr ImDrawDataBuilder): void {.importc: "ImDrawDataBuilder_Clear".}
 proc clearFreeMemory*(self: ptr ImDrawDataBuilder): void {.importc: "ImDrawDataBuilder_ClearFreeMemory".}
@@ -1971,15 +1971,15 @@ proc flattenIntoSingleLayer*(self: ptr ImDrawDataBuilder): void {.importc: "ImDr
 proc getDrawListCount*(self: ptr ImDrawDataBuilder): int32 {.importc: "ImDrawDataBuilder_GetDrawListCount".}
 proc clear*(self: ptr ImDrawData): void {.importc: "ImDrawData_Clear".}
 proc deIndexAllBuffers*(self: ptr ImDrawData): void {.importc: "ImDrawData_DeIndexAllBuffers".}
-proc newImDrawData*(): void {.importc: "ImDrawData_ImDrawData".}
+proc newImDrawData*(): ptr ImDrawData {.importc: "ImDrawData_ImDrawData".}
 proc scaleClipRects*(self: ptr ImDrawData, fb_scale: ImVec2): void {.importc: "ImDrawData_ScaleClipRects".}
 proc destroy*(self: ptr ImDrawData): void {.importc: "ImDrawData_destroy".}
-proc newImDrawListSharedData*(): void {.importc: "ImDrawListSharedData_ImDrawListSharedData".}
+proc newImDrawListSharedData*(): ptr ImDrawListSharedData {.importc: "ImDrawListSharedData_ImDrawListSharedData".}
 proc setCircleTessellationMaxError*(self: ptr ImDrawListSharedData, max_error: float32): void {.importc: "ImDrawListSharedData_SetCircleTessellationMaxError".}
 proc destroy*(self: ptr ImDrawListSharedData): void {.importc: "ImDrawListSharedData_destroy".}
 proc clear*(self: ptr ImDrawListSplitter): void {.importc: "ImDrawListSplitter_Clear".}
 proc clearFreeMemory*(self: ptr ImDrawListSplitter): void {.importc: "ImDrawListSplitter_ClearFreeMemory".}
-proc newImDrawListSplitter*(): void {.importc: "ImDrawListSplitter_ImDrawListSplitter".}
+proc newImDrawListSplitter*(): ptr ImDrawListSplitter {.importc: "ImDrawListSplitter_ImDrawListSplitter".}
 proc merge*(self: ptr ImDrawListSplitter, draw_list: ptr ImDrawList): void {.importc: "ImDrawListSplitter_Merge".}
 proc setCurrentChannel*(self: ptr ImDrawListSplitter, draw_list: ptr ImDrawList, channel_idx: int32): void {.importc: "ImDrawListSplitter_SetCurrentChannel".}
 proc split*(self: ptr ImDrawListSplitter, draw_list: ptr ImDrawList, count: int32): void {.importc: "ImDrawListSplitter_Split".}
@@ -2013,7 +2013,7 @@ proc channelsSplit*(self: ptr ImDrawList, count: int32): void {.importc: "ImDraw
 proc cloneOutput*(self: ptr ImDrawList): ptr ImDrawList {.importc: "ImDrawList_CloneOutput".}
 proc getClipRectMaxNonUDT*(pOut: ptr ImVec2, self: ptr ImDrawList): void {.importc: "ImDrawList_GetClipRectMax".}
 proc getClipRectMinNonUDT*(pOut: ptr ImVec2, self: ptr ImDrawList): void {.importc: "ImDrawList_GetClipRectMin".}
-proc newImDrawList*(shared_data: ptr ImDrawListSharedData): void {.importc: "ImDrawList_ImDrawList".}
+proc newImDrawList*(shared_data: ptr ImDrawListSharedData): ptr ImDrawList {.importc: "ImDrawList_ImDrawList".}
 proc pathArcTo*(self: ptr ImDrawList, center: ImVec2, radius: float32, a_min: float32, a_max: float32, num_segments: int32 = 0): void {.importc: "ImDrawList_PathArcTo".}
 proc pathArcToFast*(self: ptr ImDrawList, center: ImVec2, radius: float32, a_min_of_12: int32, a_max_of_12: int32): void {.importc: "ImDrawList_PathArcToFast".}
 proc pathBezierCubicCurveTo*(self: ptr ImDrawList, p2: ImVec2, p3: ImVec2, p4: ImVec2, num_segments: int32 = 0): void {.importc: "ImDrawList_PathBezierCubicCurveTo".}
@@ -2048,7 +2048,7 @@ proc PopUnusedDrawCmd*(self: ptr ImDrawList): void {.importc: "ImDrawList__PopUn
 proc ResetForNewFrame*(self: ptr ImDrawList): void {.importc: "ImDrawList__ResetForNewFrame".}
 proc TryMergeDrawCmds*(self: ptr ImDrawList): void {.importc: "ImDrawList__TryMergeDrawCmds".}
 proc destroy*(self: ptr ImDrawList): void {.importc: "ImDrawList_destroy".}
-proc newImFontAtlasCustomRect*(): void {.importc: "ImFontAtlasCustomRect_ImFontAtlasCustomRect".}
+proc newImFontAtlasCustomRect*(): ptr ImFontAtlasCustomRect {.importc: "ImFontAtlasCustomRect_ImFontAtlasCustomRect".}
 proc isPacked*(self: ptr ImFontAtlasCustomRect): bool {.importc: "ImFontAtlasCustomRect_IsPacked".}
 proc destroy*(self: ptr ImFontAtlasCustomRect): void {.importc: "ImFontAtlasCustomRect_destroy".}
 proc addCustomRectFontGlyph*(self: ptr ImFontAtlas, font: ptr ImFont, id: ImWchar, width: int32, height: int32, advance_x: float32, offset: ImVec2 = ImVec2(x: 0, y: 0)): int32 {.importc: "ImFontAtlas_AddCustomRectFontGlyph".}
@@ -2077,11 +2077,11 @@ proc getGlyphRangesVietnamese*(self: ptr ImFontAtlas): ptr ImWchar {.importc: "I
 proc getMouseCursorTexData*(self: ptr ImFontAtlas, cursor: ImGuiMouseCursor, out_offset: ptr ImVec2, out_size: ptr ImVec2, out_uv_border: var array[2, ImVec2], out_uv_fill: var array[2, ImVec2]): bool {.importc: "ImFontAtlas_GetMouseCursorTexData".}
 proc getTexDataAsAlpha8*(self: ptr ImFontAtlas, out_pixels: ptr ptr uint8, out_width: ptr int32, out_height: ptr int32, out_bytes_per_pixel: ptr int32 = nil): void {.importc: "ImFontAtlas_GetTexDataAsAlpha8".}
 proc getTexDataAsRGBA32*(self: ptr ImFontAtlas, out_pixels: ptr ptr uint8, out_width: ptr int32, out_height: ptr int32, out_bytes_per_pixel: ptr int32 = nil): void {.importc: "ImFontAtlas_GetTexDataAsRGBA32".}
-proc newImFontAtlas*(): void {.importc: "ImFontAtlas_ImFontAtlas".}
+proc newImFontAtlas*(): ptr ImFontAtlas {.importc: "ImFontAtlas_ImFontAtlas".}
 proc isBuilt*(self: ptr ImFontAtlas): bool {.importc: "ImFontAtlas_IsBuilt".}
 proc setTexID*(self: ptr ImFontAtlas, id: ImTextureID): void {.importc: "ImFontAtlas_SetTexID".}
 proc destroy*(self: ptr ImFontAtlas): void {.importc: "ImFontAtlas_destroy".}
-proc newImFontConfig*(): void {.importc: "ImFontConfig_ImFontConfig".}
+proc newImFontConfig*(): ptr ImFontConfig {.importc: "ImFontConfig_ImFontConfig".}
 proc destroy*(self: ptr ImFontConfig): void {.importc: "ImFontConfig_destroy".}
 proc addChar*(self: ptr ImFontGlyphRangesBuilder, c: ImWchar): void {.importc: "ImFontGlyphRangesBuilder_AddChar".}
 proc addRanges*(self: ptr ImFontGlyphRangesBuilder, ranges: ptr ImWchar): void {.importc: "ImFontGlyphRangesBuilder_AddRanges".}
@@ -2089,7 +2089,7 @@ proc addText*(self: ptr ImFontGlyphRangesBuilder, text: cstring, text_end: cstri
 proc buildRanges*(self: ptr ImFontGlyphRangesBuilder, out_ranges: ptr ImVector[ImWchar]): void {.importc: "ImFontGlyphRangesBuilder_BuildRanges".}
 proc clear*(self: ptr ImFontGlyphRangesBuilder): void {.importc: "ImFontGlyphRangesBuilder_Clear".}
 proc getBit*(self: ptr ImFontGlyphRangesBuilder, n: uint): bool {.importc: "ImFontGlyphRangesBuilder_GetBit".}
-proc newImFontGlyphRangesBuilder*(): void {.importc: "ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder".}
+proc newImFontGlyphRangesBuilder*(): ptr ImFontGlyphRangesBuilder {.importc: "ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder".}
 proc setBit*(self: ptr ImFontGlyphRangesBuilder, n: uint): void {.importc: "ImFontGlyphRangesBuilder_SetBit".}
 proc destroy*(self: ptr ImFontGlyphRangesBuilder): void {.importc: "ImFontGlyphRangesBuilder_destroy".}
 proc addGlyph*(self: ptr ImFont, src_cfg: ptr ImFontConfig, c: ImWchar, x0: float32, y0: float32, x1: float32, y1: float32, u0: float32, v0: float32, u1: float32, v1: float32, advance_x: float32): void {.importc: "ImFont_AddGlyph".}
@@ -2103,18 +2103,18 @@ proc findGlyphNoFallback*(self: ptr ImFont, c: ImWchar): ptr ImFontGlyph {.impor
 proc getCharAdvance*(self: ptr ImFont, c: ImWchar): float32 {.importc: "ImFont_GetCharAdvance".}
 proc getDebugName*(self: ptr ImFont): cstring {.importc: "ImFont_GetDebugName".}
 proc growIndex*(self: ptr ImFont, new_size: int32): void {.importc: "ImFont_GrowIndex".}
-proc newImFont*(): void {.importc: "ImFont_ImFont".}
+proc newImFont*(): ptr ImFont {.importc: "ImFont_ImFont".}
 proc isGlyphRangeUnused*(self: ptr ImFont, c_begin: uint32, c_last: uint32): bool {.importc: "ImFont_IsGlyphRangeUnused".}
 proc isLoaded*(self: ptr ImFont): bool {.importc: "ImFont_IsLoaded".}
 proc renderChar*(self: ptr ImFont, draw_list: ptr ImDrawList, size: float32, pos: ImVec2, col: uint32, c: ImWchar): void {.importc: "ImFont_RenderChar".}
 proc renderText*(self: ptr ImFont, draw_list: ptr ImDrawList, size: float32, pos: ImVec2, col: uint32, clip_rect: ImVec4, text_begin: cstring, text_end: cstring, wrap_width: float32 = 0.0f, cpu_fine_clip: bool = false): void {.importc: "ImFont_RenderText".}
 proc setGlyphVisible*(self: ptr ImFont, c: ImWchar, visible: bool): void {.importc: "ImFont_SetGlyphVisible".}
 proc destroy*(self: ptr ImFont): void {.importc: "ImFont_destroy".}
-proc newImGuiComboPreviewData*(): void {.importc: "ImGuiComboPreviewData_ImGuiComboPreviewData".}
+proc newImGuiComboPreviewData*(): ptr ImGuiComboPreviewData {.importc: "ImGuiComboPreviewData_ImGuiComboPreviewData".}
 proc destroy*(self: ptr ImGuiComboPreviewData): void {.importc: "ImGuiComboPreviewData_destroy".}
-proc newImGuiContextHook*(): void {.importc: "ImGuiContextHook_ImGuiContextHook".}
+proc newImGuiContextHook*(): ptr ImGuiContextHook {.importc: "ImGuiContextHook_ImGuiContextHook".}
 proc destroy*(self: ptr ImGuiContextHook): void {.importc: "ImGuiContextHook_destroy".}
-proc newImGuiContext*(shared_font_atlas: ptr ImFontAtlas): void {.importc: "ImGuiContext_ImGuiContext".}
+proc newImGuiContext*(shared_font_atlas: ptr ImFontAtlas): ptr ImGuiContext {.importc: "ImGuiContext_ImGuiContext".}
 proc destroy*(self: ptr ImGuiContext): void {.importc: "ImGuiContext_destroy".}
 proc addFocusEvent*(self: ptr ImGuiIO, focused: bool): void {.importc: "ImGuiIO_AddFocusEvent".}
 proc addInputCharacter*(self: ptr ImGuiIO, c: uint32): void {.importc: "ImGuiIO_AddInputCharacter".}
@@ -2122,12 +2122,12 @@ proc addInputCharacterUTF16*(self: ptr ImGuiIO, c: ImWchar16): void {.importc: "
 proc addInputCharactersUTF8*(self: ptr ImGuiIO, str: cstring): void {.importc: "ImGuiIO_AddInputCharactersUTF8".}
 proc clearInputCharacters*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_ClearInputCharacters".}
 proc clearInputKeys*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_ClearInputKeys".}
-proc newImGuiIO*(): void {.importc: "ImGuiIO_ImGuiIO".}
+proc newImGuiIO*(): ptr ImGuiIO {.importc: "ImGuiIO_ImGuiIO".}
 proc destroy*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_destroy".}
 proc clearSelection*(self: ptr ImGuiInputTextCallbackData): void {.importc: "ImGuiInputTextCallbackData_ClearSelection".}
 proc deleteChars*(self: ptr ImGuiInputTextCallbackData, pos: int32, bytes_count: int32): void {.importc: "ImGuiInputTextCallbackData_DeleteChars".}
 proc hasSelection*(self: ptr ImGuiInputTextCallbackData): bool {.importc: "ImGuiInputTextCallbackData_HasSelection".}
-proc newImGuiInputTextCallbackData*(): void {.importc: "ImGuiInputTextCallbackData_ImGuiInputTextCallbackData".}
+proc newImGuiInputTextCallbackData*(): ptr ImGuiInputTextCallbackData {.importc: "ImGuiInputTextCallbackData_ImGuiInputTextCallbackData".}
 proc insertChars*(self: ptr ImGuiInputTextCallbackData, pos: int32, text: cstring, text_end: cstring = nil): void {.importc: "ImGuiInputTextCallbackData_InsertChars".}
 proc selectAll*(self: ptr ImGuiInputTextCallbackData): void {.importc: "ImGuiInputTextCallbackData_SelectAll".}
 proc destroy*(self: ptr ImGuiInputTextCallbackData): void {.importc: "ImGuiInputTextCallbackData_destroy".}
@@ -2142,63 +2142,63 @@ proc getSelectionEnd*(self: ptr ImGuiInputTextState): int32 {.importc: "ImGuiInp
 proc getSelectionStart*(self: ptr ImGuiInputTextState): int32 {.importc: "ImGuiInputTextState_GetSelectionStart".}
 proc getUndoAvailCount*(self: ptr ImGuiInputTextState): int32 {.importc: "ImGuiInputTextState_GetUndoAvailCount".}
 proc hasSelection*(self: ptr ImGuiInputTextState): bool {.importc: "ImGuiInputTextState_HasSelection".}
-proc newImGuiInputTextState*(): void {.importc: "ImGuiInputTextState_ImGuiInputTextState".}
+proc newImGuiInputTextState*(): ptr ImGuiInputTextState {.importc: "ImGuiInputTextState_ImGuiInputTextState".}
 proc onKeyPressed*(self: ptr ImGuiInputTextState, key: int32): void {.importc: "ImGuiInputTextState_OnKeyPressed".}
 proc selectAll*(self: ptr ImGuiInputTextState): void {.importc: "ImGuiInputTextState_SelectAll".}
 proc destroy*(self: ptr ImGuiInputTextState): void {.importc: "ImGuiInputTextState_destroy".}
-proc newImGuiLastItemData*(): void {.importc: "ImGuiLastItemData_ImGuiLastItemData".}
+proc newImGuiLastItemData*(): ptr ImGuiLastItemData {.importc: "ImGuiLastItemData_ImGuiLastItemData".}
 proc destroy*(self: ptr ImGuiLastItemData): void {.importc: "ImGuiLastItemData_destroy".}
 proc begin*(self: ptr ImGuiListClipper, items_count: int32, items_height: float32 = -1.0f): void {.importc: "ImGuiListClipper_Begin".}
 proc `end`*(self: ptr ImGuiListClipper): void {.importc: "ImGuiListClipper_End".}
-proc newImGuiListClipper*(): void {.importc: "ImGuiListClipper_ImGuiListClipper".}
+proc newImGuiListClipper*(): ptr ImGuiListClipper {.importc: "ImGuiListClipper_ImGuiListClipper".}
 proc step*(self: ptr ImGuiListClipper): bool {.importc: "ImGuiListClipper_Step".}
 proc destroy*(self: ptr ImGuiListClipper): void {.importc: "ImGuiListClipper_destroy".}
 proc calcNextTotalWidth*(self: ptr ImGuiMenuColumns, update_offsets: bool): void {.importc: "ImGuiMenuColumns_CalcNextTotalWidth".}
 proc declColumns*(self: ptr ImGuiMenuColumns, w_icon: float32, w_label: float32, w_shortcut: float32, w_mark: float32): float32 {.importc: "ImGuiMenuColumns_DeclColumns".}
-proc newImGuiMenuColumns*(): void {.importc: "ImGuiMenuColumns_ImGuiMenuColumns".}
+proc newImGuiMenuColumns*(): ptr ImGuiMenuColumns {.importc: "ImGuiMenuColumns_ImGuiMenuColumns".}
 proc update*(self: ptr ImGuiMenuColumns, spacing: float32, window_reappearing: bool): void {.importc: "ImGuiMenuColumns_Update".}
 proc destroy*(self: ptr ImGuiMenuColumns): void {.importc: "ImGuiMenuColumns_destroy".}
-proc newImGuiMetricsConfig*(): void {.importc: "ImGuiMetricsConfig_ImGuiMetricsConfig".}
+proc newImGuiMetricsConfig*(): ptr ImGuiMetricsConfig {.importc: "ImGuiMetricsConfig_ImGuiMetricsConfig".}
 proc destroy*(self: ptr ImGuiMetricsConfig): void {.importc: "ImGuiMetricsConfig_destroy".}
 proc clear*(self: ptr ImGuiNavItemData): void {.importc: "ImGuiNavItemData_Clear".}
-proc newImGuiNavItemData*(): void {.importc: "ImGuiNavItemData_ImGuiNavItemData".}
+proc newImGuiNavItemData*(): ptr ImGuiNavItemData {.importc: "ImGuiNavItemData_ImGuiNavItemData".}
 proc destroy*(self: ptr ImGuiNavItemData): void {.importc: "ImGuiNavItemData_destroy".}
 proc clearFlags*(self: ptr ImGuiNextItemData): void {.importc: "ImGuiNextItemData_ClearFlags".}
-proc newImGuiNextItemData*(): void {.importc: "ImGuiNextItemData_ImGuiNextItemData".}
+proc newImGuiNextItemData*(): ptr ImGuiNextItemData {.importc: "ImGuiNextItemData_ImGuiNextItemData".}
 proc destroy*(self: ptr ImGuiNextItemData): void {.importc: "ImGuiNextItemData_destroy".}
 proc clearFlags*(self: ptr ImGuiNextWindowData): void {.importc: "ImGuiNextWindowData_ClearFlags".}
-proc newImGuiNextWindowData*(): void {.importc: "ImGuiNextWindowData_ImGuiNextWindowData".}
+proc newImGuiNextWindowData*(): ptr ImGuiNextWindowData {.importc: "ImGuiNextWindowData_ImGuiNextWindowData".}
 proc destroy*(self: ptr ImGuiNextWindowData): void {.importc: "ImGuiNextWindowData_destroy".}
-proc newImGuiOldColumnData*(): void {.importc: "ImGuiOldColumnData_ImGuiOldColumnData".}
+proc newImGuiOldColumnData*(): ptr ImGuiOldColumnData {.importc: "ImGuiOldColumnData_ImGuiOldColumnData".}
 proc destroy*(self: ptr ImGuiOldColumnData): void {.importc: "ImGuiOldColumnData_destroy".}
-proc newImGuiOldColumns*(): void {.importc: "ImGuiOldColumns_ImGuiOldColumns".}
+proc newImGuiOldColumns*(): ptr ImGuiOldColumns {.importc: "ImGuiOldColumns_ImGuiOldColumns".}
 proc destroy*(self: ptr ImGuiOldColumns): void {.importc: "ImGuiOldColumns_destroy".}
-proc newImGuiOnceUponAFrame*(): void {.importc: "ImGuiOnceUponAFrame_ImGuiOnceUponAFrame".}
+proc newImGuiOnceUponAFrame*(): ptr ImGuiOnceUponAFrame {.importc: "ImGuiOnceUponAFrame_ImGuiOnceUponAFrame".}
 proc destroy*(self: ptr ImGuiOnceUponAFrame): void {.importc: "ImGuiOnceUponAFrame_destroy".}
 proc clear*(self: ptr ImGuiPayload): void {.importc: "ImGuiPayload_Clear".}
-proc newImGuiPayload*(): void {.importc: "ImGuiPayload_ImGuiPayload".}
+proc newImGuiPayload*(): ptr ImGuiPayload {.importc: "ImGuiPayload_ImGuiPayload".}
 proc isDataType*(self: ptr ImGuiPayload, `type`: cstring): bool {.importc: "ImGuiPayload_IsDataType".}
 proc isDelivery*(self: ptr ImGuiPayload): bool {.importc: "ImGuiPayload_IsDelivery".}
 proc isPreview*(self: ptr ImGuiPayload): bool {.importc: "ImGuiPayload_IsPreview".}
 proc destroy*(self: ptr ImGuiPayload): void {.importc: "ImGuiPayload_destroy".}
-proc newImGuiPopupData*(): void {.importc: "ImGuiPopupData_ImGuiPopupData".}
+proc newImGuiPopupData*(): ptr ImGuiPopupData {.importc: "ImGuiPopupData_ImGuiPopupData".}
 proc destroy*(self: ptr ImGuiPopupData): void {.importc: "ImGuiPopupData_destroy".}
-proc newImGuiPtrOrIndex*(`ptr`: pointer): void {.importc: "ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr".}
-proc newImGuiPtrOrIndex*(index: int32): void {.importc: "ImGuiPtrOrIndex_ImGuiPtrOrIndex_Int".}
+proc newImGuiPtrOrIndex*(`ptr`: pointer): ptr ImGuiPtrOrIndex {.importc: "ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr".}
+proc newImGuiPtrOrIndex*(index: int32): ptr ImGuiPtrOrIndex {.importc: "ImGuiPtrOrIndex_ImGuiPtrOrIndex_Int".}
 proc destroy*(self: ptr ImGuiPtrOrIndex): void {.importc: "ImGuiPtrOrIndex_destroy".}
-proc newImGuiSettingsHandler*(): void {.importc: "ImGuiSettingsHandler_ImGuiSettingsHandler".}
+proc newImGuiSettingsHandler*(): ptr ImGuiSettingsHandler {.importc: "ImGuiSettingsHandler_ImGuiSettingsHandler".}
 proc destroy*(self: ptr ImGuiSettingsHandler): void {.importc: "ImGuiSettingsHandler_destroy".}
-proc newImGuiStackLevelInfo*(): void {.importc: "ImGuiStackLevelInfo_ImGuiStackLevelInfo".}
+proc newImGuiStackLevelInfo*(): ptr ImGuiStackLevelInfo {.importc: "ImGuiStackLevelInfo_ImGuiStackLevelInfo".}
 proc destroy*(self: ptr ImGuiStackLevelInfo): void {.importc: "ImGuiStackLevelInfo_destroy".}
 proc compareWithCurrentState*(self: ptr ImGuiStackSizes): void {.importc: "ImGuiStackSizes_CompareWithCurrentState".}
-proc newImGuiStackSizes*(): void {.importc: "ImGuiStackSizes_ImGuiStackSizes".}
+proc newImGuiStackSizes*(): ptr ImGuiStackSizes {.importc: "ImGuiStackSizes_ImGuiStackSizes".}
 proc setToCurrentState*(self: ptr ImGuiStackSizes): void {.importc: "ImGuiStackSizes_SetToCurrentState".}
 proc destroy*(self: ptr ImGuiStackSizes): void {.importc: "ImGuiStackSizes_destroy".}
-proc newImGuiStackTool*(): void {.importc: "ImGuiStackTool_ImGuiStackTool".}
+proc newImGuiStackTool*(): ptr ImGuiStackTool {.importc: "ImGuiStackTool_ImGuiStackTool".}
 proc destroy*(self: ptr ImGuiStackTool): void {.importc: "ImGuiStackTool_destroy".}
-proc newImGuiStoragePair*(key: ImGuiID, val_i: int32): void {.importc: "ImGuiStoragePair_ImGuiStoragePair_Int".}
-proc newImGuiStoragePair*(key: ImGuiID, val_f: float32): void {.importc: "ImGuiStoragePair_ImGuiStoragePair_Float".}
-proc newImGuiStoragePair*(key: ImGuiID, val_p: pointer): void {.importc: "ImGuiStoragePair_ImGuiStoragePair_Ptr".}
+proc newImGuiStoragePair*(key: ImGuiID, val_i: int32): ptr ImGuiStoragePair {.importc: "ImGuiStoragePair_ImGuiStoragePair_Int".}
+proc newImGuiStoragePair*(key: ImGuiID, val_f: float32): ptr ImGuiStoragePair {.importc: "ImGuiStoragePair_ImGuiStoragePair_Float".}
+proc newImGuiStoragePair*(key: ImGuiID, val_p: pointer): ptr ImGuiStoragePair {.importc: "ImGuiStoragePair_ImGuiStoragePair_Ptr".}
 proc destroy*(self: ptr ImGuiStoragePair): void {.importc: "ImGuiStoragePair_destroy".}
 proc buildSortByKey*(self: ptr ImGuiStorage): void {.importc: "ImGuiStorage_BuildSortByKey".}
 proc clear*(self: ptr ImGuiStorage): void {.importc: "ImGuiStorage_Clear".}
@@ -2215,35 +2215,35 @@ proc setBool*(self: ptr ImGuiStorage, key: ImGuiID, val: bool): void {.importc: 
 proc setFloat*(self: ptr ImGuiStorage, key: ImGuiID, val: float32): void {.importc: "ImGuiStorage_SetFloat".}
 proc setInt*(self: ptr ImGuiStorage, key: ImGuiID, val: int32): void {.importc: "ImGuiStorage_SetInt".}
 proc setVoidPtr*(self: ptr ImGuiStorage, key: ImGuiID, val: pointer): void {.importc: "ImGuiStorage_SetVoidPtr".}
-proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: int32): void {.importc: "ImGuiStyleMod_ImGuiStyleMod_Int".}
-proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: float32): void {.importc: "ImGuiStyleMod_ImGuiStyleMod_Float".}
-proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: ImVec2): void {.importc: "ImGuiStyleMod_ImGuiStyleMod_Vec2".}
+proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: int32): ptr ImGuiStyleMod {.importc: "ImGuiStyleMod_ImGuiStyleMod_Int".}
+proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: float32): ptr ImGuiStyleMod {.importc: "ImGuiStyleMod_ImGuiStyleMod_Float".}
+proc newImGuiStyleMod*(idx: ImGuiStyleVar, v: ImVec2): ptr ImGuiStyleMod {.importc: "ImGuiStyleMod_ImGuiStyleMod_Vec2".}
 proc destroy*(self: ptr ImGuiStyleMod): void {.importc: "ImGuiStyleMod_destroy".}
-proc newImGuiStyle*(): void {.importc: "ImGuiStyle_ImGuiStyle".}
+proc newImGuiStyle*(): ptr ImGuiStyle {.importc: "ImGuiStyle_ImGuiStyle".}
 proc scaleAllSizes*(self: ptr ImGuiStyle, scale_factor: float32): void {.importc: "ImGuiStyle_ScaleAllSizes".}
 proc destroy*(self: ptr ImGuiStyle): void {.importc: "ImGuiStyle_destroy".}
 proc getTabName*(self: ptr ImGuiTabBar, tab: ptr ImGuiTabItem): cstring {.importc: "ImGuiTabBar_GetTabName".}
 proc getTabOrder*(self: ptr ImGuiTabBar, tab: ptr ImGuiTabItem): int32 {.importc: "ImGuiTabBar_GetTabOrder".}
-proc newImGuiTabBar*(): void {.importc: "ImGuiTabBar_ImGuiTabBar".}
+proc newImGuiTabBar*(): ptr ImGuiTabBar {.importc: "ImGuiTabBar_ImGuiTabBar".}
 proc destroy*(self: ptr ImGuiTabBar): void {.importc: "ImGuiTabBar_destroy".}
-proc newImGuiTabItem*(): void {.importc: "ImGuiTabItem_ImGuiTabItem".}
+proc newImGuiTabItem*(): ptr ImGuiTabItem {.importc: "ImGuiTabItem_ImGuiTabItem".}
 proc destroy*(self: ptr ImGuiTabItem): void {.importc: "ImGuiTabItem_destroy".}
-proc newImGuiTableColumnSettings*(): void {.importc: "ImGuiTableColumnSettings_ImGuiTableColumnSettings".}
+proc newImGuiTableColumnSettings*(): ptr ImGuiTableColumnSettings {.importc: "ImGuiTableColumnSettings_ImGuiTableColumnSettings".}
 proc destroy*(self: ptr ImGuiTableColumnSettings): void {.importc: "ImGuiTableColumnSettings_destroy".}
-proc newImGuiTableColumnSortSpecs*(): void {.importc: "ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs".}
+proc newImGuiTableColumnSortSpecs*(): ptr ImGuiTableColumnSortSpecs {.importc: "ImGuiTableColumnSortSpecs_ImGuiTableColumnSortSpecs".}
 proc destroy*(self: ptr ImGuiTableColumnSortSpecs): void {.importc: "ImGuiTableColumnSortSpecs_destroy".}
-proc newImGuiTableColumn*(): void {.importc: "ImGuiTableColumn_ImGuiTableColumn".}
+proc newImGuiTableColumn*(): ptr ImGuiTableColumn {.importc: "ImGuiTableColumn_ImGuiTableColumn".}
 proc destroy*(self: ptr ImGuiTableColumn): void {.importc: "ImGuiTableColumn_destroy".}
 proc getColumnSettings*(self: ptr ImGuiTableSettings): ptr ImGuiTableColumnSettings {.importc: "ImGuiTableSettings_GetColumnSettings".}
-proc newImGuiTableSettings*(): void {.importc: "ImGuiTableSettings_ImGuiTableSettings".}
+proc newImGuiTableSettings*(): ptr ImGuiTableSettings {.importc: "ImGuiTableSettings_ImGuiTableSettings".}
 proc destroy*(self: ptr ImGuiTableSettings): void {.importc: "ImGuiTableSettings_destroy".}
-proc newImGuiTableSortSpecs*(): void {.importc: "ImGuiTableSortSpecs_ImGuiTableSortSpecs".}
+proc newImGuiTableSortSpecs*(): ptr ImGuiTableSortSpecs {.importc: "ImGuiTableSortSpecs_ImGuiTableSortSpecs".}
 proc destroy*(self: ptr ImGuiTableSortSpecs): void {.importc: "ImGuiTableSortSpecs_destroy".}
-proc newImGuiTableTempData*(): void {.importc: "ImGuiTableTempData_ImGuiTableTempData".}
+proc newImGuiTableTempData*(): ptr ImGuiTableTempData {.importc: "ImGuiTableTempData_ImGuiTableTempData".}
 proc destroy*(self: ptr ImGuiTableTempData): void {.importc: "ImGuiTableTempData_destroy".}
-proc newImGuiTable*(): void {.importc: "ImGuiTable_ImGuiTable".}
+proc newImGuiTable*(): ptr ImGuiTable {.importc: "ImGuiTable_ImGuiTable".}
 proc destroy*(self: ptr ImGuiTable): void {.importc: "ImGuiTable_destroy".}
-proc newImGuiTextBuffer*(): void {.importc: "ImGuiTextBuffer_ImGuiTextBuffer".}
+proc newImGuiTextBuffer*(): ptr ImGuiTextBuffer {.importc: "ImGuiTextBuffer_ImGuiTextBuffer".}
 proc append*(self: ptr ImGuiTextBuffer, str: cstring, str_end: cstring = nil): void {.importc: "ImGuiTextBuffer_append".}
 proc appendf*(self: ptr ImGuiTextBuffer, fmt: cstring): void {.importc: "ImGuiTextBuffer_appendf", varargs.}
 proc appendfv*(self: ptr ImGuiTextBuffer, fmt: cstring): void {.importc: "ImGuiTextBuffer_appendfv", varargs.}
@@ -2258,12 +2258,12 @@ proc size*(self: ptr ImGuiTextBuffer): int32 {.importc: "ImGuiTextBuffer_size".}
 proc build*(self: ptr ImGuiTextFilter): void {.importc: "ImGuiTextFilter_Build".}
 proc clear*(self: ptr ImGuiTextFilter): void {.importc: "ImGuiTextFilter_Clear".}
 proc draw*(self: ptr ImGuiTextFilter, label: cstring = "Filter(inc,-exc)", width: float32 = 0.0f): bool {.importc: "ImGuiTextFilter_Draw".}
-proc newImGuiTextFilter*(default_filter: cstring = ""): void {.importc: "ImGuiTextFilter_ImGuiTextFilter".}
+proc newImGuiTextFilter*(default_filter: cstring = ""): ptr ImGuiTextFilter {.importc: "ImGuiTextFilter_ImGuiTextFilter".}
 proc isActive*(self: ptr ImGuiTextFilter): bool {.importc: "ImGuiTextFilter_IsActive".}
 proc passFilter*(self: ptr ImGuiTextFilter, text: cstring, text_end: cstring = nil): bool {.importc: "ImGuiTextFilter_PassFilter".}
 proc destroy*(self: ptr ImGuiTextFilter): void {.importc: "ImGuiTextFilter_destroy".}
-proc newImGuiTextRange*(): void {.importc: "ImGuiTextRange_ImGuiTextRange_Nil".}
-proc newImGuiTextRange*(b: cstring, e: cstring): void {.importc: "ImGuiTextRange_ImGuiTextRange_Str".}
+proc newImGuiTextRange*(): ptr ImGuiTextRange {.importc: "ImGuiTextRange_ImGuiTextRange_Nil".}
+proc newImGuiTextRange*(b: cstring, e: cstring): ptr ImGuiTextRange {.importc: "ImGuiTextRange_ImGuiTextRange_Str".}
 proc destroy*(self: ptr ImGuiTextRange): void {.importc: "ImGuiTextRange_destroy".}
 proc empty*(self: ptr ImGuiTextRange): bool {.importc: "ImGuiTextRange_empty".}
 proc split*(self: ptr ImGuiTextRange, separator: int8, `out`: ptr ImVector[ImGuiTextRange]): void {.importc: "ImGuiTextRange_split".}
@@ -2272,15 +2272,15 @@ proc calcWorkRectSizeNonUDT*(pOut: ptr ImVec2, self: ptr ImGuiViewportP, off_min
 proc getBuildWorkRectNonUDT*(pOut: ptr ImRect, self: ptr ImGuiViewportP): void {.importc: "ImGuiViewportP_GetBuildWorkRect".}
 proc getMainRectNonUDT*(pOut: ptr ImRect, self: ptr ImGuiViewportP): void {.importc: "ImGuiViewportP_GetMainRect".}
 proc getWorkRectNonUDT*(pOut: ptr ImRect, self: ptr ImGuiViewportP): void {.importc: "ImGuiViewportP_GetWorkRect".}
-proc newImGuiViewportP*(): void {.importc: "ImGuiViewportP_ImGuiViewportP".}
+proc newImGuiViewportP*(): ptr ImGuiViewportP {.importc: "ImGuiViewportP_ImGuiViewportP".}
 proc updateWorkRect*(self: ptr ImGuiViewportP): void {.importc: "ImGuiViewportP_UpdateWorkRect".}
 proc destroy*(self: ptr ImGuiViewportP): void {.importc: "ImGuiViewportP_destroy".}
 proc getCenterNonUDT*(pOut: ptr ImVec2, self: ptr ImGuiViewport): void {.importc: "ImGuiViewport_GetCenter".}
 proc getWorkCenterNonUDT*(pOut: ptr ImVec2, self: ptr ImGuiViewport): void {.importc: "ImGuiViewport_GetWorkCenter".}
-proc newImGuiViewport*(): void {.importc: "ImGuiViewport_ImGuiViewport".}
+proc newImGuiViewport*(): ptr ImGuiViewport {.importc: "ImGuiViewport_ImGuiViewport".}
 proc destroy*(self: ptr ImGuiViewport): void {.importc: "ImGuiViewport_destroy".}
 proc getName*(self: ptr ImGuiWindowSettings): cstring {.importc: "ImGuiWindowSettings_GetName".}
-proc newImGuiWindowSettings*(): void {.importc: "ImGuiWindowSettings_ImGuiWindowSettings".}
+proc newImGuiWindowSettings*(): ptr ImGuiWindowSettings {.importc: "ImGuiWindowSettings_ImGuiWindowSettings".}
 proc destroy*(self: ptr ImGuiWindowSettings): void {.importc: "ImGuiWindowSettings_destroy".}
 proc calcFontSize*(self: ptr ImGuiWindow): float32 {.importc: "ImGuiWindow_CalcFontSize".}
 proc getID*(self: ptr ImGuiWindow, str: cstring, str_end: cstring = nil): ImGuiID {.importc: "ImGuiWindow_GetID_Str".}
@@ -2290,7 +2290,7 @@ proc getIDFromRectangle*(self: ptr ImGuiWindow, r_abs: ImRect): ImGuiID {.import
 proc getIDNoKeepAlive*(self: ptr ImGuiWindow, str: cstring, str_end: cstring = nil): ImGuiID {.importc: "ImGuiWindow_GetIDNoKeepAlive_Str".}
 proc getIDNoKeepAlive*(self: ptr ImGuiWindow, `ptr`: pointer): ImGuiID {.importc: "ImGuiWindow_GetIDNoKeepAlive_Ptr".}
 proc getIDNoKeepAlive*(self: ptr ImGuiWindow, n: int32): ImGuiID {.importc: "ImGuiWindow_GetIDNoKeepAlive_Int".}
-proc newImGuiWindow*(context: ptr ImGuiContext, name: cstring): void {.importc: "ImGuiWindow_ImGuiWindow".}
+proc newImGuiWindow*(context: ptr ImGuiContext, name: cstring): ptr ImGuiWindow {.importc: "ImGuiWindow_ImGuiWindow".}
 proc menuBarHeight*(self: ptr ImGuiWindow): float32 {.importc: "ImGuiWindow_MenuBarHeight".}
 proc menuBarRectNonUDT*(pOut: ptr ImRect, self: ptr ImGuiWindow): void {.importc: "ImGuiWindow_MenuBarRect".}
 proc rectNonUDT*(pOut: ptr ImRect, self: ptr ImGuiWindow): void {.importc: "ImGuiWindow_Rect".}
@@ -2307,7 +2307,7 @@ proc getByKey*[T](self: ptr ImPool, key: ImGuiID): ptr T {.importc: "ImPool_GetB
 proc getIndex*[T](self: ptr ImPool, p: ptr T): ImPoolIdx {.importc: "ImPool_GetIndex".}
 proc getMapSize*(self: ptr ImPool): int32 {.importc: "ImPool_GetMapSize".}
 proc getOrAddByKey*[T](self: ptr ImPool, key: ImGuiID): ptr T {.importc: "ImPool_GetOrAddByKey".}
-proc newImPool*(): void {.importc: "ImPool_ImPool".}
+proc newImPool*(): ptr ImPool {.importc: "ImPool_ImPool".}
 proc remove*[T](self: ptr ImPool, key: ImGuiID, p: ptr T): void {.importc: "ImPool_Remove_TPtr".}
 proc remove*(self: ptr ImPool, key: ImGuiID, idx: ImPoolIdx): void {.importc: "ImPool_Remove_PoolIdx".}
 proc reserve*(self: ptr ImPool, capacity: int32): void {.importc: "ImPool_Reserve".}
@@ -2331,10 +2331,10 @@ proc getSizeNonUDT*(pOut: ptr ImVec2, self: ptr ImRect): void {.importc: "ImRect
 proc getTLNonUDT*(pOut: ptr ImVec2, self: ptr ImRect): void {.importc: "ImRect_GetTL".}
 proc getTRNonUDT*(pOut: ptr ImVec2, self: ptr ImRect): void {.importc: "ImRect_GetTR".}
 proc getWidth*(self: ptr ImRect): float32 {.importc: "ImRect_GetWidth".}
-proc newImRect*(): void {.importc: "ImRect_ImRect_Nil".}
-proc newImRect*(min: ImVec2, max: ImVec2): void {.importc: "ImRect_ImRect_Vec2".}
-proc newImRect*(v: ImVec4): void {.importc: "ImRect_ImRect_Vec4".}
-proc newImRect*(x1: float32, y1: float32, x2: float32, y2: float32): void {.importc: "ImRect_ImRect_Float".}
+proc newImRect*(): ptr ImRect {.importc: "ImRect_ImRect_Nil".}
+proc newImRect*(min: ImVec2, max: ImVec2): ptr ImRect {.importc: "ImRect_ImRect_Vec2".}
+proc newImRect*(v: ImVec4): ptr ImRect {.importc: "ImRect_ImRect_Vec4".}
+proc newImRect*(x1: float32, y1: float32, x2: float32, y2: float32): ptr ImRect {.importc: "ImRect_ImRect_Float".}
 proc isInverted*(self: ptr ImRect): bool {.importc: "ImRect_IsInverted".}
 proc overlaps*(self: ptr ImRect, r: ImRect): bool {.importc: "ImRect_Overlaps".}
 proc toVec4NonUDT*(pOut: ptr ImVec4, self: ptr ImRect): void {.importc: "ImRect_ToVec4".}
@@ -2345,13 +2345,13 @@ proc destroy*(self: ptr ImRect): void {.importc: "ImRect_destroy".}
 proc getArenaSizeInBytes*(self: ptr ImSpanAllocator): int32 {.importc: "ImSpanAllocator_GetArenaSizeInBytes".}
 proc getSpanPtrBegin*(self: ptr ImSpanAllocator, n: int32): pointer {.importc: "ImSpanAllocator_GetSpanPtrBegin".}
 proc getSpanPtrEnd*(self: ptr ImSpanAllocator, n: int32): pointer {.importc: "ImSpanAllocator_GetSpanPtrEnd".}
-proc newImSpanAllocator*(): void {.importc: "ImSpanAllocator_ImSpanAllocator".}
+proc newImSpanAllocator*(): ptr ImSpanAllocator {.importc: "ImSpanAllocator_ImSpanAllocator".}
 proc reserve*(self: ptr ImSpanAllocator, n: int32, sz: uint, a: int32 = 4): void {.importc: "ImSpanAllocator_Reserve".}
 proc setArenaBasePtr*(self: ptr ImSpanAllocator, base_ptr: pointer): void {.importc: "ImSpanAllocator_SetArenaBasePtr".}
 proc destroy*(self: ptr ImSpanAllocator): void {.importc: "ImSpanAllocator_destroy".}
-proc newImSpan*(): void {.importc: "ImSpan_ImSpan_Nil".}
-proc newImSpan*[T](data: ptr T, size: int32): void {.importc: "ImSpan_ImSpan_TPtrInt".}
-proc newImSpan*[T](data: ptr T, data_end: ptr T): void {.importc: "ImSpan_ImSpan_TPtrTPtr".}
+proc newImSpan*(): ptr ImSpan {.importc: "ImSpan_ImSpan_Nil".}
+proc newImSpan*[T](data: ptr T, size: int32): ptr ImSpan {.importc: "ImSpan_ImSpan_TPtrInt".}
+proc newImSpan*[T](data: ptr T, data_end: ptr T): ptr ImSpan {.importc: "ImSpan_ImSpan_TPtrTPtr".}
 proc begin*[T](self: ptr ImSpan): ptr T {.importc: "ImSpan_begin_Nil".}
 proc destroy*(self: ptr ImSpan): void {.importc: "ImSpan_destroy".}
 proc `end`*[T](self: ptr ImSpan): ptr T {.importc: "ImSpan_end_Nil".}
@@ -2360,18 +2360,18 @@ proc set*[T](self: ptr ImSpan, data: ptr T, size: int32): void {.importc: "ImSpa
 proc set*[T](self: ptr ImSpan, data: ptr T, data_end: ptr T): void {.importc: "ImSpan_set_TPtr".}
 proc size*(self: ptr ImSpan): int32 {.importc: "ImSpan_size".}
 proc size_in_bytes*(self: ptr ImSpan): int32 {.importc: "ImSpan_size_in_bytes".}
-proc newImVec1*(): void {.importc: "ImVec1_ImVec1_Nil".}
-proc newImVec1*(x: float32): void {.importc: "ImVec1_ImVec1_Float".}
+proc newImVec1*(): ptr ImVec1 {.importc: "ImVec1_ImVec1_Nil".}
+proc newImVec1*(x: float32): ptr ImVec1 {.importc: "ImVec1_ImVec1_Float".}
 proc destroy*(self: ptr ImVec1): void {.importc: "ImVec1_destroy".}
-proc newImVec2*(): void {.importc: "ImVec2_ImVec2_Nil".}
-proc newImVec2*(x: float32, y: float32): void {.importc: "ImVec2_ImVec2_Float".}
+proc newImVec2*(): ptr ImVec2 {.importc: "ImVec2_ImVec2_Nil".}
+proc newImVec2*(x: float32, y: float32): ptr ImVec2 {.importc: "ImVec2_ImVec2_Float".}
 proc destroy*(self: ptr ImVec2): void {.importc: "ImVec2_destroy".}
-proc newImVec2ih*(): void {.importc: "ImVec2ih_ImVec2ih_Nil".}
-proc newImVec2ih*(x: int16, y: int16): void {.importc: "ImVec2ih_ImVec2ih_short".}
-proc newImVec2ih*(rhs: ImVec2): void {.importc: "ImVec2ih_ImVec2ih_Vec2".}
+proc newImVec2ih*(): ptr ImVec2ih {.importc: "ImVec2ih_ImVec2ih_Nil".}
+proc newImVec2ih*(x: int16, y: int16): ptr ImVec2ih {.importc: "ImVec2ih_ImVec2ih_short".}
+proc newImVec2ih*(rhs: ImVec2): ptr ImVec2ih {.importc: "ImVec2ih_ImVec2ih_Vec2".}
 proc destroy*(self: ptr ImVec2ih): void {.importc: "ImVec2ih_destroy".}
-proc newImVec4*(): void {.importc: "ImVec4_ImVec4_Nil".}
-proc newImVec4*(x: float32, y: float32, z: float32, w: float32): void {.importc: "ImVec4_ImVec4_Float".}
+proc newImVec4*(): ptr ImVec4 {.importc: "ImVec4_ImVec4_Nil".}
+proc newImVec4*(x: float32, y: float32, z: float32, w: float32): ptr ImVec4 {.importc: "ImVec4_ImVec4_Float".}
 proc destroy*(self: ptr ImVec4): void {.importc: "ImVec4_destroy".}
 proc grow_capacity*(self: ptr ImVector, sz: int32): int32 {.importc: "ImVector__grow_capacity".}
 proc back*[T](self: ptr ImVector): ptr T {.importc: "ImVector_back_Nil".}
