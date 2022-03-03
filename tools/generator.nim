@@ -248,6 +248,7 @@ proc genProcs(output: var string) =
 
       # Name
       var funcname = ""
+      var orgfuncname: string
       if variation.contains("stname") and variation["stname"].getStr() != "":
         if variation.contains("destructor"):
           funcname = "destroy"
@@ -265,6 +266,7 @@ proc genProcs(output: var string) =
       if variation.contains("constructor"):
         if funcname.startsWith("ImVector"):
           continue
+        orgfuncname = funcname
         funcname = "new" & funcname.capitalizeAscii()
 
       if funcname.isUpper():
@@ -353,6 +355,10 @@ proc genProcs(output: var string) =
         isGeneric = true
       if argRet == "explicit":
         argRet = "ptr ImVec2ih" # Ugly solution for a temporal problem
+      if variation.contains("constructor"):
+        if orgfuncname == "ImBitArray":
+          orgfuncname = "uint32"
+        argRet = "ptr " & orgfuncname
 
       output.add(if isGeneric: "[T](" else: "(")
       output.add(argsOutput)
