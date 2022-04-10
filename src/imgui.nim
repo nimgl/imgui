@@ -800,7 +800,7 @@ type
     cmdListsCount* {.importc: "CmdListsCount".}: int32
     totalIdxCount* {.importc: "TotalIdxCount".}: int32
     totalVtxCount* {.importc: "TotalVtxCount".}: int32
-    cmdLists* {.importc: "CmdLists".}: UncheckedArray[ptr ImDrawList]
+    cmdLists* {.importc: "CmdLists".}: ptr UncheckedArray[ptr ImDrawList]
     displayPos* {.importc: "DisplayPos".}: ImVec2
     displaySize* {.importc: "DisplaySize".}: ImVec2
     framebufferScale* {.importc: "FramebufferScale".}: ImVec2
