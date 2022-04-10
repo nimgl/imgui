@@ -746,7 +746,7 @@ type
   ImVector*[T] = object # Should I importc a generic?
     size* {.importc: "Size".}: int32
     capacity* {.importc: "Capacity".}: int32
-    data* {.importc: "Data".}: UncheckedArray[T]
+    data* {.importc: "Data".}: ptr UncheckedArray[T]
   ImGuiStyleModBackup* {.union.} = object
     backup_int* {.importc: "BackupInt".}: int32 # Breaking naming convetion to denote "low level"
     backup_float* {.importc: "BackupFloat".}: float32
@@ -800,7 +800,7 @@ type
     cmdListsCount* {.importc: "CmdListsCount".}: int32
     totalIdxCount* {.importc: "TotalIdxCount".}: int32
     totalVtxCount* {.importc: "TotalVtxCount".}: int32
-    cmdLists* {.importc: "CmdLists".}: UncheckedArray[ptr ImDrawList]
+    cmdLists* {.importc: "CmdLists".}: ptr UncheckedArray[ptr ImDrawList]
     displayPos* {.importc: "DisplayPos".}: ImVec2
     displaySize* {.importc: "DisplaySize".}: ImVec2
     framebufferScale* {.importc: "FramebufferScale".}: ImVec2
