@@ -32,13 +32,20 @@ when defined(linux):
   {.passL: "-Xlinker -rpath .".}
 
 when defined(c):
-  {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
-  {.pragma: imgui_header, header: "cimgui.h".}
-  when not defined(cimguiDLL):
-    {.fatal: "No build script for C yet".}
-when defined(cimguiDLL):
-  const cimguiDLL {.strdefine.}: string = ""
-  const imgui_dll* = cimguiDLL
+  {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui_c.h".}
+  when defined(cimguiDLL):
+    {.fatal: "not supported yet".}
+    when defined(windows):
+      const cimguiDLL {.strdefine.}: string = "cimgui.dll"
+    elif defined(macosx):
+      const cimguiDLL {.strdefine.}: string = "cimgui.dylib"
+    else:
+      const cimguiDLL {.strdefine.}: string = "cimgui.so"
+    const imgui_dll* = cimguiDLL
+  else:
+    # TODO: 
+    # run "makecimgui.nim" before install
+    {.passL: cimgui_dir & "/libcimgui.a".}
 
 when defined(cpp):
   {.compile: cimgui_dir & "/cimgui.cpp",
@@ -1927,8 +1934,11 @@ type
 
 # Procs
 {.push warning[HoleEnumConv]: off.}
-when not defined(cpp) or defined(cimguiDLL):
-  {.push dynlib: imgui_dll, cdecl, discardable.}
+when not defined(cpp):
+  when defined(cimguiDLL):
+    {.push dynlib: imgui_dll, cdecl, discardable.}
+  else:
+    {.push nodecl, discardable.}
 else:
   {.push nodecl, discardable.}
 
