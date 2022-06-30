@@ -25,26 +25,28 @@ proc currentSourceDir(): string {.compileTime.} =
   result = currentSourcePath().replace("\\", "/")
   result = result[0 ..< result.rfind("/")]
 
-{.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+const cimgui_dir = currentSourceDir() & "/imgui/private/cimgui"
+
+{.passC: "-I" & cimgui_dir & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
 when defined(linux):
   {.passL: "-Xlinker -rpath .".}
 
-when not defined(cpp) or defined(cimguiDLL):
-  when defined(windows):
-    const imgui_dll* = "cimgui.dll"
-  elif defined(macosx):
-    const imgui_dll* = "cimgui.dylib"
-  else:
-    const imgui_dll* = "cimgui.so"
+when defined(c):
   {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
-else:
-  {.compile: "imgui/private/cimgui/cimgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_tables.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_demo.cpp".}
+  when not defined(cimguiDLL):
+    {.fatal: "No build script for C yet".}
+when defined(cimguiDLL):
+  const cimguiDLL {.strdefine.}: string = ""
+  const imgui_dll* = cimguiDLL
+
+when defined(cpp):
+  {.compile: cimgui_dir & "/cimgui.cpp",
+    compile: cimgui_dir & "/imgui/imgui.cpp",
+    compile: cimgui_dir & "/imgui/imgui_draw.cpp",
+    compile: cimgui_dir & "/imgui/imgui_tables.cpp",
+    compile: cimgui_dir & "/imgui/imgui_widgets.cpp",
+    compile: cimgui_dir & "/imgui/imgui_demo.cpp".}
   {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 
 # Enums
