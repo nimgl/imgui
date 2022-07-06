@@ -1,0 +1,22 @@
+Subject: [PATCH] Remove threadsafe
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index d5462fc..90cc096 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,7 +9,7 @@ OBJS += ./imgui/imgui_demo.o
+ OBJS += ./imgui/imgui_tables.o
+ OBJS += ./imgui/imgui_widgets.o
+ 
+-CXXFLAGS=-O2 -fno-exceptions -fno-rtti
++CXXFLAGS=-O2 -fno-exceptions -fno-rtti -fno-threadsafe-statics
+ 
+ UNAME_S := $(shell uname -s)
+ 
+-- 
+2.36.1
+

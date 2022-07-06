@@ -25,26 +25,35 @@ proc currentSourceDir(): string {.compileTime.} =
   result = currentSourcePath().replace("\\", "/")
   result = result[0 ..< result.rfind("/")]
 
-{.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+const cimgui_dir = currentSourceDir() & "/imgui/private/cimgui"
+
+{.passC: "-I" & cimgui_dir & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
 when defined(linux):
   {.passL: "-Xlinker -rpath .".}
 
-when not defined(cpp) or defined(cimguiDLL):
-  when defined(windows):
-    const imgui_dll* = "cimgui.dll"
-  elif defined(macosx):
-    const imgui_dll* = "cimgui.dylib"
+when defined(c):
+  {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui_c.h".}
+  when defined(cimguiDLL):
+    {.fatal: "not supported yet".}
+    when defined(windows):
+      const cimguiDLL {.strdefine.}: string = "cimgui.dll"
+    elif defined(macosx):
+      const cimguiDLL {.strdefine.}: string = "cimgui.dylib"
+    else:
+      const cimguiDLL {.strdefine.}: string = "cimgui.so"
+    const imgui_dll* = cimguiDLL
   else:
-    const imgui_dll* = "cimgui.so"
-  {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
-  {.pragma: imgui_header, header: "cimgui.h".}
-else:
-  {.compile: "imgui/private/cimgui/cimgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_tables.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_demo.cpp".}
+    # TODO: 
+    # run "makecimgui.nim" before install
+    {.passL: cimgui_dir & "/libcimgui.a".}
+
+when defined(cpp):
+  {.compile: cimgui_dir & "/cimgui.cpp",
+    compile: cimgui_dir & "/imgui/imgui.cpp",
+    compile: cimgui_dir & "/imgui/imgui_draw.cpp",
+    compile: cimgui_dir & "/imgui/imgui_tables.cpp",
+    compile: cimgui_dir & "/imgui/imgui_widgets.cpp",
+    compile: cimgui_dir & "/imgui/imgui_demo.cpp".}
   {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 
 # Enums
@@ -1925,8 +1934,11 @@ type
 
 # Procs
 {.push warning[HoleEnumConv]: off.}
-when not defined(cpp) or defined(cimguiDLL):
-  {.push dynlib: imgui_dll, cdecl, discardable.}
+when not defined(cpp):
+  when defined(cimguiDLL):
+    {.push dynlib: imgui_dll, cdecl, discardable.}
+  else:
+    {.push nodecl, discardable.}
 else:
   {.push nodecl, discardable.}
 
