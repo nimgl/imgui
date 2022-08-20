@@ -133,6 +133,9 @@ proc translateType(name: string): string =
     if result == "ptr ptr ImDrawList":
       result = "UncheckedArray[ptr ImDrawList]"
 
+  if result == "":
+    result = "void"
+
 proc genEnums(output: var string) =
   let file = readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json")
   let data = file.parseJson()
@@ -152,9 +155,6 @@ proc genEnums(output: var string) =
       var dataName = data["name"].getStr()
       let dataValue = data["calc_value"].getInt()
       dataName = dataName.replace("__", "_")
-      if dataName.contains("NamedKey") or dataName == "ImGuiKey_KeysData_SIZE":
-        tableNamedKeys[dataName] = dataValue
-        continue
       dataName = dataName.split("_", 1)[1]
       if dataName.endsWith("_"):
         dataName = dataName[0 ..< dataName.len - 1]
@@ -164,7 +164,8 @@ proc genEnums(output: var string) =
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
         continue
       if table.hasKey(dataValue):
-        echo "Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue} skipping...".fmt
+        echo "Notice: Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue}, use constant {enumName}_{dataName} to access it".fmt
+        tableNamedKeys[enumName & "_" & dataName] = dataValue
         continue
       table[dataValue] = dataName
 
@@ -177,7 +178,7 @@ proc genEnums(output: var string) =
       output.add("    {v} = {k}\n".fmt)
 
   if tableNamedKeys.len > 0:
-    output.add("\n")
+    output.add("\n# Duplicate enums as consts\n")
     for k, v in tableNamedKeys.pairs:
       output.add("const {k}* = {v}\n".fmt)
 
