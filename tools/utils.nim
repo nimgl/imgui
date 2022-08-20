@@ -29,8 +29,6 @@ proc currentSourceDir(): string {.compileTime.} =
   result = result[0 ..< result.rfind("/")]
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
-when defined(linux):
-  {.passL: "-Xlinker -rpath .".}
 
 when not defined(cpp) or defined(cimguiDLL):
   when defined(windows):
@@ -39,6 +37,8 @@ when not defined(cpp) or defined(cimguiDLL):
     const imgui_dll* = "cimgui.dylib"
   else:
     const imgui_dll* = "cimgui.so"
+    when defined(linux):
+      {.passL: "-Xlinker -rpath .".}
   {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
 else:
@@ -55,7 +55,7 @@ const notDefinedStructs* = """
   ImVector*[T] = object # Should I importc a generic?
     size* {.importc: "Size".}: int32
     capacity* {.importc: "Capacity".}: int32
-    data* {.importc: "Data".}: UncheckedArray[T]
+    data* {.importc: "Data".}: ptr UncheckedArray[T]
   ImGuiStyleModBackup* {.union.} = object
     backup_int* {.importc: "BackupInt".}: int32 # Breaking naming convetion to denote "low level"
     backup_float* {.importc: "BackupFloat".}: float32

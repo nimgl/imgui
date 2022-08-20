@@ -10,7 +10,7 @@ proc main() =
   glfwWindowHint(GLFWContextVersionMinor, 1)
   glfwWindowHint(GLFWOpenglForwardCompat, GLFW_TRUE)
   glfwWindowHint(GLFWOpenglProfile, GLFW_OPENGL_CORE_PROFILE)
-  glfwWindowHint(GLFWResizable, GLFW_FALSE)
+  glfwWindowHint(GLFWResizable, GLFW_TRUE)
 
   var w: GLFWWindow = glfwCreateWindow(1280, 720)
   if w == nil:

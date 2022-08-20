@@ -8,7 +8,7 @@ igDebugCheckVersionAndDataLayout(version, ImGuiIO.sizeof().uint32,
                                  ImDrawIdx.sizeof().uint32).assert()
 
 echo "CreateContext() - {version}".fmt
-igCreateContext(nil)
+let context = igCreateContext()
 let io = igGetIO()
 
 var text_pixels: ptr uint8 = nil
@@ -35,4 +35,4 @@ for i in 0 ..< 20:
   igRender()
 
 echo "DestroyContext()"
-igDestroyContext(nil)
+context.igDestroyContext()
