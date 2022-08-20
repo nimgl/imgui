@@ -285,6 +285,14 @@ type
     AllowWhenOverlapped = 256
     RectOnly = 416
     AllowWhenDisabled = 512
+  ImGuiInputEventType* {.pure, size: int32.sizeof.} = enum
+    None = 0
+    MousePos = 1
+    MouseWheel = 2
+    MouseButton = 3
+    Key = 4
+    Char = 5
+    Focus = 6
   ImGuiInputReadMode* {.pure, size: int32.sizeof.} = enum
     Down = 0
     Pressed = 1
@@ -297,8 +305,8 @@ type
     Mouse = 1
     Keyboard = 2
     Gamepad = 3
-    Nav = 4
-    Clipboard = 5
+    Clipboard = 4
+    Nav = 5
   ImGuiInputTextFlagsPrivate* {.pure, size: int32.sizeof.} = enum
     Multiline = 67108864
     NoMarkEdited = 134217728
@@ -353,29 +361,146 @@ type
     Shift = 2
     Alt = 4
     Super = 8
+  ImGuiKeyPrivate* {.pure, size: int32.sizeof.} = enum
+    LegacyNativeKey_BEGIN = 0
+    LegacyNativeKey_END = 512
+    Gamepad_BEGIN = 617
+    Gamepad_END = 641
   ImGuiKey* {.pure, size: int32.sizeof.} = enum
-    Tab = 0
-    LeftArrow = 1
-    RightArrow = 2
-    UpArrow = 3
-    DownArrow = 4
-    PageUp = 5
-    PageDown = 6
-    Home = 7
-    End = 8
-    Insert = 9
-    Delete = 10
-    Backspace = 11
-    Space = 12
-    Enter = 13
-    Escape = 14
-    KeyPadEnter = 15
-    A = 16
-    C = 17
-    V = 18
-    X = 19
-    Y = 20
-    Z = 21
+    None = 0
+    Tab = 512
+    LeftArrow = 513
+    RightArrow = 514
+    UpArrow = 515
+    DownArrow = 516
+    PageUp = 517
+    PageDown = 518
+    Home = 519
+    End = 520
+    Insert = 521
+    Delete = 522
+    Backspace = 523
+    Space = 524
+    Enter = 525
+    Escape = 526
+    LeftCtrl = 527
+    LeftShift = 528
+    LeftAlt = 529
+    LeftSuper = 530
+    RightCtrl = 531
+    RightShift = 532
+    RightAlt = 533
+    RightSuper = 534
+    Menu = 535
+    `"0"` = 536
+    `"1"` = 537
+    `"2"` = 538
+    `"3"` = 539
+    `"4"` = 540
+    `"5"` = 541
+    `"6"` = 542
+    `"7"` = 543
+    `"8"` = 544
+    `"9"` = 545
+    A = 546
+    B = 547
+    C = 548
+    D = 549
+    E = 550
+    F = 551
+    G = 552
+    H = 553
+    I = 554
+    J = 555
+    K = 556
+    L = 557
+    M = 558
+    N = 559
+    O = 560
+    P = 561
+    Q = 562
+    R = 563
+    S = 564
+    T = 565
+    U = 566
+    V = 567
+    W = 568
+    X = 569
+    Y = 570
+    Z = 571
+    F1 = 572
+    F2 = 573
+    F3 = 574
+    F4 = 575
+    F5 = 576
+    F6 = 577
+    F7 = 578
+    F8 = 579
+    F9 = 580
+    F10 = 581
+    F11 = 582
+    F12 = 583
+    Apostrophe = 584
+    Comma = 585
+    Minus = 586
+    Period = 587
+    Slash = 588
+    Semicolon = 589
+    Equal = 590
+    LeftBracket = 591
+    Backslash = 592
+    RightBracket = 593
+    GraveAccent = 594
+    CapsLock = 595
+    ScrollLock = 596
+    NumLock = 597
+    PrintScreen = 598
+    Pause = 599
+    Keypad0 = 600
+    Keypad1 = 601
+    Keypad2 = 602
+    Keypad3 = 603
+    Keypad4 = 604
+    Keypad5 = 605
+    Keypad6 = 606
+    Keypad7 = 607
+    Keypad8 = 608
+    Keypad9 = 609
+    KeypadDecimal = 610
+    KeypadDivide = 611
+    KeypadMultiply = 612
+    KeypadSubtract = 613
+    KeypadAdd = 614
+    KeypadEnter = 615
+    KeypadEqual = 616
+    GamepadStart = 617
+    GamepadBack = 618
+    GamepadFaceUp = 619
+    GamepadFaceDown = 620
+    GamepadFaceLeft = 621
+    GamepadFaceRight = 622
+    GamepadDpadUp = 623
+    GamepadDpadDown = 624
+    GamepadDpadLeft = 625
+    GamepadDpadRight = 626
+    GamepadL1 = 627
+    GamepadR1 = 628
+    GamepadL2 = 629
+    GamepadR2 = 630
+    GamepadL3 = 631
+    GamepadR3 = 632
+    GamepadLStickUp = 633
+    GamepadLStickDown = 634
+    GamepadLStickLeft = 635
+    GamepadLStickRight = 636
+    GamepadRStickUp = 637
+    GamepadRStickDown = 638
+    GamepadRStickLeft = 639
+    GamepadRStickRight = 640
+    ModCtrl = 641
+    ModShift = 642
+    ModAlt = 643
+    ModSuper = 644
   ImGuiLayoutType* {.pure, size: int32.sizeof.} = enum
     Horizontal = 0
     Vertical = 1
@@ -725,6 +850,11 @@ type
     Modal = 134217728
     ChildMenu = 268435456
 
+const ImGuiKey_NamedKey_END* = 645
+const ImGuiKey_KeysData_SIZE* = 645
+const ImGuiKey_NamedKey_COUNT* = 133
+const ImGuiKey_NamedKey_BEGIN* = 512
+
 # TypeDefs
 type
   ImDrawCallback* = proc(parent_list: ptr ImDrawList, cmd: ptr ImDrawCmd): void {.cdecl, varargs.}
@@ -769,6 +899,18 @@ type
   ImPair* {.importc: "Pair", imgui_header.} = object
     key* {.importc: "key".}: ImGuiID
     data*: ImPairData
+  ImGuiInputEventData* {.union.} = object
+    mousePos*: ImGuiInputEventMousePos
+    mouseWheel*: ImGuiInputEventMouseWheel
+    mouseButton*: ImGuiInputEventMouseButton
+    key*: ImGuiInputEventKey
+    text*: ImGuiInputEventText
+    appFocused*: ImGuiInputEventAppFocused
+  ImGuiInputEvent* {.importc: "ImGuiInputEvent", imgui_header.} = object
+    `type`* {.importc: "`type`".}: ImGuiInputEventType
+    source* {.importc: "Source".}: ImGuiInputSource
+    data*: ImGuiInputEventData
+    addedByTestEngine* {.importc: "AddedByTestEngine".}: bool
 
   # Undefined data types in cimgui
 
@@ -945,6 +1087,8 @@ type
     initialized* {.importc: "Initialized".}: bool
     fontAtlasOwnedByContext* {.importc: "FontAtlasOwnedByContext".}: bool
     io* {.importc: "IO".}: ImGuiIO
+    inputEventsQueue* {.importc: "InputEventsQueue".}: ImVector[ImGuiInputEvent]
+    inputEventsTrail* {.importc: "InputEventsTrail".}: ImVector[ImGuiInputEvent]
     style* {.importc: "Style".}: ImGuiStyle
     font* {.importc: "Font".}: ptr ImFont
     fontSize* {.importc: "FontSize".}: float32
@@ -995,7 +1139,7 @@ type
     activeIdUsingMouseWheel* {.importc: "ActiveIdUsingMouseWheel".}: bool
     activeIdUsingNavDirMask* {.importc: "ActiveIdUsingNavDirMask".}: uint32
     activeIdUsingNavInputMask* {.importc: "ActiveIdUsingNavInputMask".}: uint32
-    activeIdUsingKeyInputMask* {.importc: "ActiveIdUsingKeyInputMask".}: uint64
+    activeIdUsingKeyInputMask* {.importc: "ActiveIdUsingKeyInputMask".}: uint32
     activeIdClickOffset* {.importc: "ActiveIdClickOffset".}: ImVec2
     activeIdWindow* {.importc: "ActiveIdWindow".}: ptr ImGuiWindow
     activeIdSource* {.importc: "ActiveIdSource".}: ImGuiInputSource
@@ -1121,8 +1265,8 @@ type
     tooltipSlowDelay* {.importc: "TooltipSlowDelay".}: float32
     clipboardHandlerData* {.importc: "ClipboardHandlerData".}: ImVector[int8]
     menusIdSubmittedThisFrame* {.importc: "MenusIdSubmittedThisFrame".}: ImVector[ImGuiID]
-    platformImePos* {.importc: "PlatformImePos".}: ImVec2
-    platformImeLastPos* {.importc: "PlatformImeLastPos".}: ImVec2
+    platformImeData* {.importc: "PlatformImeData".}: ImGuiPlatformImeData
+    platformImeDataPrev* {.importc: "PlatformImeDataPrev".}: ImGuiPlatformImeData
     platformLocaleDecimalPoint* {.importc: "PlatformLocaleDecimalPoint".}: int8
     settingsLoaded* {.importc: "SettingsLoaded".}: bool
     settingsDirtyTimer* {.importc: "SettingsDirtyTimer".}: float32
@@ -1191,7 +1335,6 @@ type
     mouseDoubleClickTime* {.importc: "MouseDoubleClickTime".}: float32
     mouseDoubleClickMaxDist* {.importc: "MouseDoubleClickMaxDist".}: float32
     mouseDragThreshold* {.importc: "MouseDragThreshold".}: float32
-    keyMap* {.importc: "KeyMap".}: array[22, int32]
     keyRepeatDelay* {.importc: "KeyRepeatDelay".}: float32
     keyRepeatRate* {.importc: "KeyRepeatRate".}: float32
     userData* {.importc: "UserData".}: pointer
@@ -1202,6 +1345,7 @@ type
     displayFramebufferScale* {.importc: "DisplayFramebufferScale".}: ImVec2
     mouseDrawCursor* {.importc: "MouseDrawCursor".}: bool
     configMacOSXBehaviors* {.importc: "ConfigMacOSXBehaviors".}: bool
+    configInputTrickleEventQueue* {.importc: "ConfigInputTrickleEventQueue".}: bool
     configInputTextCursorBlink* {.importc: "ConfigInputTextCursorBlink".}: bool
     configDragClickToInputText* {.importc: "ConfigDragClickToInputText".}: bool
     configWindowsResizeFromEdges* {.importc: "ConfigWindowsResizeFromEdges".}: bool
@@ -1215,18 +1359,8 @@ type
     getClipboardTextFn* {.importc: "GetClipboardTextFn".}: proc(user_data: pointer): cstring {.cdecl, varargs.}
     setClipboardTextFn* {.importc: "SetClipboardTextFn".}: proc(user_data: pointer, text: cstring): void {.cdecl, varargs.}
     clipboardUserData* {.importc: "ClipboardUserData".}: pointer
-    imeSetInputScreenPosFn* {.importc: "ImeSetInputScreenPosFn".}: proc(x: int32, y: int32): void {.cdecl, varargs.}
-    imeWindowHandle* {.importc: "ImeWindowHandle".}: pointer
-    mousePos* {.importc: "MousePos".}: ImVec2
-    mouseDown* {.importc: "MouseDown".}: array[5, bool]
-    mouseWheel* {.importc: "MouseWheel".}: float32
-    mouseWheelH* {.importc: "MouseWheelH".}: float32
-    keyCtrl* {.importc: "KeyCtrl".}: bool
-    keyShift* {.importc: "KeyShift".}: bool
-    keyAlt* {.importc: "KeyAlt".}: bool
-    keySuper* {.importc: "KeySuper".}: bool
-    keysDown* {.importc: "KeysDown".}: array[512, bool]
-    navInputs* {.importc: "NavInputs".}: array[20, float32]
+    setPlatformImeDataFn* {.importc: "SetPlatformImeDataFn".}: proc(viewport: ptr ImGuiViewport, data: ptr ImGuiPlatformImeData): void {.cdecl, varargs.}
+    unusedPadding* {.importc: "_UnusedPadding".}: pointer
     wantCaptureMouse* {.importc: "WantCaptureMouse".}: bool
     wantCaptureKeyboard* {.importc: "WantCaptureKeyboard".}: bool
     wantTextInput* {.importc: "WantTextInput".}: bool
@@ -1241,9 +1375,21 @@ type
     metricsActiveWindows* {.importc: "MetricsActiveWindows".}: int32
     metricsActiveAllocations* {.importc: "MetricsActiveAllocations".}: int32
     mouseDelta* {.importc: "MouseDelta".}: ImVec2
-    wantCaptureMouseUnlessPopupClose* {.importc: "WantCaptureMouseUnlessPopupClose".}: bool
+    keyMap* {.importc: "KeyMap".}: array[645, int32]
+    keysDown* {.importc: "KeysDown".}: array[512, bool]
+    mousePos* {.importc: "MousePos".}: ImVec2
+    mouseDown* {.importc: "MouseDown".}: array[5, bool]
+    mouseWheel* {.importc: "MouseWheel".}: float32
+    mouseWheelH* {.importc: "MouseWheelH".}: float32
+    keyCtrl* {.importc: "KeyCtrl".}: bool
+    keyShift* {.importc: "KeyShift".}: bool
+    keyAlt* {.importc: "KeyAlt".}: bool
+    keySuper* {.importc: "KeySuper".}: bool
+    navInputs* {.importc: "NavInputs".}: array[20, float32]
     keyMods* {.importc: "KeyMods".}: ImGuiKeyModFlags
     keyModsPrev* {.importc: "KeyModsPrev".}: ImGuiKeyModFlags
+    keysData* {.importc: "KeysData".}: array[ImGuiKey_KeysData_SIZE, ImGuiKeyData]
+    wantCaptureMouseUnlessPopupClose* {.importc: "WantCaptureMouseUnlessPopupClose".}: bool
     mousePosPrev* {.importc: "MousePosPrev".}: ImVec2
     mouseClickedPos* {.importc: "MouseClickedPos".}: array[5, ImVec2]
     mouseClickedTime* {.importc: "MouseClickedTime".}: array[5, float64]
@@ -1256,16 +1402,32 @@ type
     mouseDownOwnedUnlessPopupClose* {.importc: "MouseDownOwnedUnlessPopupClose".}: array[5, bool]
     mouseDownDuration* {.importc: "MouseDownDuration".}: array[5, float32]
     mouseDownDurationPrev* {.importc: "MouseDownDurationPrev".}: array[5, float32]
-    mouseDragMaxDistanceAbs* {.importc: "MouseDragMaxDistanceAbs".}: array[5, ImVec2]
     mouseDragMaxDistanceSqr* {.importc: "MouseDragMaxDistanceSqr".}: array[5, float32]
-    keysDownDuration* {.importc: "KeysDownDuration".}: array[512, float32]
-    keysDownDurationPrev* {.importc: "KeysDownDurationPrev".}: array[512, float32]
     navInputsDownDuration* {.importc: "NavInputsDownDuration".}: array[20, float32]
     navInputsDownDurationPrev* {.importc: "NavInputsDownDurationPrev".}: array[20, float32]
     penPressure* {.importc: "PenPressure".}: float32
     appFocusLost* {.importc: "AppFocusLost".}: bool
+    backendUsingLegacyKeyArrays* {.importc: "BackendUsingLegacyKeyArrays".}: int8
+    backendUsingLegacyNavInputArray* {.importc: "BackendUsingLegacyNavInputArray".}: bool
     inputQueueSurrogate* {.importc: "InputQueueSurrogate".}: ImWchar16
     inputQueueCharacters* {.importc: "InputQueueCharacters".}: ImVector[ImWchar]
+  ImGuiInputEventAppFocused* {.importc: "ImGuiInputEventAppFocused", imgui_header.} = object
+    focused* {.importc: "Focused".}: bool
+  ImGuiInputEventKey* {.importc: "ImGuiInputEventKey", imgui_header.} = object
+    key* {.importc: "Key".}: ImGuiKey
+    down* {.importc: "Down".}: bool
+    analogValue* {.importc: "AnalogValue".}: float32
+  ImGuiInputEventMouseButton* {.importc: "ImGuiInputEventMouseButton", imgui_header.} = object
+    button* {.importc: "Button".}: int32
+    down* {.importc: "Down".}: bool
+  ImGuiInputEventMousePos* {.importc: "ImGuiInputEventMousePos", imgui_header.} = object
+    posX* {.importc: "PosX".}: float32
+    posY* {.importc: "PosY".}: float32
+  ImGuiInputEventMouseWheel* {.importc: "ImGuiInputEventMouseWheel", imgui_header.} = object
+    wheelX* {.importc: "WheelX".}: float32
+    wheelY* {.importc: "WheelY".}: float32
+  ImGuiInputEventText* {.importc: "ImGuiInputEventText", imgui_header.} = object
+    char* {.importc: "Char".}: uint32
   ImGuiInputTextCallbackData* {.importc: "ImGuiInputTextCallbackData", imgui_header.} = object
     eventFlag* {.importc: "EventFlag".}: ImGuiInputTextFlags
     flags* {.importc: "Flags".}: ImGuiInputTextFlags
@@ -1295,6 +1457,11 @@ type
     selectedAllMouseLock* {.importc: "SelectedAllMouseLock".}: bool
     edited* {.importc: "Edited".}: bool
     flags* {.importc: "Flags".}: ImGuiInputTextFlags
+  ImGuiKeyData* {.importc: "ImGuiKeyData", imgui_header.} = object
+    down* {.importc: "Down".}: bool
+    downDuration* {.importc: "DownDuration".}: float32
+    downDurationPrev* {.importc: "DownDurationPrev".}: float32
+    analogValue* {.importc: "AnalogValue".}: float32
   ImGuiLastItemData* {.importc: "ImGuiLastItemData", imgui_header.} = object
     id* {.importc: "ID".}: ImGuiID
     inFlags* {.importc: "InFlags".}: ImGuiItemFlags
@@ -1404,6 +1571,10 @@ type
     dataType* {.importc: "DataType".}: array[32+1, int8]
     preview* {.importc: "Preview".}: bool
     delivery* {.importc: "Delivery".}: bool
+  ImGuiPlatformImeData* {.importc: "ImGuiPlatformImeData", imgui_header.} = object
+    wantVisible* {.importc: "WantVisible".}: bool
+    inputPos* {.importc: "InputPos".}: ImVec2
+    inputLineHeight* {.importc: "InputLineHeight".}: float32
   ImGuiPopupData* {.importc: "ImGuiPopupData", imgui_header.} = object
     popupId* {.importc: "PopupId".}: ImGuiID
     window* {.importc: "Window".}: ptr ImGuiWindow
@@ -1743,6 +1914,7 @@ type
     size* {.importc: "Size".}: ImVec2
     workPos* {.importc: "WorkPos".}: ImVec2
     workSize* {.importc: "WorkSize".}: ImVec2
+    platformHandleRaw* {.importc: "PlatformHandleRaw".}: pointer
   ImGuiViewportP* {.importc: "ImGuiViewportP", imgui_header.} = object
     imGuiViewport* {.importc: "_ImGuiViewport".}: ImGuiViewport
     drawListsLastFrame* {.importc: "DrawListsLastFrame".}: array[2, int32]
@@ -2133,10 +2305,18 @@ proc addFocusEvent*(self: ptr ImGuiIO, focused: bool): void {.importc: "ImGuiIO_
 proc addInputCharacter*(self: ptr ImGuiIO, c: uint32): void {.importc: "ImGuiIO_AddInputCharacter".}
 proc addInputCharacterUTF16*(self: ptr ImGuiIO, c: ImWchar16): void {.importc: "ImGuiIO_AddInputCharacterUTF16".}
 proc addInputCharactersUTF8*(self: ptr ImGuiIO, str: cstring): void {.importc: "ImGuiIO_AddInputCharactersUTF8".}
+proc addKeyAnalogEvent*(self: ptr ImGuiIO, key: ImGuiKey, down: bool, v: float32): void {.importc: "ImGuiIO_AddKeyAnalogEvent".}
+proc addKeyEvent*(self: ptr ImGuiIO, key: ImGuiKey, down: bool): void {.importc: "ImGuiIO_AddKeyEvent".}
+proc addMouseButtonEvent*(self: ptr ImGuiIO, button: int32, down: bool): void {.importc: "ImGuiIO_AddMouseButtonEvent".}
+proc addMousePosEvent*(self: ptr ImGuiIO, x: float32, y: float32): void {.importc: "ImGuiIO_AddMousePosEvent".}
+proc addMouseWheelEvent*(self: ptr ImGuiIO, wh_x: float32, wh_y: float32): void {.importc: "ImGuiIO_AddMouseWheelEvent".}
 proc clearInputCharacters*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_ClearInputCharacters".}
 proc clearInputKeys*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_ClearInputKeys".}
 proc newImGuiIO*(): void {.importc: "ImGuiIO_ImGuiIO".}
+proc setKeyEventNativeData*(self: ptr ImGuiIO, key: ImGuiKey, native_keycode: int32, native_scancode: int32, native_legacy_index: int32 = -1): void {.importc: "ImGuiIO_SetKeyEventNativeData".}
 proc destroy*(self: ptr ImGuiIO): void {.importc: "ImGuiIO_destroy".}
+proc newImGuiInputEvent*(): void {.importc: "ImGuiInputEvent_ImGuiInputEvent".}
+proc destroy*(self: ptr ImGuiInputEvent): void {.importc: "ImGuiInputEvent_destroy".}
 proc clearSelection*(self: ptr ImGuiInputTextCallbackData): void {.importc: "ImGuiInputTextCallbackData_ClearSelection".}
 proc deleteChars*(self: ptr ImGuiInputTextCallbackData, pos: int32, bytes_count: int32): void {.importc: "ImGuiInputTextCallbackData_DeleteChars".}
 proc hasSelection*(self: ptr ImGuiInputTextCallbackData): bool {.importc: "ImGuiInputTextCallbackData_HasSelection".}
@@ -2200,6 +2380,8 @@ proc isDataType*(self: ptr ImGuiPayload, `type`: cstring): bool {.importc: "ImGu
 proc isDelivery*(self: ptr ImGuiPayload): bool {.importc: "ImGuiPayload_IsDelivery".}
 proc isPreview*(self: ptr ImGuiPayload): bool {.importc: "ImGuiPayload_IsPreview".}
 proc destroy*(self: ptr ImGuiPayload): void {.importc: "ImGuiPayload_destroy".}
+proc newImGuiPlatformImeData*(): void {.importc: "ImGuiPlatformImeData_ImGuiPlatformImeData".}
+proc destroy*(self: ptr ImGuiPlatformImeData): void {.importc: "ImGuiPlatformImeData_destroy".}
 proc newImGuiPopupData*(): void {.importc: "ImGuiPopupData_ImGuiPopupData".}
 proc destroy*(self: ptr ImGuiPopupData): void {.importc: "ImGuiPopupData_destroy".}
 proc newImGuiPtrOrIndex*(`ptr`: pointer): void {.importc: "ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr".}
@@ -2422,7 +2604,7 @@ proc resize*[T](self: ptr ImVector, new_size: int32, v: T): void {.importc: "ImV
 proc shrink*(self: ptr ImVector, new_size: int32): void {.importc: "ImVector_shrink".}
 proc size*(self: ptr ImVector): int32 {.importc: "ImVector_size".}
 proc size_in_bytes*(self: ptr ImVector): int32 {.importc: "ImVector_size_in_bytes".}
-proc swap*(self: ptr ImVector, rhs: ptr ImVector): void {.importc: "ImVector_swap".}
+proc swap*(self: ptr ImVector, rhs: ptr ImVector[T]): void {.importc: "ImVector_swap".}
 proc igAcceptDragDropPayload*(`type`: cstring, flags: ImGuiDragDropFlags = 0.ImGuiDragDropFlags): ptr ImGuiPayload {.importc: "igAcceptDragDropPayload".}
 proc igActivateItem*(id: ImGuiID): void {.importc: "igActivateItem".}
 proc igAddContextHook*(context: ptr ImGuiContext, hook: ptr ImGuiContextHook): ImGuiID {.importc: "igAddContextHook".}
@@ -2515,8 +2697,8 @@ proc igCombo*(label: cstring, current_item: ptr int32, items_separated_by_zeros:
 proc igCombo*(label: cstring, current_item: ptr int32, items_getter: proc(data: pointer, idx: int32, out_text: ptr cstring): bool {.cdecl, varargs.}, data: pointer, items_count: int32, popup_max_height_in_items: int32 = -1): bool {.importc: "igCombo_FnBoolPtr".}
 proc igCreateContext*(shared_font_atlas: ptr ImFontAtlas = nil): ptr ImGuiContext {.importc: "igCreateContext".}
 proc igCreateNewWindowSettings*(name: cstring): ptr ImGuiWindowSettings {.importc: "igCreateNewWindowSettings".}
+proc igDataTypeApplyFromText*(buf: cstring, data_type: ImGuiDataType, p_data: pointer, format: cstring): bool {.importc: "igDataTypeApplyFromText".}
 proc igDataTypeApplyOp*(data_type: ImGuiDataType, op: int32, output: pointer, arg_1: pointer, arg_2: pointer): void {.importc: "igDataTypeApplyOp".}
-proc igDataTypeApplyOpFromText*(buf: cstring, initial_value_buf: cstring, data_type: ImGuiDataType, p_data: pointer, format: cstring): bool {.importc: "igDataTypeApplyOpFromText".}
 proc igDataTypeClamp*(data_type: ImGuiDataType, p_data: pointer, p_min: pointer, p_max: pointer): bool {.importc: "igDataTypeClamp".}
 proc igDataTypeCompare*(data_type: ImGuiDataType, arg_1: pointer, arg_2: pointer): int32 {.importc: "igDataTypeCompare".}
 proc igDataTypeFormatString*(buf: cstring, buf_size: int32, data_type: ImGuiDataType, p_data: pointer, format: cstring): int32 {.importc: "igDataTypeFormatString".}
@@ -2648,8 +2830,10 @@ proc igGetItemRectMaxNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectMa
 proc igGetItemRectMinNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectMin".}
 proc igGetItemRectSizeNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetItemRectSize".}
 proc igGetItemStatusFlags*(): ImGuiItemStatusFlags {.importc: "igGetItemStatusFlags".}
-proc igGetKeyIndex*(imgui_key: ImGuiKey): int32 {.importc: "igGetKeyIndex".}
-proc igGetKeyPressedAmount*(key_index: int32, repeat_delay: float32, rate: float32): int32 {.importc: "igGetKeyPressedAmount".}
+proc igGetKeyData*(key: ImGuiKey): ptr ImGuiKeyData {.importc: "igGetKeyData".}
+proc igGetKeyIndex*(key: ImGuiKey): int32 {.importc: "igGetKeyIndex".}
+proc igGetKeyName*(key: ImGuiKey): cstring {.importc: "igGetKeyName".}
+proc igGetKeyPressedAmount*(key: ImGuiKey, repeat_delay: float32, rate: float32): int32 {.importc: "igGetKeyPressedAmount".}
 proc igGetMainViewport*(): ptr ImGuiViewport {.importc: "igGetMainViewport".}
 proc igGetMergedKeyModFlags*(): ImGuiKeyModFlags {.importc: "igGetMergedKeyModFlags".}
 proc igGetMouseClickedCount*(button: ImGuiMouseButton): int32 {.importc: "igGetMouseClickedCount".}
@@ -2659,6 +2843,7 @@ proc igGetMousePosNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetMousePos".}
 proc igGetMousePosOnOpeningCurrentPopupNonUDT*(pOut: ptr ImVec2): void {.importc: "igGetMousePosOnOpeningCurrentPopup".}
 proc igGetNavInputAmount*(n: ImGuiNavInput, mode: ImGuiInputReadMode): float32 {.importc: "igGetNavInputAmount".}
 proc igGetNavInputAmount2dNonUDT*(pOut: ptr ImVec2, dir_sources: ImGuiNavDirSourceFlags, mode: ImGuiInputReadMode, slow_factor: float32 = 0.0f, fast_factor: float32 = 0.0f): void {.importc: "igGetNavInputAmount2d".}
+proc igGetNavInputName*(n: ImGuiNavInput): cstring {.importc: "igGetNavInputName".}
 proc igGetPopupAllowedExtentRectNonUDT*(pOut: ptr ImRect, window: ptr ImGuiWindow): void {.importc: "igGetPopupAllowedExtentRect".}
 proc igGetScrollMaxX*(): float32 {.importc: "igGetScrollMaxX".}
 proc igGetScrollMaxY*(): float32 {.importc: "igGetScrollMaxY".}
@@ -2710,7 +2895,8 @@ proc igImFileRead*(data: pointer, size: uint64, count: uint64, file: ImFileHandl
 proc igImFileWrite*(data: pointer, size: uint64, count: uint64, file: ImFileHandle): uint64 {.importc: "igImFileWrite".}
 proc igImFloor*(f: float32): float32 {.importc: "igImFloor_Float".}
 proc igImFloorNonUDT*(pOut: ptr ImVec2, v: ImVec2): void {.importc: "igImFloor_Vec2".}
-proc igImFloorSigned*(f: float32): float32 {.importc: "igImFloorSigned".}
+proc igImFloorSigned*(f: float32): float32 {.importc: "igImFloorSigned_Float".}
+proc igImFloorSignedNonUDT*(pOut: ptr ImVec2, v: ImVec2): void {.importc: "igImFloorSigned_Vec2".}
 proc igImFontAtlasBuildFinish*(atlas: ptr ImFontAtlas): void {.importc: "igImFontAtlasBuildFinish".}
 proc igImFontAtlasBuildInit*(atlas: ptr ImFontAtlas): void {.importc: "igImFontAtlasBuildInit".}
 proc igImFontAtlasBuildMultiplyCalcLookupTable*(out_table: uint8, in_multiply_factor: float32): void {.importc: "igImFontAtlasBuildMultiplyCalcLookupTable".}
@@ -2809,6 +2995,7 @@ proc igIsAnyItemHovered*(): bool {.importc: "igIsAnyItemHovered".}
 proc igIsAnyMouseDown*(): bool {.importc: "igIsAnyMouseDown".}
 proc igIsClippedEx*(bb: ImRect, id: ImGuiID): bool {.importc: "igIsClippedEx".}
 proc igIsDragDropPayloadBeingAccepted*(): bool {.importc: "igIsDragDropPayloadBeingAccepted".}
+proc igIsGamepadKey*(key: ImGuiKey): bool {.importc: "igIsGamepadKey".}
 proc igIsItemActivated*(): bool {.importc: "igIsItemActivated".}
 proc igIsItemActive*(): bool {.importc: "igIsItemActive".}
 proc igIsItemClicked*(mouse_button: ImGuiMouseButton = 0.ImGuiMouseButton): bool {.importc: "igIsItemClicked".}
@@ -2820,10 +3007,11 @@ proc igIsItemHovered*(flags: ImGuiHoveredFlags = 0.ImGuiHoveredFlags): bool {.im
 proc igIsItemToggledOpen*(): bool {.importc: "igIsItemToggledOpen".}
 proc igIsItemToggledSelection*(): bool {.importc: "igIsItemToggledSelection".}
 proc igIsItemVisible*(): bool {.importc: "igIsItemVisible".}
-proc igIsKeyDown*(user_key_index: int32): bool {.importc: "igIsKeyDown".}
-proc igIsKeyPressed*(user_key_index: int32, repeat: bool = true): bool {.importc: "igIsKeyPressed".}
+proc igIsKeyDown*(key: ImGuiKey): bool {.importc: "igIsKeyDown".}
+proc igIsKeyPressed*(key: ImGuiKey, repeat: bool = true): bool {.importc: "igIsKeyPressed".}
 proc igIsKeyPressedMap*(key: ImGuiKey, repeat: bool = true): bool {.importc: "igIsKeyPressedMap".}
-proc igIsKeyReleased*(user_key_index: int32): bool {.importc: "igIsKeyReleased".}
+proc igIsKeyReleased*(key: ImGuiKey): bool {.importc: "igIsKeyReleased".}
+proc igIsLegacyKey*(key: ImGuiKey): bool {.importc: "igIsLegacyKey".}
 proc igIsMouseClicked*(button: ImGuiMouseButton, repeat: bool = false): bool {.importc: "igIsMouseClicked".}
 proc igIsMouseDoubleClicked*(button: ImGuiMouseButton): bool {.importc: "igIsMouseDoubleClicked".}
 proc igIsMouseDown*(button: ImGuiMouseButton): bool {.importc: "igIsMouseDown".}
@@ -2832,6 +3020,7 @@ proc igIsMouseDragging*(button: ImGuiMouseButton, lock_threshold: float32 = -1.0
 proc igIsMouseHoveringRect*(r_min: ImVec2, r_max: ImVec2, clip: bool = true): bool {.importc: "igIsMouseHoveringRect".}
 proc igIsMousePosValid*(mouse_pos: ptr ImVec2 = nil): bool {.importc: "igIsMousePosValid".}
 proc igIsMouseReleased*(button: ImGuiMouseButton): bool {.importc: "igIsMouseReleased".}
+proc igIsNamedKey*(key: ImGuiKey): bool {.importc: "igIsNamedKey".}
 proc igIsNavInputDown*(n: ImGuiNavInput): bool {.importc: "igIsNavInputDown".}
 proc igIsNavInputTest*(n: ImGuiNavInput, rm: ImGuiInputReadMode): bool {.importc: "igIsNavInputTest".}
 proc igIsPopupOpen*(str_id: cstring, flags: ImGuiPopupFlags = 0.ImGuiPopupFlags): bool {.importc: "igIsPopupOpen_Str".}
@@ -2965,6 +3154,7 @@ proc igSelectable*(label: cstring, p_selected: ptr bool, flags: ImGuiSelectableF
 proc igSeparator*(): void {.importc: "igSeparator".}
 proc igSeparatorEx*(flags: ImGuiSeparatorFlags): void {.importc: "igSeparatorEx".}
 proc igSetActiveID*(id: ImGuiID, window: ptr ImGuiWindow): void {.importc: "igSetActiveID".}
+proc igSetActiveIdUsingKey*(key: ImGuiKey): void {.importc: "igSetActiveIdUsingKey".}
 proc igSetActiveIdUsingNavAndKeys*(): void {.importc: "igSetActiveIdUsingNavAndKeys".}
 proc igSetAllocatorFunctions*(alloc_func: ImGuiMemAllocFunc, free_func: ImGuiMemFreeFunc, user_data: pointer = nil): void {.importc: "igSetAllocatorFunctions".}
 proc igSetClipboardText*(text: cstring): void {.importc: "igSetClipboardText".}
@@ -3157,6 +3347,7 @@ proc igTreePush*(ptr_id: pointer = nil): void {.importc: "igTreePush_Ptr".}
 proc igTreePushOverrideID*(id: ImGuiID): void {.importc: "igTreePushOverrideID".}
 proc igUnindent*(indent_w: float32 = 0.0f): void {.importc: "igUnindent".}
 proc igUpdateHoveredWindowAndCaptureFlags*(): void {.importc: "igUpdateHoveredWindowAndCaptureFlags".}
+proc igUpdateInputEvents*(trickle_fast_inputs: bool): void {.importc: "igUpdateInputEvents".}
 proc igUpdateMouseMovingWindowEndFrame*(): void {.importc: "igUpdateMouseMovingWindowEndFrame".}
 proc igUpdateMouseMovingWindowNewFrame*(): void {.importc: "igUpdateMouseMovingWindowNewFrame".}
 proc igUpdateWindowParentAndRootLinks*(window: ptr ImGuiWindow, flags: ImGuiWindowFlags, parent_window: ptr ImGuiWindow): void {.importc: "igUpdateWindowParentAndRootLinks".}
