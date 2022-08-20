@@ -1,7 +1,7 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
 import strutils, json, strformat, tables,
-       algorithm, sets, ./utils
+       algorithm, sets, re, ./utils
 
 var enums: HashSet[string]
 var enumsCount: Table[string, int]
@@ -24,16 +24,22 @@ proc translateProc(name: string): string =
   var nameSplit = name.replace(";", "").split("(*)", 1)
   let procType = nameSplit[0].translateType()
 
+
   nameSplit[1] = nameSplit[1][1 ..< nameSplit[1].len - 1]
   var isVarArgs = false
   var argsSplit = nameSplit[1].split(',')
   var argSeq: seq[tuple[name: string, kind: string]]
+  var unnamedArgCounter = 0
   for arg in argsSplit:
-    let argPieces = arg.rsplit(' ', 1)
+    let argPieces = arg.replace(" const", "").rsplit(' ', 1)
     if argPieces[0] == "...":
       isVarArgs = true
       continue
-    var argName = argPieces[1]
+    var argName = if argPieces.len == 1:
+      inc(unnamedArgCounter)
+      "unamed_arg_{unnamedArgCounter}".fmt
+    else:
+      argPieces[1]
     var argType = argPieces[0]
     if argName.contains('*'):
       argType.add('*')
@@ -143,6 +149,8 @@ proc genEnums(output: var string) =
       dataName = dataName.split("_")[1]
       if dataName.endsWith("_"):
         dataName = dataName[0 ..< dataName.len - 1]
+      if dataName.match(re"^[0-9]"):
+        dataName = "`\"" & dataName & "\"`"
       if dataName == "COUNT":
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
         continue
