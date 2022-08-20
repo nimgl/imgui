@@ -106,6 +106,7 @@ proc translateType(name: string): string =
     result = result.replace("void", "pointer")
     depth.dec
 
+  result = result.replace("ImBitArrayForNamedKeys", "ImU32")
   result = result.replace("ImBitArray", "ImU32")
   result = result.replace("ImGuiWindowPtr", "ptr ImGuiWindow")
   result = result.replace("ImS8", "int8") # Doing it a little verbose to avoid issues in the future.
@@ -123,6 +124,8 @@ proc translateType(name: string): string =
     result = result["ImVector_".len ..< result.len]
     result = "ImVector[{result}]".fmt
 
+  result = result.replace("ImChunkStream_T", "ImChunkStream")
+
   result = result.replace("ImGuiStorageImPair", "ImGuiStoragePair")
 
   for d in 0 ..< depth:
@@ -136,6 +139,8 @@ proc genEnums(output: var string) =
 
   output.add("\n# Enums\ntype\n")
 
+  var tableNamedKeys: Table[string, int]
+
   for name, obj in data["enums"].pairs:
     var enumName = name
     if enumName.endsWith("_"):
@@ -145,8 +150,12 @@ proc genEnums(output: var string) =
     var table: Table[int, string]
     for data in obj:
       var dataName = data["name"].getStr()
+      let dataValue = data["calc_value"].getInt()
       dataName = dataName.replace("__", "_")
-      dataName = dataName.split("_")[1]
+      if dataName.contains("NamedKey") or dataName == "ImGuiKey_KeysData_SIZE":
+        tableNamedKeys[dataName] = dataValue
+        continue
+      dataName = dataName.split("_", 1)[1]
       if dataName.endsWith("_"):
         dataName = dataName[0 ..< dataName.len - 1]
       if dataName.match(re"^[0-9]"):
@@ -154,7 +163,6 @@ proc genEnums(output: var string) =
       if dataName == "COUNT":
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
         continue
-      let dataValue = data["calc_value"].getInt()
       if table.hasKey(dataValue):
         echo "Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue} skipping...".fmt
         continue
@@ -168,6 +176,11 @@ proc genEnums(output: var string) =
     for k, v in tableOrder.pairs:
       output.add("    {v} = {k}\n".fmt)
 
+  if tableNamedKeys.len > 0:
+    output.add("\n")
+    for k, v in tableNamedKeys.pairs:
+      output.add("const {k}* = {v}\n".fmt)
+
 proc genTypeDefs(output: var string) =
   # Must be run after genEnums
   let file = readFile("src/imgui/private/cimgui/generator/output/typedefs_dict.json")
@@ -178,7 +191,7 @@ proc genTypeDefs(output: var string) =
   for name, obj in data.pairs:
     let ignorable = ["const_iterator", "iterator", "value_type", "ImS8",
                      "ImS16", "ImS32", "ImS64", "ImU8", "ImU16", "ImU32",
-                     "ImU64"]
+                     "ImU64", "ImBitArrayForNamedKeys"]
     if obj.getStr().startsWith("struct") or enums.contains(name) or ignorable.contains(name):
       continue
     output.add("  {name}* = {obj.getStr().translateType()}\n".fmt)
@@ -193,7 +206,7 @@ proc genTypes(output: var string) =
   output.add(notDefinedStructs)
 
   for name, obj in data["structs"].pairs:
-    if name == "Pair" or name == "ImGuiStoragePair" or name == "ImGuiStyleMod":
+    if name == "Pair" or name == "ImGuiStoragePair" or name == "ImGuiStyleMod" or name == "ImGuiInputEvent":
       continue
 
     if name == "ImDrawChannel":

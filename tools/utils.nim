@@ -76,6 +76,18 @@ const notDefinedStructs* = """
   ImPair* {.importc: "Pair", imgui_header.} = object
     key* {.importc: "key".}: ImGuiID
     data*: ImPairData
+  ImGuiInputEventData* {.union.} = object
+    mousePos*: ImGuiInputEventMousePos
+    mouseWheel*: ImGuiInputEventMouseWheel
+    mouseButton*: ImGuiInputEventMouseButton
+    key*: ImGuiInputEventKey
+    text*: ImGuiInputEventText
+    appFocused*: ImGuiInputEventAppFocused
+  ImGuiInputEvent* {.importc: "ImGuiInputEvent", imgui_header.} = object
+    `type`* {.importc: "`type`".}: ImGuiInputEventType
+    source* {.importc: "Source".}: ImGuiInputSource
+    data*: ImGuiInputEventData
+    addedByTestEngine* {.importc: "AddedByTestEngine".}: bool
 
   # Undefined data types in cimgui
 
