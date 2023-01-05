@@ -14,12 +14,13 @@
 ## Source language of ImGui is C++, since Nim is able to compile both to C
 ## and C++ you can select which compile target you wish to use. Note that to use
 ## the C backend you must supply a `cimgui <https://github.com/cimgui/cimgui>`_
-## dynamic library file.
+## dynamic library file or pass -d:cimguiStaticCgcc --gcc.linkerexe:g++ if using 
+## GCC as your c/c++ compiler.
 ##
 ## HACK: If you are targeting Windows, be sure to compile the cimgui dll with
 ## visual studio and not with mingw.
 
-import strutils
+import std/[compilesettings, strformat, strutils]
 
 proc currentSourceDir(): string {.compileTime.} =
   result = currentSourcePath().replace("\\", "/")
@@ -29,23 +30,44 @@ proc currentSourceDir(): string {.compileTime.} =
 when defined(linux):
   {.passL: "-Xlinker -rpath .".}
 
-when not defined(cpp) or defined(cimguiDLL):
-  when defined(windows):
-    const imgui_dll* = "cimgui.dll"
-  elif defined(macosx):
-    const imgui_dll* = "cimgui.dylib"
-  else:
-    const imgui_dll* = "cimgui.so"
-  {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
+when defined(cimguiStaticCgcc):
+  ## For use with the C backend only when --gcc.linkerexe:g++ is passed
+  const
+    nimcache = querySetting(SingleValueSetting.nimcacheDir)
+    cimgui = staticExec(fmt"""g++ -c private/cimgui/cimgui.cpp -o {nimcache}/cimgui.cpp.o""")
+    imgui = staticExec(fmt"""g++ -c private/cimgui/imgui/imgui.cpp -o {nimcache}/imgui.cpp.o""")
+    imguiDraw = staticExec(fmt"""g++ -c private/cimgui/imgui/imgui_draw.cpp -o {nimcache}/imgui_draw.cpp.o""")
+    imguiTables = staticExec(fmt"""g++ -c private/cimgui/imgui/imgui_tables.cpp -o {nimcache}/imgui_tables.cpp.o""")
+    imguiWidgets = staticExec(fmt"""g++ -c private/cimgui/imgui/imgui_widgets.cpp -o {nimcache}/imgui_widgets.cpp.o""")
+    imguiDemo = staticExec(fmt"""g++ -c private/cimgui/imgui/imgui_demo.cpp -o {nimcache}/imgui_demo.cpp.o""")
+
+  {.passL: fmt"""{nimcache}/cimgui.cpp.o""".}
+  {.passL: fmt"""{nimcache}/imgui_demo.cpp.o""".}
+  {.passL: fmt"""{nimcache}/imgui_draw.cpp.o""".}
+  {.passL: fmt"""{nimcache}/imgui_tables.cpp.o""".}
+  {.passL: fmt"""{nimcache}/imgui_widgets.cpp.o""".}
+  {.passL: fmt"""{nimcache}/imgui.cpp.o""".}
+  {.passL: "-static-libgcc -static-libstdc++".}
+  {.passc: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
 else:
-  {.compile: "imgui/private/cimgui/cimgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_tables.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_widgets.cpp",
-    compile: "imgui/private/cimgui/imgui/imgui_demo.cpp".}
-  {.pragma: imgui_header, header: currentSourceDir() & "/imgui/private/ncimgui.h".}
+  when not defined(cpp) or defined(cimguiDLL):
+    when defined(windows):
+      const imguiDll* = "cimgui.dll"
+    elif defined(macosx):
+      const imguiDll* = "cimgui.dylib"
+    else:
+      const imguiDll* = "cimgui.so"
+    {.passc: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
+    {.pragma: imgui_header, header: "cimgui.h".}
+  else:
+    {.compile: "private/cimgui/cimgui.cpp",
+      compile: "private/cimgui/imgui/imgui.cpp",
+      compile: "private/cimgui/imgui/imgui_draw.cpp",
+      compile: "private/cimgui/imgui/imgui_tables.cpp",
+      compile: "private/cimgui/imgui/imgui_widgets.cpp",
+      compile: "private/cimgui/imgui/imgui_demo.cpp".}
+    {.pragma: imgui_header, header: "../ncimgui.h".}
 
 # Enums
 type
@@ -1924,11 +1946,13 @@ type
     redo_char_point* {.importc: "redo_char_point".}: int32
 
 # Procs
-{.push warning[HoleEnumConv]: off.}
-when not defined(cpp) or defined(cimguiDLL):
-  {.push dynlib: imgui_dll, cdecl, discardable.}
-else:
+when defined(cimguiStaticCgcc):
   {.push nodecl, discardable.}
+else:
+  when not defined(cpp) or defined(cimguiDLL):
+    {.push dynlib: imgui_dll, cdecl, discardable.}
+  else:
+    {.push nodecl, discardable.}
 
 proc clearAllBits*(self: ptr uint32): void {.importc: "ImBitArray_ClearAllBits".}
 proc clearBit*(self: ptr uint32, n: int32): void {.importc: "ImBitArray_ClearBit".}
