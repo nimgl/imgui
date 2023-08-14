@@ -119,7 +119,9 @@ proc igGlfwInit(window: GLFWwindow, installCallbacks: bool, clientApi: GlfwClien
     io.getClipboardTextFn = igGlfwGetClipboardText
   io.clipboardUserData = gWindow
   when defined windows:
-    io.imeWindowHandle = gWindow.getWin32Window()
+    var viewPort = igGetMainViewport() # CIMGUI_API ImGuiViewport* igGetMainViewport()
+    viewPort.platformhandleRaw = gWindow.getWin32Window()
+    #io.imeWindowHandle = gWindow.getWin32Window() # Obsoleted ?
 
   gMouseCursors[ImGuiMouseCursor.Arrow.int32] = glfwCreateStandardCursor(GLFWArrowCursor)
   gMouseCursors[ImGuiMouseCursor.TextInput.int32] = glfwCreateStandardCursor(GLFWIbeamCursor)

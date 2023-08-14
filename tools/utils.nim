@@ -24,6 +24,14 @@ const srcHeader* = """
 
 import strutils
 
+## Tentative workaround [start]
+type
+  uint32Ptr* = ptr uint32
+  const_cstringPtr* = cstring
+  Imguidockrequest* = distinct object
+  ImGuiDockNodeSettings* = distinct object
+## Tentative workaround [end]
+
 proc currentSourceDir(): string {.compileTime.} =
   result = currentSourcePath().replace("\\", "/")
   result = result[0 ..< result.rfind("/")]

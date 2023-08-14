@@ -227,7 +227,7 @@ proc igOpenGL3RenderDrawData*(data: ptr ImDrawData) =
 
   let pos = data.displayPos
   for n in 0 ..< data.cmdListsCount:
-    var cmd_list = data.cmdLists[n]
+    var cmd_list = data.cmdLists.data[n]
     var idx_buffer_offset: int = 0
 
     glBindBuffer(GL_ARRAY_BUFFER, gVboHandle)
