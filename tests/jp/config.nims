@@ -1,11 +1,17 @@
 switch("path", "$projectDir/../../src")
 
-# These lines should delete
-switch "warning","HoleEnumConv:off"
-switch "warning","CStringConv:off"
-switch "warning","PtrToCstringConv:off"
-switch "hint","XDeclaredButNotUsed:off"
-#
+when (NimMajor, NimMinor, NimPatch) >= (1, 6, 10):
+  # These lines should delete
+  switch "warning","HoleEnumConv:off"
+  switch "warning","CStringConv:off"
+  switch "warning","PtrToCstringConv:off"
+  switch "hint","XDeclaredButNotUsed:off"
+
+when (NimMajor, NimMinor, NimPatch) < (1, 6, 10):
+  echo "====================================================="
+  echo "=== Error! Nim version: Use nim-1.6.10 or later ==="
+  echo "====================================================="
+  quit 1
 
 # Enable IME implement for Asia region
 import std/[pegs,os,strutils]
