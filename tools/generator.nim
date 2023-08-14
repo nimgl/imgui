@@ -160,7 +160,7 @@ proc genEnums(output: var string) =
         dataName = dataName[0 ..< dataName.len - 1]
       if dataName.match(re"^[0-9]"):
         dataName = "`\"" & dataName & "\"`"
-      if dataName == "COUNT":
+      if dataName.match(re".*COUNT$"):
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
         continue
       if table.hasKey(dataValue):
