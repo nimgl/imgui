@@ -27,9 +27,12 @@ import strutils
 ## Tentative workaround [start]
 type
   uint32Ptr* = ptr uint32
-  const_cstringPtr* = cstring
   Imguidockrequest* = distinct object
   ImGuiDockNodeSettings* = distinct object
+  const_cstringPtr* {.pure, inheritable, bycopy.} = object
+    Size*: cint
+    Capacity*: cint
+    Data*: ptr ptr cschar
 ## Tentative workaround [end]
 
 proc currentSourceDir(): string {.compileTime.} =
