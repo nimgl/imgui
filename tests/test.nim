@@ -3,11 +3,12 @@
 import imgui, imgui/[impl_opengl, impl_glfw]
 import nimgl/[opengl, glfw]
 
-proc main() =
-  assert glfwInit()
 
-  glfwWindowHint(GLFWContextVersionMajor, 4)
-  glfwWindowHint(GLFWContextVersionMinor, 1)
+proc main() =
+  doAssert glfwInit()
+
+  glfwWindowHint(GLFWContextVersionMajor, 3)
+  glfwWindowHint(GLFWContextVersionMinor, 3)
   glfwWindowHint(GLFWOpenglForwardCompat, GLFW_TRUE)
   glfwWindowHint(GLFWOpenglProfile, GLFW_OPENGL_CORE_PROFILE)
   glfwWindowHint(GLFWResizable, GLFW_TRUE)
@@ -18,13 +19,13 @@ proc main() =
 
   w.makeContextCurrent()
 
-  assert glInit()
+  doAssert glInit()
 
   let context = igCreateContext()
   #let io = igGetIO()
 
-  assert igGlfwInitForOpenGL(w, true)
-  assert igOpenGL3Init()
+  doAssert igGlfwInitForOpenGL(w, true)
+  doAssert igOpenGL3Init()
 
   igStyleColorsCherry()
 
