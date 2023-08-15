@@ -2568,7 +2568,7 @@ type
 when not defined(cpp) or defined(cimguiDLL):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
-  {.push nodecl, discardable.}
+  {.push nodecl, discardable,header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 
 proc clearAllBits*(self: ptr uint32): void {.importc: "ImBitArray_ClearAllBits".}
 proc clearBit*(self: ptr uint32, n: int32): void {.importc: "ImBitArray_ClearBit".}

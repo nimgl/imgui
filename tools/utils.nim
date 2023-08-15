@@ -118,7 +118,7 @@ const preProcs* = """
 when not defined(cpp) or defined(cimguiDLL):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
-  {.push nodecl, discardable.}
+  {.push nodecl, discardable,header: currentSourceDir() & "/imgui/private/ncimgui.h".}
 """
 
 const postProcs* = """
