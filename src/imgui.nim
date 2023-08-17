@@ -37,6 +37,7 @@ proc currentSourceDir(): string {.compileTime.} =
   result = result[0 ..< result.rfind("/")]
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+{.passC:"-DImDrawIdx=\"unsigned int\"".}
 
 when not defined(cpp) or defined(cimguiDLL):
   when defined(windows):
@@ -1019,7 +1020,7 @@ const ImGuiKey_NamedKey_BEGIN* = 512
 type
   ImBitArrayPtr* = ptr uint32
   ImDrawCallback* = proc(parent_list: ptr ImDrawList, cmd: ptr ImDrawCmd): void {.cdecl, varargs.}
-  ImDrawIdx* = uint16
+  ImDrawIdx* = uint32
   ImFileHandle* = ptr FILE
   ImGuiContextHookCallback* = proc(ctx: ptr ImGuiContext, hook: ptr ImGuiContextHook): void {.cdecl, varargs.}
   ImGuiErrorLogCallback* = proc(user_data: pointer, fmt: cstring): void {.cdecl.}

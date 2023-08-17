@@ -1,7 +1,7 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
 import strutils, json, strformat, tables,
-       algorithm, sets, re, ./utils
+       algorithm, sets, re, ./utils, pegs
 
 var enums: HashSet[string]
 var enumsCount: Table[string, int]
@@ -399,6 +399,17 @@ proc genProcs(output: var string) =
 
   output.add("\n{postProcs}\n".fmt)
 
+proc fixAfter(fname:string) =
+  var s:seq[string]
+  for line in fname.lines:
+    var st = line
+    if line.contains(peg"'ImDrawIdx*' \s* '=' \s* 'uint16'"):
+      st = line.replacef(peg"{@'ImDrawIdx*' \s*} '=' \s* 'uint16'","$1= uint32")
+    #
+    s.add st
+  # write result
+  writeFile(fname,s.join("\n"))
+
 proc igGenerate*() =
   var output = srcHeader
 
@@ -409,6 +420,7 @@ proc igGenerate*() =
   output.add("\n" & cherryTheme)
 
   writeFile("src/imgui.nim", output)
+  fixAfter("src/imgui.nim")
 
 when isMainModule:
   igGenerate()
