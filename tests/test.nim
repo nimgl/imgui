@@ -25,7 +25,8 @@ proc main() =
   #let io = igGetIO()
 
   doAssert igGlfwInitForOpenGL(w, true)
-  doAssert igOpenGL3Init()
+
+  doAssert igOpenGL3Init() # default: glsl_version = "#version 130"
 
   igStyleColorsCherry()
 

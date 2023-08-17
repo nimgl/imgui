@@ -40,6 +40,7 @@ proc currentSourceDir(): string {.compileTime.} =
   result = result[0 ..< result.rfind("/")]
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
+{.passC:"-DImDrawIdx=\"unsigned int\"".}
 
 when not defined(cpp) or defined(cimguiDLL):
   when defined(windows):
