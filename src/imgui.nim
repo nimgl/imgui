@@ -30,6 +30,10 @@ type
     Size*: cint
     Capacity*: cint
     Data*: ptr ptr cschar
+when not defined(cpp) or defined(cimguiDLL):
+  type ImDrawIdx* = uint16
+else:
+  type ImDrawIdx* = uint32
 ## Tentative workaround [end]
 
 proc currentSourceDir(): string {.compileTime.} =
@@ -37,7 +41,6 @@ proc currentSourceDir(): string {.compileTime.} =
   result = result[0 ..< result.rfind("/")]
 
 {.passC: "-I" & currentSourceDir() & "/imgui/private/cimgui" & " -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=1".}
-{.passC:"-DImDrawIdx=\"unsigned int\"".}
 
 when not defined(cpp) or defined(cimguiDLL):
   when defined(windows):
@@ -51,6 +54,7 @@ when not defined(cpp) or defined(cimguiDLL):
   {.passC: "-DCIMGUI_DEFINE_ENUMS_AND_STRUCTS".}
   {.pragma: imgui_header, header: "cimgui.h".}
 else:
+  {.passC:"-DImDrawIdx=\"unsigned int\"".}
   {.compile: "imgui/private/cimgui/cimgui.cpp",
     compile: "imgui/private/cimgui/imgui/imgui.cpp",
     compile: "imgui/private/cimgui/imgui/imgui_draw.cpp",
@@ -1020,7 +1024,6 @@ const ImGuiKey_NamedKey_BEGIN* = 512
 type
   ImBitArrayPtr* = ptr uint32
   ImDrawCallback* = proc(parent_list: ptr ImDrawList, cmd: ptr ImDrawCmd): void {.cdecl, varargs.}
-  ImDrawIdx* = uint32
   ImFileHandle* = ptr FILE
   ImGuiContextHookCallback* = proc(ctx: ptr ImGuiContext, hook: ptr ImGuiContextHook): void {.cdecl, varargs.}
   ImGuiErrorLogCallback* = proc(user_data: pointer, fmt: cstring): void {.cdecl.}
