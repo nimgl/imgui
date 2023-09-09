@@ -18,6 +18,7 @@ proc main() =
     quit(-1)
 
   w.makeContextCurrent()
+  glfwSwapInterval(1) # Enable Vsync
 
   doAssert glInit()
 
