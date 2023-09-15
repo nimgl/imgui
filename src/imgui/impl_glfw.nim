@@ -30,10 +30,10 @@ var
   gPrevKeyCallback: GLFWKeyFun = nil
   gPrevCharCallback: GLFWCharFun = nil
 
-proc igGlfwGetClipboardText(userData: pointer): cstring {.cdecl.} =
+proc igGlfwGetClipboardText(userData: pointer): cstring {.cdecl,used.} =
   cast[GLFWwindow](userData).getClipboardString()
 
-proc igGlfwSetClipboardText(userData: pointer, text: cstring): void {.cdecl.} =
+proc igGlfwSetClipboardText(userData: pointer, text: cstring): void {.cdecl,used.} =
   cast[GLFWwindow](userData).setClipboardString(text)
 
 proc igGlfwMouseCallback*(window: GLFWWindow, button: int32, action: int32, mods: int32): void {.cdecl.} =
