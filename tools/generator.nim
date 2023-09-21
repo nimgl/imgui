@@ -262,6 +262,7 @@ proc genProcs(output: var string) =
 
   for name, obj in data.pairs:
     var isNonUDT = false
+    var isConstructor = false
     var nonUDTNumber = 0
     for variation in obj:
       if variation.contains("nonUDT"):
@@ -290,6 +291,7 @@ proc genProcs(output: var string) =
         if funcname.startsWith("ImVector"):
           continue
         funcname = "new" & funcname.capitalizeAscii()
+        isConstructor = true
 
       if funcname.isUpper():
         funcname = funcname.normalize()
@@ -377,6 +379,12 @@ proc genProcs(output: var string) =
         isGeneric = true
       if argRet == "explicit":
         argRet = "ptr ImVec2ih" # Ugly solution for a temporal problem
+      if isConstructor:
+        # Here "funcname" is assumed "newConstrucorName" so,
+        var retType = funcname.split("new")[1]
+        if retType == "ImBitArray": # Exception
+           retType &=  "Ptr"
+        argRet = "ptr " & retType
 
       output.add(if isGeneric: "[T](" else: "(")
       output.add(argsOutput)
