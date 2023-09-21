@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.89.9.2"
+version     = "1.89.9.3"
 author      = "Leonardo Mariscal"
 description = "ImGui bindings for Nim"
 license     = "MIT"
