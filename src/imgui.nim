@@ -2575,7 +2575,7 @@ type
     redo_char_point* {.importc: "redo_char_point".}: int32
 
 # Procs
-{.push warning[HoleEnumConv]: off.}
+#{.push warning[HoleEnumConv]: off.}
 when not defined(cpp) or defined(cimguiDLL):
   {.push dynlib: imgui_dll, cdecl, discardable.}
 else:
@@ -4011,7 +4011,7 @@ proc igWindowRectAbsToRelNonUDT*(pOut: ptr ImRect, window: ptr ImGuiWindow, r: I
 proc igWindowRectRelToAbsNonUDT*(pOut: ptr ImRect, window: ptr ImGuiWindow, r: ImRect): void {.importc: "igWindowRectRelToAbs".}
 
 {.pop.} # push dynlib / nodecl, etc...
-{.pop.} # push warning[HoleEnumConv]: off
+#{.pop.} # push warning[HoleEnumConv]: off
 
 
 proc igStyleColorsCherry*(dst: ptr ImGuiStyle = nil): void =
