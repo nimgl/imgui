@@ -1,7 +1,7 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
 import strutils, json, strformat, tables,
-       algorithm, sets, ./utils
+       algorithm, sets, re, ./utils
 
 var enums: HashSet[string]
 var enumsCount: Table[string, int]
@@ -24,16 +24,22 @@ proc translateProc(name: string): string =
   var nameSplit = name.replace(";", "").split("(*)", 1)
   let procType = nameSplit[0].translateType()
 
+
   nameSplit[1] = nameSplit[1][1 ..< nameSplit[1].len - 1]
   var isVarArgs = false
   var argsSplit = nameSplit[1].split(',')
   var argSeq: seq[tuple[name: string, kind: string]]
+  var unnamedArgCounter = 0
   for arg in argsSplit:
-    let argPieces = arg.rsplit(' ', 1)
+    let argPieces = arg.replace(" const", "").rsplit(' ', 1)
     if argPieces[0] == "...":
       isVarArgs = true
       continue
-    var argName = argPieces[1]
+    var argName = if argPieces.len == 1:
+      inc(unnamedArgCounter)
+      "unamed_arg_{unnamedArgCounter}".fmt
+    else:
+      argPieces[1]
     var argType = argPieces[0]
     if argName.contains('*'):
       argType.add('*')
@@ -100,6 +106,7 @@ proc translateType(name: string): string =
     result = result.replace("void", "pointer")
     depth.dec
 
+  result = result.replace("ImBitArrayForNamedKeys", "ImU32")
   result = result.replace("ImBitArray", "ImU32")
   result = result.replace("ImGuiWindowPtr", "ptr ImGuiWindow")
   result = result.replace("ImS8", "int8") # Doing it a little verbose to avoid issues in the future.
@@ -117,6 +124,8 @@ proc translateType(name: string): string =
     result = result["ImVector_".len ..< result.len]
     result = "ImVector[{result}]".fmt
 
+  result = result.replace("ImChunkStream_T", "ImChunkStream")
+
   result = result.replace("ImGuiStorageImPair", "ImGuiStoragePair")
 
   for d in 0 ..< depth:
@@ -124,11 +133,16 @@ proc translateType(name: string): string =
     if result == "ptr ptr ImDrawList":
       result = "UncheckedArray[ptr ImDrawList]"
 
+  if result == "":
+    result = "void"
+
 proc genEnums(output: var string) =
   let file = readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json")
   let data = file.parseJson()
 
   output.add("\n# Enums\ntype\n")
+
+  var tableNamedKeys: Table[string, int]
 
   for name, obj in data["enums"].pairs:
     var enumName = name
@@ -139,16 +153,19 @@ proc genEnums(output: var string) =
     var table: Table[int, string]
     for data in obj:
       var dataName = data["name"].getStr()
+      let dataValue = data["calc_value"].getInt()
       dataName = dataName.replace("__", "_")
-      dataName = dataName.split("_")[1]
+      dataName = dataName.split("_", 1)[1]
       if dataName.endsWith("_"):
         dataName = dataName[0 ..< dataName.len - 1]
-      if dataName == "COUNT":
+      if dataName.match(re"^[0-9]"):
+        dataName = "`\"" & dataName & "\"`"
+      if dataName.match(re".*COUNT$"):
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
         continue
-      let dataValue = data["calc_value"].getInt()
       if table.hasKey(dataValue):
-        echo "Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue} skipping...".fmt
+        echo "Notice: Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue}, use constant {enumName}_{dataName} to access it".fmt
+        tableNamedKeys[enumName & "_" & dataName] = dataValue
         continue
       table[dataValue] = dataName
 
@@ -160,6 +177,11 @@ proc genEnums(output: var string) =
     for k, v in tableOrder.pairs:
       output.add("    {v} = {k}\n".fmt)
 
+  if tableNamedKeys.len > 0:
+    output.add("\n# Duplicate enums as consts\n")
+    for k, v in tableNamedKeys.pairs:
+      output.add("const {k}* = {v}\n".fmt)
+
 proc genTypeDefs(output: var string) =
   # Must be run after genEnums
   let file = readFile("src/imgui/private/cimgui/generator/output/typedefs_dict.json")
@@ -170,8 +192,10 @@ proc genTypeDefs(output: var string) =
   for name, obj in data.pairs:
     let ignorable = ["const_iterator", "iterator", "value_type", "ImS8",
                      "ImS16", "ImS32", "ImS64", "ImU8", "ImU16", "ImU32",
-                     "ImU64"]
+                     "ImU64", "ImBitArrayForNamedKeys"]
     if obj.getStr().startsWith("struct") or enums.contains(name) or ignorable.contains(name):
+      continue
+    if name == "ImDrawIdx": # delete and define in "utils.nim"
       continue
     output.add("  {name}* = {obj.getStr().translateType()}\n".fmt)
 
@@ -185,7 +209,7 @@ proc genTypes(output: var string) =
   output.add(notDefinedStructs)
 
   for name, obj in data["structs"].pairs:
-    if name == "Pair" or name == "ImGuiStoragePair" or name == "ImGuiStyleMod":
+    if name == "Pair" or name == "ImGuiStoragePair" or name == "ImGuiStyleMod" or name == "ImGuiInputEvent":
       continue
 
     if name == "ImDrawChannel":
@@ -238,6 +262,7 @@ proc genProcs(output: var string) =
 
   for name, obj in data.pairs:
     var isNonUDT = false
+    var isConstructor = false
     var nonUDTNumber = 0
     for variation in obj:
       if variation.contains("nonUDT"):
@@ -266,6 +291,7 @@ proc genProcs(output: var string) =
         if funcname.startsWith("ImVector"):
           continue
         funcname = "new" & funcname.capitalizeAscii()
+        isConstructor = true
 
       if funcname.isUpper():
         funcname = funcname.normalize()
@@ -353,6 +379,12 @@ proc genProcs(output: var string) =
         isGeneric = true
       if argRet == "explicit":
         argRet = "ptr ImVec2ih" # Ugly solution for a temporal problem
+      if isConstructor:
+        # Here "funcname" is assumed "newConstrucorName" so,
+        var retType = funcname.split("new")[1]
+        if retType == "ImBitArray": # Exception
+           retType &=  "Ptr"
+        argRet = "ptr " & retType
 
       output.add(if isGeneric: "[T](" else: "(")
       output.add(argsOutput)
@@ -377,6 +409,17 @@ proc genProcs(output: var string) =
 
   output.add("\n{postProcs}\n".fmt)
 
+proc fixAfter(fname:string) = discard
+  #var s:seq[string]
+  #for line in fname.lines:
+  #  var st = line
+  #  if line.contains(peg"'ImDrawIdx*' \s* '=' \s* 'uint16'"):
+  #    st = line.replacef(peg"{@'ImDrawIdx*' \s*} '=' \s* 'uint16'","$1= uint32")
+  #  #
+  #  s.add st
+  ## write result
+  #writeFile(fname,s.join("\n"))
+
 proc igGenerate*() =
   var output = srcHeader
 
@@ -387,6 +430,7 @@ proc igGenerate*() =
   output.add("\n" & cherryTheme)
 
   writeFile("src/imgui.nim", output)
+  fixAfter("src/imgui.nim")
 
 when isMainModule:
   igGenerate()

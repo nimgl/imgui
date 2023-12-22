@@ -1,6 +1,6 @@
 # Package
 
-version     = "1.84.2"
+version     = "1.89.9.5"
 author      = "Leonardo Mariscal"
 description = "ImGui bindings for Nim"
 license     = "MIT"
@@ -16,10 +16,10 @@ task gen, "Generate bindings from source":
 
 task test, "Create window with imgui demo":
   requires "nimgl@#1.0" # Please https://github.com/nim-lang/nimble/issues/482
-  exec("nim c -r tests/test.nim") # requires cimgui.dll
-  exec("nim cpp -r tests/test.nim")
+  exec("nim cpp -r --passL:-static tests/test.nim")
+  exec("nim c -r tests/test.nim") # requires cimgui.dll or cimgui.so
 
 task ci, "Create window with imgui null demo":
   requires "nimgl@#1.0" # Please https://github.com/nim-lang/nimble/issues/482
-  exec("nim c -r tests/tnull.nim") # requires cimgui.dll
   exec("nim cpp -r tests/tnull.nim")
+  exec("nim c -r tests/tnull.nim") # requires cimgui.dll or cimgui.so
