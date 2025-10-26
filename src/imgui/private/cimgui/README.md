@@ -11,7 +11,7 @@ History:
 Initially cimgui was developed by Stephan Dilly as hand-written code but lately turned into an auto-generated version by sonoro1234 in order to keep up with imgui more easily (letting the user select the desired branch and commit)
 
 Notes:
-* currently this wrapper is based on version [1.89.9 of Dear ImGui with internal api]
+* currently this wrapper is based on version [1.91.0 of Dear ImGui with internal api]
 * only functions, structs and enums from imgui.h (an optionally imgui_internal.h) are wrapped.
 * if you are interested in imgui backends you should look [LuaJIT-ImGui](https://github.com/sonoro1234/LuaJIT-ImGui) project.
 * All naming is algorithmic except for those names that were coded in cimgui_overloads table (https://github.com/cimgui/cimgui/blob/master/generator/generator.lua#L60). In the official version this table is empty.
@@ -95,7 +95,8 @@ Notes:
 
 # usage with backends
 
-* look at backend_test folder for a cmake module building with SDL and opengl3.
+* look at backend_test folder for a cmake module building with SDL and opengl3, glfw and opengl3, SDL and Vulkan
+* read [How can cimgui backends be used](https://github.com/cimgui/cimgui/issues/157)
 
 # example bindings based on cimgui
 
@@ -117,3 +118,4 @@ Notes:
 * [sdl2-cimgui-demo](https://github.com/haxpor/sdl2-cimgui-demo)
 * [cimgui_c_sdl2_example](https://github.com/canoi12/cimgui_c_sdl2_example/)
 * [cimgui-c-example](https://github.com/peko/cimgui-c-example) with GLFW
+* [raylib-cimgui](https://github.com/alfredbaudisch/raylib-cimgui)

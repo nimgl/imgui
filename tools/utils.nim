@@ -25,9 +25,13 @@ const srcHeader* = """
 import strutils
 
 ## Tentative workaround [start]
+
+# Fix for using const char* in C
+type cstringconst* {.importc: "const char*".} = cstring
+
 type
   uint32Ptr* = ptr uint32
-  Imguidockrequest* = distinct object
+  ImGuiDockRequest* = distinct object
   ImGuiDockNodeSettings* = distinct object
   const_cstringPtr* {.pure, inheritable, bycopy.} = object
     Size*: cint

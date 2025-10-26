@@ -43,7 +43,7 @@ You can find more information in the [main repo](https://github.com/nimgl/nimgl)
 
 It is currently being developed and tested on
 
-* Windows 10
+* Windows 10 or later
 * MacOS Mojave
 * Linux Ubuntu 18.10
 

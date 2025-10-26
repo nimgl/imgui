@@ -162,7 +162,7 @@ proc genEnums(output: var string) =
         dataName = "`\"" & dataName & "\"`"
       if dataName.match(re".*COUNT$"):
         enumsCount[data["name"].getStr()] = data["calc_value"].getInt()
-        continue
+        #continue
       if table.hasKey(dataValue):
         echo "Notice: Enum {enumName}.{dataName} already exists as {enumName}.{table[dataValue]} with value {dataValue}, use constant {enumName}_{dataName} to access it".fmt
         tableNamedKeys[enumName & "_" & dataName] = dataValue
@@ -330,6 +330,8 @@ proc genProcs(output: var string) =
           argDefault = argDefault.replace("ImGuiPopupPositionPolicy_Default", "ImGuiPopupPositionPolicy.Default")
           argDefault = argDefault.replace("ImGuiPopupFlags_None", "ImGuiPopupFlags.None")
           argDefault = argDefault.replace("ImGuiNavHighlightFlags_TypeDefault", "ImGuiNavHighlightFlags.TypeDefault")
+          argDefault = argDefault.replace("ImGuiTypingSelectFlags_None","ImGuiTypingSelectFlags.None")
+          argDefault = argDefault.replace("ImGuiNavHighlightFlags_None","ImGuiNavHighlightFlags.None")
 
           if argDefault.startsWith("ImVec"):
             let letters = ['x', 'y', 'z', 'w']
@@ -409,16 +411,18 @@ proc genProcs(output: var string) =
 
   output.add("\n{postProcs}\n".fmt)
 
-proc fixAfter(fname:string) = discard
-  #var s:seq[string]
-  #for line in fname.lines:
-  #  var st = line
-  #  if line.contains(peg"'ImDrawIdx*' \s* '=' \s* 'uint16'"):
-  #    st = line.replacef(peg"{@'ImDrawIdx*' \s*} '=' \s* 'uint16'","$1= uint32")
-  #  #
-  #  s.add st
-  ## write result
-  #writeFile(fname,s.join("\n"))
+import pegs
+proc fixAfter() =
+  # Replace: typedef unsigned short ImDrawIdx;
+  #    with: typedef unsigned int   ImDrawIdx;
+  var seqOut:seq[string]
+  var inFile = "src/imgui/private/cimgui/cimgui.h"
+  for line in inFile.lines:
+    var st = line
+    if line.contains(peg"'typedef unsigned short ImDrawIdx'"):
+      st = line.replace("short","int")
+    seqOut.add st
+  writeFile(inFile, seqOut.join("\n")) # write result
 
 proc igGenerate*() =
   var output = srcHeader
@@ -430,7 +434,7 @@ proc igGenerate*() =
   output.add("\n" & cherryTheme)
 
   writeFile("src/imgui.nim", output)
-  fixAfter("src/imgui.nim")
+  fixAfter()
 
 when isMainModule:
   igGenerate()

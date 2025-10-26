@@ -8,6 +8,7 @@ on:
     # "scheduled" workflow, while maintaining ability to perform local CI builds.
     workflows:
       - scheduled
+      - manual
     branches:
       - master
       - docking
@@ -21,7 +22,7 @@ jobs:
       VS_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\
       MSBUILD_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Dependencies
         shell: powershell
@@ -123,6 +124,11 @@ jobs:
         run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_glfw_vulkan/example_glfw_vulkan.vcxproj /p:Platform=Win32 /p:Configuration=Release'
         if: github.event_name == 'workflow_run'
 
+      - name: Build Win32 example_sdl2_sdlrenderer2
+        shell: cmd
+        run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_sdl2_sdlrenderer2/example_sdl2_sdlrenderer2.vcxproj /p:Platform=Win32 /p:Configuration=Release'
+        if: github.event_name == 'workflow_run'
+
       - name: Build Win32 example_sdl2_vulkan
         shell: cmd
         run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_sdl2_vulkan/example_sdl2_vulkan.vcxproj /p:Platform=Win32 /p:Configuration=Release'
@@ -168,6 +174,11 @@ jobs:
         shell: cmd
         run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_glfw_vulkan/example_glfw_vulkan.vcxproj /p:Platform=x64 /p:Configuration=Release'
 
+      - name: Build x64 example_sdl2_sdlrenderer2
+        shell: cmd
+        run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_sdl2_sdlrenderer2/example_sdl2_sdlrenderer2.vcxproj /p:Platform=x64 /p:Configuration=Release'
+        if: github.event_name == 'workflow_run'
+
       - name: Build x64 example_sdl2_vulkan
         shell: cmd
         run: '"%MSBUILD_PATH%\MSBuild.exe" examples/example_sdl2_vulkan/example_sdl2_vulkan.vcxproj /p:Platform=x64 /p:Configuration=Release'
@@ -209,7 +220,7 @@ jobs:
   Linux:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: |
@@ -402,7 +413,7 @@ jobs:
   MacOS:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: |
@@ -462,7 +473,7 @@ jobs:
   iOS:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Build example_apple_metal
       run: |
@@ -472,7 +483,7 @@ jobs:
   Emscripten:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: |
@@ -489,17 +500,17 @@ jobs:
         popd
         make -C examples/example_sdl2_opengl3 -f Makefile.emscripten
 
-    - name: Build example_emscripten_wgpu
+    - name: Build example_glfw_wgpu
       run: |
         pushd emsdk-master
         source ./emsdk_env.sh
         popd
-        make -C examples/example_emscripten_wgpu
+        make -C examples/example_glfw_wgpu -f Makefile.emscripten
 
   Android:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Build example_android_opengl3
       run: |
