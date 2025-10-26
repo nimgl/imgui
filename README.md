@@ -9,6 +9,8 @@ Some developers do not require the entire bundle of APIs that
 [NimGL](https://nimgl.dev/) offer, and so, prefere to only download the required
 modules.
 
+Updated Dear ImGui (CImGui) to 1.91.9b dock (2025/10) 
+
 ## Installation
 
 ### Nimble download
@@ -43,7 +45,7 @@ You can find more information in the [main repo](https://github.com/nimgl/nimgl)
 
 It is currently being developed and tested on
 
-* Windows 10
+* Windows 10 or later
 * MacOS Mojave
 * Linux Ubuntu 18.10
 

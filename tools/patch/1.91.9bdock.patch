@@ -1,0 +1,43 @@
+ src/imgui.nim | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/imgui.nim b/src/imgui.nim
+index 3921df0..edd33cd 100755
+--- a/src/imgui.nim
++++ b/src/imgui.nim
+@@ -1170,7 +1170,7 @@ type
+   ImGuiTableColumnIdx* = int16
+   ImGuiTableDrawChannelIdx* = uint16
+   ImPoolIdx* = int32
+-  ImStbTexteditState* = ImStb::STB_TexteditState
++  ImStbTexteditState* = object
+   ImTextureID* = uint64
+   ImWchar* = ImWchar16
+   ImWchar16* = uint16
+@@ -1315,7 +1315,7 @@ type
+     descent* {.importc: "Descent".}: float32
+     metricsTotalSurface* {.importc: "MetricsTotalSurface".}: int32
+     dirtyLookupTables* {.importc: "DirtyLookupTables".}: bool
+-    used8kPagesMap* {.importc: "Used8kPagesMap".}: array[(0xFFFF+1)/8192/8, uint8]
++    used8kPagesMap* {.importc: "Used8kPagesMap".}: array[((0xFFFF+1)/8192/8).int, uint8]
+   ImFontAtlas* {.importc: "ImFontAtlas", imgui_header.} = object
+     flags* {.importc: "Flags".}: ImFontAtlasFlags
+     texID* {.importc: "TexID".}: ImTextureID
+@@ -3132,7 +3132,7 @@ proc destroy*(self: ptr ImGuiDockNode): void {.importc: "ImGuiDockNode_destroy".
+ proc newImGuiErrorRecoveryState*(): ptr ImGuiErrorRecoveryState {.importc: "ImGuiErrorRecoveryState_ImGuiErrorRecoveryState".}
+ proc destroy*(self: ptr ImGuiErrorRecoveryState): void {.importc: "ImGuiErrorRecoveryState_destroy".}
+ proc imGuiFreeType_GetBuilderForFreeType*(): ptr ImFontBuilderIO {.importc: "ImGuiFreeType_GetBuilderForFreeType".}
+-proc imGuiFreeType_SetAllocatorFunctions*(alloc_func: proc(sz: uint, user_data: pointer): pointer {.cdecl, varargs.}, free_func: proc(`ptr`: pointer, user_data: pointer): void {.cdecl, varargs.}, user_data: pointer = nullptr): void {.importc: "ImGuiFreeType_SetAllocatorFunctions".}
++proc imGuiFreeType_SetAllocatorFunctions*(alloc_func: proc(sz: uint, user_data: pointer): pointer {.cdecl, varargs.}, free_func: proc(`ptr`: pointer, user_data: pointer): void {.cdecl, varargs.}, user_data: pointer = nil): void {.importc: "ImGuiFreeType_SetAllocatorFunctions".}
+ proc newImGuiIDStackTool*(): ptr ImGuiIDStackTool {.importc: "ImGuiIDStackTool_ImGuiIDStackTool".}
+ proc destroy*(self: ptr ImGuiIDStackTool): void {.importc: "ImGuiIDStackTool_destroy".}
+ proc addFocusEvent*(self: ptr ImGuiIO, focused: bool): void {.importc: "ImGuiIO_AddFocusEvent".}
+@@ -4155,7 +4155,7 @@ proc igRenderDragDropTargetRect*(bb: ImRect, item_clip_rect: ImRect): void {.imp
+ proc igRenderFrame*(p_min: ImVec2, p_max: ImVec2, fill_col: uint32, borders: bool = true, rounding: float32 = 0.0f): void {.importc: "igRenderFrame".}
+ proc igRenderFrameBorder*(p_min: ImVec2, p_max: ImVec2, rounding: float32 = 0.0f): void {.importc: "igRenderFrameBorder".}
+ proc igRenderMouseCursor*(pos: ImVec2, scale: float32, mouse_cursor: ImGuiMouseCursor, col_fill: uint32, col_border: uint32, col_shadow: uint32): void {.importc: "igRenderMouseCursor".}
+-proc igRenderNavCursor*(bb: ImRect, id: ImGuiID, flags: ImGuiNavRenderCursorFlags = ImGuiNavRenderCursorFlags_None.ImGuiNavRenderCursorFlags): void {.importc: "igRenderNavCursor".}
++proc igRenderNavCursor*(bb: ImRect, id: ImGuiID, flags: ImGuiNavRenderCursorFlags = ImGuiNavRenderCursorFlags.None): void {.importc: "igRenderNavCursor".}
+ proc igRenderPlatformWindowsDefault*(platform_render_arg: pointer = nil, renderer_render_arg: pointer = nil): void {.importc: "igRenderPlatformWindowsDefault".}
+ proc igRenderRectFilledRangeH*(draw_list: ptr ImDrawList, rect: ImRect, col: uint32, x_start_norm: float32, x_end_norm: float32, rounding: float32): void {.importc: "igRenderRectFilledRangeH".}
+ proc igRenderRectFilledWithHole*(draw_list: ptr ImDrawList, outer: ImRect, inner: ImRect, col: uint32, rounding: float32): void {.importc: "igRenderRectFilledWithHole".}

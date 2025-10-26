@@ -37,8 +37,7 @@ proc main() =
   glfwWindowHint(GLFWOpenglForwardCompat, GLFW_TRUE)
   glfwWindowHint(GLFWOpenglProfile, GLFW_OPENGL_CORE_PROFILE)
   glfwWindowHint(GLFWResizable, GLFW_TRUE)
-  if TransparentViewport:
-    glfwWindowHint(GLFWVisible, GLFW_FALSE)
+  glfwWindowHint(GLFWVisible, GLFW_FALSE)
 
   var w: GLFWWindow = glfwCreateWindow(1080, 720)
   if w == nil:
@@ -72,6 +71,7 @@ proc main() =
   var showFirstWindow = true
   var somefloat: float32 = 0.0f
   var counter: int32 = 0
+  var showWindowDelay = 2 # TODO: Avoid flickering screen at startup.
 
   while not w.windowShouldClose:
     glfwPollEvents()
@@ -116,6 +116,12 @@ proc main() =
     w.swapBuffers()
     if not showFirstWindow and not show_demo:
       w.setWindowShouldClose(true) # End program
+
+    if showWindowDelay > 0:
+      dec showWindowDelay
+    else:
+      once:
+        w.showWindow()
 
   igOpenGL3Shutdown()
   igGlfwShutdown()

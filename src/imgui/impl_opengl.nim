@@ -14,8 +14,11 @@ else:
   {.passC:"-I" & ImguiRootPath.}
   {.passC:"-DCIMGUI_USE_OPENGL3".}
   {.passC:"""-DCIMGUI_API="extern \"C\" " """.}
-  {.passC:"""-DIMGUI_IMPL_API="extern \"C\" " """.}
-  #{.passC:"""-DIMGUI_IMPL_API="extern \"C\" __declspec(dllexport)"  """.}
+
+  when defined(windows):
+    {.passC:"""-DIMGUI_IMPL_API="extern \"C\" __declspec(dllexport)"  """.}
+  else:
+    {.passC:"""-DIMGUI_IMPL_API="extern \"C\" " """.}
   {.compile:joinPath(ImguiRootPath,"backends","imgui_impl_opengl3.cpp").}
 
   {.push discardable.}

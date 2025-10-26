@@ -38,8 +38,8 @@ proc igOpenGL3CheckProgram(handle: uint32, desc: string) =
   if status == GL_FALSE.int32:
     echo "ERROR: impl_opengl failed to link " & desc
   if log_length > 0:
-    var msg: seq[char] = newSeq[char](log_length)
-    glGetProgramInfoLog(handle, log_length, nil, msg[0].addr)
+    var msg = newString(log_length)
+    glGetProgramInfoLog(handle, log_length, nil, cast[cstring](msg[0].addr))
     for m in msg:
       stdout.write(m)
     echo ""
@@ -52,8 +52,8 @@ proc igOpenGL3CheckShader(handle: uint32, desc: string) =
   if status == GL_FALSE.int32:
     echo "ERROR: impl_opengl failed to compile " & desc
   if log_length > 0:
-    var msg: seq[char] = newSeq[char](log_length)
-    glGetShaderInfoLog(handle, log_length, nil, msg[0].addr)
+    var msg = newString(log_length)
+    glGetShaderInfoLog(handle, log_length, nil, cast[cstring](msg[0].addr))
     for m in msg:
       stdout.write(m)
     echo ""
@@ -108,8 +108,8 @@ void main() {
   Out_Color = Frag_Color * texture(Texture, Frag_UV.st);
 }
   """
-  vertex_shader_glsl = $gGlslVersionString & "\n" & $vertex_shader_glsl
-  fragment_shader_glsl = $gGlslVersionString & "\n" & $fragment_shader_glsl
+  vertex_shader_glsl = cstring($gGlslVersionString & "\n" & $vertex_shader_glsl)
+  fragment_shader_glsl = cstring($gGlslVersionString & "\n" & $fragment_shader_glsl)
 
   gVertHandle = glCreateShader(GL_VERTEX_SHADER)
   glShaderSource(gVertHandle, 1, vertex_shader_glsl.addr, nil)
