@@ -1148,7 +1148,7 @@ type
   ImGuiTableColumnIdx* = int16
   ImGuiTableDrawChannelIdx* = uint16
   ImPoolIdx* = int32
-  ImStbTexteditState* = ImStb::STB_TexteditState
+  ImStbTexteditState* = object
   ImTextureID* = pointer
   ImWchar* = ImWchar16
   ImWchar16* = uint16

@@ -7,7 +7,7 @@ ImColor_ImColor	5
 5	nil	ImColor_ImColor_U32 (ImU32)
 ImDrawList_AddText	2
 1	void	ImDrawList_AddText_Vec2 (const ImVec2,ImU32,const char*,const char*)
-2	void	ImDrawList_AddText_FontPtr (ImFont*,float,const ImVec2,ImU32,const char*,const char*,float,const ImVec4*)
+2	void	ImDrawList_AddText_FontPtr (const ImFont*,float,const ImVec2,ImU32,const char*,const char*,float,const ImVec4*)
 ImGuiPtrOrIndex_ImGuiPtrOrIndex	2
 1	nil	ImGuiPtrOrIndex_ImGuiPtrOrIndex_Ptr (void*)
 2	nil	ImGuiPtrOrIndex_ImGuiPtrOrIndex_Int (int)
@@ -123,15 +123,9 @@ igGetID	4
 igGetIDWithSeed	2
 1	ImGuiID	igGetIDWithSeed_Str (const char*,const char*,ImGuiID)
 2	ImGuiID	igGetIDWithSeed_Int (int,ImGuiID)
-igGetIO	2
-1	ImGuiIO*	igGetIO_Nil ()
-2	ImGuiIO*	igGetIO_ContextPtr (ImGuiContext*)
 igGetKeyData	2
 1	ImGuiKeyData*	igGetKeyData_ContextPtr (ImGuiContext*,ImGuiKey)
 2	ImGuiKeyData*	igGetKeyData_Key (ImGuiKey)
-igGetPlatformIO	2
-1	ImGuiPlatformIO*	igGetPlatformIO_Nil ()
-2	ImGuiPlatformIO*	igGetPlatformIO_ContextPtr (ImGuiContext*)
 igImAbs	3
 1	int	igImAbs_Int (int)
 2	float	igImAbs_Float (float)
@@ -265,9 +259,6 @@ igSetWindowSize	3
 igShortcut	2
 1	bool	igShortcut_Nil (ImGuiKeyChord,ImGuiInputFlags)
 2	bool	igShortcut_ID (ImGuiKeyChord,ImGuiInputFlags,ImGuiID)
-igTabBarQueueFocus	2
-1	void	igTabBarQueueFocus_TabItemPtr (ImGuiTabBar*,ImGuiTabItem*)
-2	void	igTabBarQueueFocus_Str (ImGuiTabBar*,const char*)
 igTabItemCalcSize	2
 1	ImVec2	igTabItemCalcSize_Str (const char*,bool)
 2	ImVec2	igTabItemCalcSize_WindowPtr (ImGuiWindow*)
@@ -299,4 +290,4 @@ igValue	4
 2	void	igValue_Int (const char*,int)
 3	void	igValue_Uint (const char*,unsigned int)
 4	void	igValue_Float (const char*,float,const char*)
-209 overloaded
+203 overloaded

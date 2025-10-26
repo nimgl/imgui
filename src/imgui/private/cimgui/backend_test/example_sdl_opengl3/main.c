@@ -18,8 +18,6 @@
 #define igButton igButton_Str
 #endif
 
-#define igGetIO igGetIO_Nil
-
 SDL_Window *window = NULL;
 
 int main(int argc, char* argv[])

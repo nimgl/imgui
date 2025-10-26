@@ -15,9 +15,7 @@ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DVK_PROTOTYPES")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_PROTOTYPES")
 
 # GLFW
-if(NOT GLFW_DIR)
-   set(GLFW_DIR ../../../glfw) # Set this to point to an up-to-date GLFW repo
-endif()
+set(GLFW_DIR ../../../glfw) # Set this to point to an up-to-date GLFW repo
 option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
 option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
@@ -36,7 +34,6 @@ find_package(Vulkan REQUIRED)
   #NAMES vulkan vulkan-1)
 #set(LIBRARIES "glfw;${VULKAN_LIBRARY}")
 set(LIBRARIES "glfw;Vulkan::Vulkan")
-# FIXME: Linux needs linking with "X11" as well?
 
 # Use vulkan headers from glfw:
 include_directories(${GLFW_DIR}/deps)
@@ -45,4 +42,4 @@ file(GLOB sources *.cpp)
 
 add_executable(example_glfw_vulkan ${sources} ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp ${IMGUI_DIR}/imgui.cpp ${IMGUI_DIR}/imgui_draw.cpp ${IMGUI_DIR}/imgui_demo.cpp ${IMGUI_DIR}/imgui_tables.cpp ${IMGUI_DIR}/imgui_widgets.cpp)
 target_link_libraries(example_glfw_vulkan ${LIBRARIES})
-
+target_compile_definitions(example_glfw_vulkan PUBLIC -DImTextureID=ImU64)

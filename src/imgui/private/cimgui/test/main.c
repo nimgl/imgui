@@ -11,8 +11,6 @@
 #define igDebugCheckVersionAndDataLayout igDebugCheckVersionAndDataLayout_Str
 #endif
 
-#define igGetIO igGetIO_Nil
-
 int main(void)
 {
   assert(igDebugCheckVersionAndDataLayout(igGetVersion(), sizeof(ImGuiIO), sizeof(ImGuiStyle),

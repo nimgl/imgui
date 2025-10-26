@@ -17,8 +17,6 @@
 #define igButton igButton_Str
 #endif
 
-#define igGetIO igGetIO_Nil
-
 GLFWwindow *window;
 
 int main(int argc, char *argv[])
