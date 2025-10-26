@@ -47,9 +47,9 @@ typedef union SDL_Event SDL_Event;
 
 /////////////////////////hand written functions
 //no LogTextV
-CIMGUI_API void igLogText(CONST char *fmt, ...);
+CIMGUI_API void igLogText(const char *fmt, ...);
 //no appendfV
-CIMGUI_API void ImGuiTextBuffer_appendf(struct ImGuiTextBuffer *buffer, const char *fmt, ...);
+CIMGUI_API void ImGuiTextBuffer_appendf(ImGuiTextBuffer *self, const char *fmt, ...);
 //for getting FLT_MAX in bindings
 CIMGUI_API float igGET_FLT_MAX(void);
 //for getting FLT_MIN in bindings

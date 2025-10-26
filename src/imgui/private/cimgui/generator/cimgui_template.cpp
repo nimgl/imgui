@@ -1,12 +1,4 @@
-#ifdef IMGUI_ENABLE_FREETYPE
-#ifndef CIMGUI_FREETYPE
-#error "IMGUI_FREETYPE should be defined for Freetype linking"
-#endif
-#else
-#ifdef CIMGUI_FREETYPE
-#error "IMGUI_FREETYPE should not be defined without freetype generated cimgui"
-#endif
-#endif
+
 #include "./imgui/imgui.h"
 #ifdef IMGUI_ENABLE_FREETYPE
 #include "./imgui/misc/freetype/imgui_freetype.h"
@@ -20,7 +12,7 @@
 
 
 /////////////////////////////manual written functions
-CIMGUI_API void igLogText(CONST char *fmt, ...)
+CIMGUI_API void igLogText(const char *fmt, ...)
 {
     char buffer[256];
     va_list args;
@@ -30,11 +22,11 @@ CIMGUI_API void igLogText(CONST char *fmt, ...)
 
     ImGui::LogText("%s", buffer);
 }
-CIMGUI_API void ImGuiTextBuffer_appendf(struct ImGuiTextBuffer *buffer, const char *fmt, ...)
+CIMGUI_API void ImGuiTextBuffer_appendf(ImGuiTextBuffer *self, const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    buffer->appendfv(fmt, args);
+    self->appendfv(fmt, args);
     va_end(args);
 }
 
