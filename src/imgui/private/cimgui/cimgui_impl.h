@@ -1,3 +1,5 @@
+#ifndef CIMGUI_IMPL_DEFINED
+#define CIMGUI_IMPL_DEFINED
 #ifdef CIMGUI_USE_GLFW
 #ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 
@@ -6,45 +8,58 @@ typedef struct GLFWmonitor GLFWmonitor;
 struct GLFWwindow;
 struct GLFWmonitor;
 #endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-CIMGUI_API bool ImGui_ImplGlfw_InitForOpenGL(GLFWwindow* window,bool install_callbacks);
-CIMGUI_API bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window,bool install_callbacks);
-CIMGUI_API bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window,bool install_callbacks);
-CIMGUI_API void ImGui_ImplGlfw_Shutdown(void);
-CIMGUI_API void ImGui_ImplGlfw_NewFrame(void);
-CIMGUI_API void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window);
-CIMGUI_API void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window);
-CIMGUI_API void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows);
-CIMGUI_API void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window,int focused);
+CIMGUI_API void ImGui_ImplGlfw_CharCallback(GLFWwindow* window,unsigned int c);
 CIMGUI_API void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window,int entered);
 CIMGUI_API void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window,double x,double y);
-CIMGUI_API void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,int button,int action,int mods);
-CIMGUI_API void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,double xoffset,double yoffset);
+CIMGUI_API float ImGui_ImplGlfw_GetContentScaleForMonitor(GLFWmonitor* monitor);
+CIMGUI_API float ImGui_ImplGlfw_GetContentScaleForWindow(GLFWwindow* window);
+CIMGUI_API bool ImGui_ImplGlfw_InitForOpenGL(GLFWwindow* window,bool install_callbacks);
+CIMGUI_API bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window,bool install_callbacks);
+CIMGUI_API bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window,bool install_callbacks);
+CIMGUI_API void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window);
 CIMGUI_API void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window,int key,int scancode,int action,int mods);
-CIMGUI_API void ImGui_ImplGlfw_CharCallback(GLFWwindow* window,unsigned int c);
 CIMGUI_API void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor* monitor,int event);
+CIMGUI_API void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,int button,int action,int mods);
+CIMGUI_API void ImGui_ImplGlfw_NewFrame(void);
+CIMGUI_API void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window);
+CIMGUI_API void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,double xoffset,double yoffset);
+CIMGUI_API void ImGui_ImplGlfw_SetCallbacksChainForAllWindows(bool chain_for_all_windows);
+CIMGUI_API void ImGui_ImplGlfw_Shutdown(void);
 CIMGUI_API void ImGui_ImplGlfw_Sleep(int milliseconds);
+CIMGUI_API void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window,int focused);
 
 #endif
 #ifdef CIMGUI_USE_OPENGL3
-CIMGUI_API bool ImGui_ImplOpenGL3_Init(const char* glsl_version);
-CIMGUI_API void ImGui_ImplOpenGL3_Shutdown(void);
-CIMGUI_API void ImGui_ImplOpenGL3_NewFrame(void);
-CIMGUI_API void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
-CIMGUI_API bool ImGui_ImplOpenGL3_CreateFontsTexture(void);
-CIMGUI_API void ImGui_ImplOpenGL3_DestroyFontsTexture(void);
+#ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
+
+typedef struct ImGui_ImplOpenGL3_RenderState ImGui_ImplOpenGL3_RenderState;
+struct ImGui_ImplOpenGL3_RenderState
+{
+    bool UseBindSampler;
+    bool UseTexParameterFilter;
+    unsigned int CurrentSampler;
+    unsigned int CurrentTexParameterFilter;
+};
+#endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 CIMGUI_API bool ImGui_ImplOpenGL3_CreateDeviceObjects(void);
 CIMGUI_API void ImGui_ImplOpenGL3_DestroyDeviceObjects(void);
+CIMGUI_API ImGui_ImplOpenGL3_RenderState* ImGui_ImplOpenGL3_GetRenderState(void);
+CIMGUI_API bool ImGui_ImplOpenGL3_Init(const char* glsl_version);
+CIMGUI_API void ImGui_ImplOpenGL3_NewFrame(void);
+CIMGUI_API void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
+CIMGUI_API void ImGui_ImplOpenGL3_SetClipOrigin(unsigned int gl_clip_origin);
+CIMGUI_API void ImGui_ImplOpenGL3_Shutdown(void);
+CIMGUI_API void ImGui_ImplOpenGL3_UpdateTexture(ImTextureData* tex);
 
 #endif
 #ifdef CIMGUI_USE_OPENGL2
-CIMGUI_API bool ImGui_ImplOpenGL2_Init(void);
-CIMGUI_API void ImGui_ImplOpenGL2_Shutdown(void);
-CIMGUI_API void ImGui_ImplOpenGL2_NewFrame(void);
-CIMGUI_API void ImGui_ImplOpenGL2_RenderDrawData(ImDrawData* draw_data);
-CIMGUI_API bool ImGui_ImplOpenGL2_CreateFontsTexture(void);
-CIMGUI_API void ImGui_ImplOpenGL2_DestroyFontsTexture(void);
 CIMGUI_API bool ImGui_ImplOpenGL2_CreateDeviceObjects(void);
 CIMGUI_API void ImGui_ImplOpenGL2_DestroyDeviceObjects(void);
+CIMGUI_API bool ImGui_ImplOpenGL2_Init(void);
+CIMGUI_API void ImGui_ImplOpenGL2_NewFrame(void);
+CIMGUI_API void ImGui_ImplOpenGL2_RenderDrawData(ImDrawData* draw_data);
+CIMGUI_API void ImGui_ImplOpenGL2_Shutdown(void);
+CIMGUI_API void ImGui_ImplOpenGL2_UpdateTexture(ImTextureData* tex);
 
 #endif
 #ifdef CIMGUI_USE_SDL2
@@ -58,17 +73,21 @@ struct SDL_Renderer;
 struct _SDL_GameController;
 typedef union SDL_Event SDL_Event;
 typedef enum { ImGui_ImplSDL2_GamepadMode_AutoFirst, ImGui_ImplSDL2_GamepadMode_AutoAll, ImGui_ImplSDL2_GamepadMode_Manual }ImGui_ImplSDL2_GamepadMode;
+typedef enum { ImGui_ImplSDL2_MouseCaptureMode_Enabled, ImGui_ImplSDL2_MouseCaptureMode_EnabledAfterDrag, ImGui_ImplSDL2_MouseCaptureMode_Disabled }ImGui_ImplSDL2_MouseCaptureMode;
 #endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-CIMGUI_API bool ImGui_ImplSDL2_InitForOpenGL(SDL_Window* window,void* sdl_gl_context);
-CIMGUI_API bool ImGui_ImplSDL2_InitForVulkan(SDL_Window* window);
+CIMGUI_API float ImGui_ImplSDL2_GetContentScaleForDisplay(int display_index);
+CIMGUI_API float ImGui_ImplSDL2_GetContentScaleForWindow(SDL_Window* window);
 CIMGUI_API bool ImGui_ImplSDL2_InitForD3D(SDL_Window* window);
 CIMGUI_API bool ImGui_ImplSDL2_InitForMetal(SDL_Window* window);
-CIMGUI_API bool ImGui_ImplSDL2_InitForSDLRenderer(SDL_Window* window,SDL_Renderer* renderer);
+CIMGUI_API bool ImGui_ImplSDL2_InitForOpenGL(SDL_Window* window,void* sdl_gl_context);
 CIMGUI_API bool ImGui_ImplSDL2_InitForOther(SDL_Window* window);
-CIMGUI_API void ImGui_ImplSDL2_Shutdown(void);
+CIMGUI_API bool ImGui_ImplSDL2_InitForSDLRenderer(SDL_Window* window,SDL_Renderer* renderer);
+CIMGUI_API bool ImGui_ImplSDL2_InitForVulkan(SDL_Window* window);
 CIMGUI_API void ImGui_ImplSDL2_NewFrame(void);
 CIMGUI_API bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event);
 CIMGUI_API void ImGui_ImplSDL2_SetGamepadMode(ImGui_ImplSDL2_GamepadMode mode,struct _SDL_GameController** manual_gamepads_array,int manual_gamepads_count);
+CIMGUI_API void ImGui_ImplSDL2_SetMouseCaptureMode(ImGui_ImplSDL2_MouseCaptureMode mode);
+CIMGUI_API void ImGui_ImplSDL2_Shutdown(void);
 
 #endif
 #ifdef CIMGUI_USE_SDL3
@@ -82,18 +101,20 @@ struct SDL_Renderer;
 struct SDL_Gamepad;
 typedef union SDL_Event SDL_Event;
 typedef enum { ImGui_ImplSDL3_GamepadMode_AutoFirst, ImGui_ImplSDL3_GamepadMode_AutoAll, ImGui_ImplSDL3_GamepadMode_Manual }ImGui_ImplSDL3_GamepadMode;
+typedef enum { ImGui_ImplSDL3_MouseCaptureMode_Enabled, ImGui_ImplSDL3_MouseCaptureMode_EnabledAfterDrag, ImGui_ImplSDL3_MouseCaptureMode_Disabled }ImGui_ImplSDL3_MouseCaptureMode;
 #endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-CIMGUI_API bool ImGui_ImplSDL3_InitForOpenGL(SDL_Window* window,void* sdl_gl_context);
-CIMGUI_API bool ImGui_ImplSDL3_InitForVulkan(SDL_Window* window);
 CIMGUI_API bool ImGui_ImplSDL3_InitForD3D(SDL_Window* window);
 CIMGUI_API bool ImGui_ImplSDL3_InitForMetal(SDL_Window* window);
-CIMGUI_API bool ImGui_ImplSDL3_InitForSDLRenderer(SDL_Window* window,SDL_Renderer* renderer);
-CIMGUI_API bool ImGui_ImplSDL3_InitForSDLGPU(SDL_Window* window);
+CIMGUI_API bool ImGui_ImplSDL3_InitForOpenGL(SDL_Window* window,void* sdl_gl_context);
 CIMGUI_API bool ImGui_ImplSDL3_InitForOther(SDL_Window* window);
-CIMGUI_API void ImGui_ImplSDL3_Shutdown(void);
+CIMGUI_API bool ImGui_ImplSDL3_InitForSDLGPU(SDL_Window* window);
+CIMGUI_API bool ImGui_ImplSDL3_InitForSDLRenderer(SDL_Window* window,SDL_Renderer* renderer);
+CIMGUI_API bool ImGui_ImplSDL3_InitForVulkan(SDL_Window* window);
 CIMGUI_API void ImGui_ImplSDL3_NewFrame(void);
 CIMGUI_API bool ImGui_ImplSDL3_ProcessEvent(const SDL_Event* event);
 CIMGUI_API void ImGui_ImplSDL3_SetGamepadMode(ImGui_ImplSDL3_GamepadMode mode,SDL_Gamepad** manual_gamepads_array,int manual_gamepads_count);
+CIMGUI_API void ImGui_ImplSDL3_SetMouseCaptureMode(ImGui_ImplSDL3_MouseCaptureMode mode);
+CIMGUI_API void ImGui_ImplSDL3_Shutdown(void);
 
 #endif
 #ifdef CIMGUI_USE_VULKAN
@@ -101,6 +122,18 @@ CIMGUI_API void ImGui_ImplSDL3_SetGamepadMode(ImGui_ImplSDL3_GamepadMode mode,SD
 
 typedef struct ImGui_ImplVulkanH_Frame ImGui_ImplVulkanH_Frame;
 typedef struct ImGui_ImplVulkanH_Window ImGui_ImplVulkanH_Window;
+typedef struct ImGui_ImplVulkan_PipelineInfo ImGui_ImplVulkan_PipelineInfo;
+typedef struct ImVector_VkDynamicState {int Size;int Capacity;VkDynamicState* Data;} ImVector_VkDynamicState;
+
+struct ImGui_ImplVulkan_PipelineInfo
+{
+    VkRenderPass RenderPass;
+    uint32_t Subpass;
+    VkSampleCountFlagBits MSAASamples;
+    ImVector_VkDynamicState ExtraDynamicStates;
+    VkPipelineRenderingCreateInfoKHR PipelineRenderingCreateInfo;
+    VkImageUsageFlags SwapChainImageUsage;
+};
 typedef struct ImGui_ImplVulkan_InitInfo ImGui_ImplVulkan_InitInfo;
 struct ImGui_ImplVulkan_InitInfo
 {
@@ -111,18 +144,18 @@ struct ImGui_ImplVulkan_InitInfo
     uint32_t QueueFamily;
     VkQueue Queue;
     VkDescriptorPool DescriptorPool;
-    VkRenderPass RenderPass;
+    uint32_t DescriptorPoolSize;
     uint32_t MinImageCount;
     uint32_t ImageCount;
-    VkSampleCountFlagBits MSAASamples;
     VkPipelineCache PipelineCache;
-    uint32_t Subpass;
-    uint32_t DescriptorPoolSize;
+    ImGui_ImplVulkan_PipelineInfo PipelineInfoMain;
+    ImGui_ImplVulkan_PipelineInfo PipelineInfoForViewports;
     bool UseDynamicRendering;
-    VkPipelineRenderingCreateInfoKHR PipelineRenderingCreateInfo;
     const VkAllocationCallbacks* Allocator;
     void (*CheckVkResultFn)(VkResult err);
     VkDeviceSize MinAllocationSize;
+    VkShaderModuleCreateInfo CustomShaderVertCreateInfo;
+    VkShaderModuleCreateInfo CustomShaderFragCreateInfo;
 };
 typedef struct ImGui_ImplVulkan_RenderState ImGui_ImplVulkan_RenderState;
 struct ImGui_ImplVulkan_RenderState
@@ -154,16 +187,16 @@ typedef struct ImVector_ImGui_ImplVulkanH_FrameSemaphores {int Size;int Capacity
 
 struct ImGui_ImplVulkanH_Window
 {
-    int Width;
-    int Height;
-    VkSwapchainKHR Swapchain;
+    bool UseDynamicRendering;
     VkSurfaceKHR Surface;
     VkSurfaceFormatKHR SurfaceFormat;
     VkPresentModeKHR PresentMode;
-    VkRenderPass RenderPass;
-    bool UseDynamicRendering;
-    bool ClearEnable;
+    VkAttachmentDescription AttachmentDesc;
     VkClearValue ClearValue;
+    int Width;
+    int Height;
+    VkSwapchainKHR Swapchain;
+    VkRenderPass RenderPass;
     uint32_t FrameIndex;
     uint32_t ImageCount;
     uint32_t SemaphoreCount;
@@ -175,24 +208,70 @@ struct ImGui_ImplVulkanH_Window
 #ifndef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 typedef ImVector<ImGui_ImplVulkanH_Frame> ImVector_ImGui_ImplVulkanH_Frame;
 typedef ImVector<ImGui_ImplVulkanH_FrameSemaphores> ImVector_ImGui_ImplVulkanH_FrameSemaphores;
+typedef ImVector<VkDynamicState> ImVector_VkDynamicState;
 #endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-CIMGUI_API bool ImGui_ImplVulkan_Init(ImGui_ImplVulkan_InitInfo* info);
-CIMGUI_API void ImGui_ImplVulkan_Shutdown(void);
-CIMGUI_API void ImGui_ImplVulkan_NewFrame(void);
-CIMGUI_API void ImGui_ImplVulkan_RenderDrawData(ImDrawData* draw_data,VkCommandBuffer command_buffer,VkPipeline pipeline);
-CIMGUI_API bool ImGui_ImplVulkan_CreateFontsTexture(void);
-CIMGUI_API void ImGui_ImplVulkan_DestroyFontsTexture(void);
-CIMGUI_API void ImGui_ImplVulkan_SetMinImageCount(uint32_t min_image_count);
-CIMGUI_API VkDescriptorSet ImGui_ImplVulkan_AddTexture(VkSampler sampler,VkImageView image_view,VkImageLayout image_layout);
-CIMGUI_API void ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set);
-CIMGUI_API bool ImGui_ImplVulkan_LoadFunctions(uint32_t api_version,PFN_vkVoidFunction(*loader_func)(const char* function_name,void* user_data),void* user_data);
-CIMGUI_API void ImGui_ImplVulkanH_CreateOrResizeWindow(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count);
+#define IMGUI_IMPL_VULKAN_MINIMUM_SAMPLED_IMAGE_POOL_SIZE (8)
+#define IMGUI_IMPL_VULKAN_MINIMUM_SAMPLER_POOL_SIZE (2)
+CIMGUI_API void ImGui_ImplVulkanH_CreateOrResizeWindow(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count,VkImageUsageFlags image_usage);
 CIMGUI_API void ImGui_ImplVulkanH_DestroyWindow(VkInstance instance,VkDevice device,ImGui_ImplVulkanH_Window* wd,const VkAllocationCallbacks* allocator);
-CIMGUI_API VkSurfaceFormatKHR ImGui_ImplVulkanH_SelectSurfaceFormat(VkPhysicalDevice physical_device,VkSurfaceKHR surface,const VkFormat* request_formats,int request_formats_count,VkColorSpaceKHR request_color_space);
-CIMGUI_API VkPresentModeKHR ImGui_ImplVulkanH_SelectPresentMode(VkPhysicalDevice physical_device,VkSurfaceKHR surface,const VkPresentModeKHR* request_modes,int request_modes_count);
-CIMGUI_API VkPhysicalDevice ImGui_ImplVulkanH_SelectPhysicalDevice(VkInstance instance);
-CIMGUI_API uint32_t ImGui_ImplVulkanH_SelectQueueFamilyIndex(VkPhysicalDevice physical_device);
 CIMGUI_API int ImGui_ImplVulkanH_GetMinImageCountFromPresentMode(VkPresentModeKHR present_mode);
+CIMGUI_API ImGui_ImplVulkanH_Window* ImGui_ImplVulkanH_GetWindowDataFromViewport(ImGuiViewport* viewport);
+CIMGUI_API VkPhysicalDevice ImGui_ImplVulkanH_SelectPhysicalDevice(VkInstance instance);
+CIMGUI_API VkPresentModeKHR ImGui_ImplVulkanH_SelectPresentMode(VkPhysicalDevice physical_device,VkSurfaceKHR surface,const VkPresentModeKHR* request_modes,int request_modes_count);
+CIMGUI_API uint32_t ImGui_ImplVulkanH_SelectQueueFamilyIndex(VkPhysicalDevice physical_device);
+CIMGUI_API VkSurfaceFormatKHR ImGui_ImplVulkanH_SelectSurfaceFormat(VkPhysicalDevice physical_device,VkSurfaceKHR surface,const VkFormat* request_formats,int request_formats_count,VkColorSpaceKHR request_color_space);
 CIMGUI_API ImGui_ImplVulkanH_Window* ImGui_ImplVulkanH_Window_ImGui_ImplVulkanH_Window(void);
+CIMGUI_API VkDescriptorSet ImGui_ImplVulkan_AddTexture(VkImageView image_view,VkImageLayout image_layout);
+CIMGUI_API void ImGui_ImplVulkan_CreateMainPipeline(const ImGui_ImplVulkan_PipelineInfo* info);
+CIMGUI_API ImGui_ImplVulkan_RenderState* ImGui_ImplVulkan_GetRenderState(void);
+CIMGUI_API bool ImGui_ImplVulkan_Init(ImGui_ImplVulkan_InitInfo* info);
+CIMGUI_API bool ImGui_ImplVulkan_LoadFunctions(uint32_t api_version,PFN_vkVoidFunction(*loader_func)(const char* function_name,void* user_data),void* user_data);
+CIMGUI_API void ImGui_ImplVulkan_NewFrame(void);
+CIMGUI_API void ImGui_ImplVulkan_RemoveTexture(VkDescriptorSet descriptor_set);
+CIMGUI_API void ImGui_ImplVulkan_RenderDrawData(ImDrawData* draw_data,VkCommandBuffer command_buffer,VkPipeline pipeline);
+CIMGUI_API void ImGui_ImplVulkan_SetMinImageCount(uint32_t min_image_count);
+CIMGUI_API void ImGui_ImplVulkan_Shutdown(void);
+CIMGUI_API void ImGui_ImplVulkan_UpdateTexture(ImTextureData* tex);
 
 #endif
+#ifdef CIMGUI_USE_WIN32
+CIMGUI_API void ImGui_ImplWin32_EnableAlphaCompositing(void* hwnd);
+CIMGUI_API void ImGui_ImplWin32_EnableDpiAwareness(void);
+CIMGUI_API float ImGui_ImplWin32_GetDpiScaleForHwnd(void* hwnd);
+CIMGUI_API float ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor);
+CIMGUI_API bool ImGui_ImplWin32_Init(void* hwnd);
+CIMGUI_API bool ImGui_ImplWin32_InitForOpenGL(void* hwnd);
+CIMGUI_API void ImGui_ImplWin32_NewFrame(void);
+CIMGUI_API void ImGui_ImplWin32_Shutdown(void);
+
+#endif
+#ifdef CIMGUI_USE_DX11
+#ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
+
+typedef struct ID3D11Device ID3D11Device;
+typedef struct ID3D11DeviceContext ID3D11DeviceContext;
+typedef struct ID3D11SamplerState ID3D11SamplerState;
+typedef struct ID3D11Buffer ID3D11Buffer;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11SamplerState;
+struct ID3D11Buffer;
+typedef struct ImGui_ImplDX11_RenderState ImGui_ImplDX11_RenderState;
+struct ImGui_ImplDX11_RenderState
+{
+    ID3D11Device* Device;
+    ID3D11DeviceContext* DeviceContext;
+    ID3D11Buffer* VertexConstantBuffer;
+};
+#endif //CIMGUI_DEFINE_ENUMS_AND_STRUCTS
+CIMGUI_API bool ImGui_ImplDX11_CreateDeviceObjects(void);
+CIMGUI_API ImGui_ImplDX11_RenderState* ImGui_ImplDX11_GetRenderState(void);
+CIMGUI_API bool ImGui_ImplDX11_Init(ID3D11Device* device,ID3D11DeviceContext* device_context);
+CIMGUI_API void ImGui_ImplDX11_InvalidateDeviceObjects(void);
+CIMGUI_API void ImGui_ImplDX11_NewFrame(void);
+CIMGUI_API void ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data);
+CIMGUI_API void ImGui_ImplDX11_Shutdown(void);
+CIMGUI_API void ImGui_ImplDX11_UpdateTexture(ImTextureData* tex);
+
+#endif
+#endif //CIMGUI_IMPL_DEFINED

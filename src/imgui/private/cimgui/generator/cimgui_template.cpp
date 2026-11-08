@@ -1,8 +1,5 @@
 
 #include "./imgui/imgui.h"
-#ifdef IMGUI_ENABLE_FREETYPE
-#include "./imgui/misc/freetype/imgui_freetype.h"
-#endif
 #include "./imgui/imgui_internal.h"
 #include "cimgui.h"
 
@@ -12,16 +9,7 @@
 
 
 /////////////////////////////manual written functions
-CIMGUI_API void igLogText(const char *fmt, ...)
-{
-    char buffer[256];
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(buffer, 256, fmt, args);
-    va_end(args);
 
-    ImGui::LogText("%s", buffer);
-}
 CIMGUI_API void ImGuiTextBuffer_appendf(ImGuiTextBuffer *self, const char *fmt, ...)
 {
     va_list args;
@@ -29,6 +17,12 @@ CIMGUI_API void ImGuiTextBuffer_appendf(ImGuiTextBuffer *self, const char *fmt, 
     self->appendfv(fmt, args);
     va_end(args);
 }
+#ifdef CIMGUI_VARGS0
+CIMGUI_API void ImGuiTextBuffer_appendf0(ImGuiTextBuffer *self, const char *fmt)
+{
+    ImGuiTextBuffer_appendf(self,fmt);
+}
+#endif
 
 CIMGUI_API float igGET_FLT_MAX()
 {

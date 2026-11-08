@@ -20,6 +20,12 @@ else:
   else:
     {.passC:"""-DIMGUI_IMPL_API="extern \"C\" " """.}
   {.compile:joinPath(ImguiRootPath,"backends","imgui_impl_glfw.cpp").}
+  # The C++ backend calls GLFW functions directly, so it must be linked
+  # against the GLFW import library (nimgl itself only loads glfw at runtime).
+  when defined(windows):
+    {.passL: "-lglfw3".}
+  else:
+    {.passL: "-lglfw".}
 
   #--------------
   # Public procs

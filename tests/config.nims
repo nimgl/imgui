@@ -1,5 +1,5 @@
 switch("path", "$projectDir/../src")
-switch "warning","HoleEnumConv:off"
+#switch "warning","HoleEnumConv:off"
 
 switch "app","gui"
 

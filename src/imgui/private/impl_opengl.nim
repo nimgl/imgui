@@ -12,7 +12,6 @@ import ../../imgui, nimgl/opengl
 
 var
   gGlslVersionString: cstring = "#version 330 core"
-  gFontTexture: uint32 = 0
   gShaderHandle: uint32 = 0
   gVertHandle: uint32 = 0
   gFragHandle: uint32 = 0
@@ -28,6 +27,8 @@ proc igOpenGL3Init*(): bool =
   ## Initiate Opengl, this proc does nothing here because I assume that you are using modern opengl 3.2>.
   ## If you actually need to use lower specs open and issue or PR the fix please.
   # @TODO: add opengles support
+  let io = igGetIO()
+  io.backendFlags = (io.backendFlags.int32 or ImGuiBackendFlags.RendererHasTextures.int32).ImGuiBackendFlags
   return true
 
 proc igOpenGL3CheckProgram(handle: uint32, desc: string) =
@@ -58,23 +59,42 @@ proc igOpenGL3CheckShader(handle: uint32, desc: string) =
       stdout.write(m)
     echo ""
 
-proc igOpenGL3CreateFontsTexture() =
-  let io = igGetIO()
-  var text_pixels: ptr uint8
-  var text_w: int32
-  var text_h: int32
-  io.fonts.getTexDataAsRGBA32(text_pixels.addr, text_w.addr, text_h.addr)
+proc igOpenGL3DestroyTexture(tex: ptr ImTextureData) =
+  var gl_tex = cast[uint32](tex.texID)
+  if gl_tex > 0'u32:
+    glDeleteTextures(1, gl_tex.addr)
+  tex.texID = cast[ImTextureID](0)
+  tex.setStatus(ImTextureStatus.Destroyed)
 
+proc igOpenGL3UpdateTexture(tex: ptr ImTextureData) =
   var last_texture: int32
   glGetIntegerv(GL_TEXTURE_BINDING_2D, last_texture.addr)
-  glGenTextures(1, gFontTexture.addr)
-  glBindTexture(GL_TEXTURE_2D, gFontTexture)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR.ord)
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR.ord)
-  glPixelStorei(GL_UNPACK_ROW_LENGTH, 0)
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA.ord, text_w, text_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, text_pixels)
 
-  io.fonts.texID = cast[ImTextureID](gFontTexture)
+  if tex.status == ImTextureStatus.WantCreate:
+    var gl_texture: uint32 = 0
+    glGenTextures(1, gl_texture.addr)
+    glBindTexture(GL_TEXTURE_2D, gl_texture)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR.ord)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR.ord)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE.ord)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE.ord)
+    if tex.format == ImTextureFormat.Alpha8:
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_R8.ord, tex.width, tex.height, 0, GL_RED, GL_UNSIGNED_BYTE, tex.getPixels())
+    else:
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA.ord, tex.width, tex.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.getPixels())
+    tex.setTexID(cast[ImTextureID](gl_texture))
+    tex.setStatus(ImTextureStatus.OK)
+  elif tex.status == ImTextureStatus.WantUpdates:
+    glBindTexture(GL_TEXTURE_2D, cast[uint32](tex.texID))
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, tex.width)
+    for i in 0 ..< tex.updates.size:
+      let r = tex.updates.data[i]
+      glTexSubImage2D(GL_TEXTURE_2D, 0, r.x.int32, r.y.int32, r.w.int32, r.h.int32, GL_RGBA, GL_UNSIGNED_BYTE, tex.getPixelsAt(r.x.int32, r.y.int32))
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0)
+    tex.setStatus(ImTextureStatus.OK)
+  elif tex.status == ImTextureStatus.WantDestroy and tex.unusedFrames > 0:
+    igOpenGL3DestroyTexture(tex)
+
   glBindTexture(GL_TEXTURE_2D, last_texture.uint32)
 
 proc igOpenGL3CreateDeviceObjects() =
@@ -136,15 +156,18 @@ void main() {
   glGenBuffers(1, gVboHandle.addr)
   glGenBuffers(1, gElementsHandle.addr)
 
-  igOpenGL3CreateFontsTexture()
-
   glBindTexture(GL_TEXTURE_2D, last_texture.uint32)
   glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer.uint32)
   glBindVertexArray(last_vertex_array.uint32)
 
 proc igOpenGL3NewFrame*() =
-  if gFontTexture == 0:
+  if gShaderHandle == 0:
     igOpenGL3CreateDeviceObjects()
+  let io = igGetIO()
+  for i in 0 ..< io.fonts.texList.size:
+    let tex = io.fonts.texList.data[i]
+    if tex.status != ImTextureStatus.OK:
+      igOpenGL3UpdateTexture(tex)
 
 proc igOpenGL3RenderDrawData*(data: ptr ImDrawData) =
   let io = igGetIO()
@@ -226,7 +249,7 @@ proc igOpenGL3RenderDrawData*(data: ptr ImDrawData) =
   glVertexAttribPointer(gAttribLocationColor.uint32, 4, GL_UNSIGNED_BYTE, true, ImDrawVert.sizeof().int32, cast[pointer](16))
 
   let pos = data.displayPos
-  for n in 0 ..< data.cmdListsCount:
+  for n in 0 ..< data.cmdLists.size:
     var cmd_list = data.cmdLists.data[n]
     var idx_buffer_offset: int = 0
 
@@ -245,7 +268,7 @@ proc igOpenGL3RenderDrawData*(data: ptr ImDrawData) =
         var clip_rect = ImVec4(x: pcmd.clipRect.x - pos.x, y: pcmd.clipRect.y - pos.y, z: pcmd.clipRect.z - pos.x, w: pcmd.clipRect.w - pos.y)
         if clip_rect.x < fb_width.float32 and clip_rect.y < fb_height.float32 and clip_rect.z >= 0.0f and clip_rect.w >= 0.0f:
           glScissor(clip_rect.x.int32, (fb_height.float32 - clip_rect.w).int32, (clip_rect.z - clip_rect.x).int32, (clip_rect.w - clip_rect.y).int32)
-          glBindTexture(GL_TEXTURE_2D, cast[uint32](pcmd.textureId))
+          glBindTexture(GL_TEXTURE_2D, cast[uint32](pcmd.addr.getTexID()))
           glDrawElements(GL_TRIANGLES, pcmd.elemCount.int32, if ImDrawIdx.sizeof == 2: GL_UNSIGNED_SHORT else: GL_UNSIGNED_INT, cast[pointer](idx_buffer_offset))
         idx_buffer_offset.inc(pcmd.elemCount.int32 * ImDrawIdx.sizeof())
 
@@ -269,11 +292,11 @@ proc igOpenGL3RenderDrawData*(data: ptr ImDrawData) =
   glScissor(last_scissor_box[0], last_scissor_box[1], last_scissor_box[2], last_scissor_box[3])
 
 proc igOpenGL3DestroyFontsTexture() =
-  if gFontTexture > 0'u32:
-    let io = igGetIO()
-    glDeleteTextures(1, gFontTexture.addr)
-    io.fonts.texID = cast[ImTextureID](0)
-    gFontTexture = 0
+  let io = igGetIO()
+  for i in 0 ..< io.fonts.texList.size:
+    let tex = io.fonts.texList.data[i]
+    if tex.texID != cast[ImTextureID](0):
+      igOpenGL3DestroyTexture(tex)
 
 proc igOpenGL3DestroyDeviceObjects() =
   if gVboHandle > 0'u32: glDeleteBuffers(1, gVboHandle.addr)

@@ -54,7 +54,7 @@ proc igGlfwScrollCallback*(window: GLFWWindow, xoff: float64, yoff: float64) {.c
 
 proc keyToImGuiKey(key: int32): ImGuiKey =
     return case key:
-    of GlfwKey.TAB: ImGuiKey.Tab
+    of GlfwKey.TAB: ImGuiKey(ImGuiKey_Tab)
     of GlfwKey.LEFT: ImGuiKey.LeftArrow
     of GlfwKey.RIGHT: ImGuiKey.RightArrow
     of GlfwKey.UP: ImGuiKey.UpArrow
@@ -312,7 +312,6 @@ proc igGlfwUpdateMouseCursor() =
 
 proc igGlfwNewFrame*() =
   let io = igGetIO()
-  assert io.fonts.isBuilt()
 
   var w: int32
   var h: int32

@@ -30,6 +30,14 @@
 #include "imgui_impl_vulkan.h"
 #endif
 
+#ifdef CIMGUI_USE_WIN32
+#include "imgui_impl_win32.h"
+#endif
+
+#ifdef CIMGUI_USE_DX11
+#include "imgui_impl_dx11.h"
+#endif
+
 #include "cimgui_impl.h"
 
 #ifdef CIMGUI_USE_VULKAN

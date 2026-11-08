@@ -10,19 +10,15 @@ igDebugCheckVersionAndDataLayout(version, ImGuiIO.sizeof().uint32,
 echo "CreateContext() - {version}".fmt
 let context = igCreateContext()
 let io = igGetIO()
-
-var text_pixels: ptr uint8 = nil
-var text_w: int32
-var text_h: int32
-io.fonts.getTexDataAsRGBA32(text_pixels.addr, text_w.addr, text_h.addr, nil)
+# No renderer backend in this headless test; declare texture support so the
+# core does not demand a pre-built font atlas (ImGui 1.92+ texture API).
+io.backendFlags = (io.backendFlags.int32 or ImGuiBackendFlags.RendererHasTextures.int32).ImGuiBackendFlags
 
 for i in 0 ..< 20:
   echo "NewFrame() {i}".fmt
 
-  var display_size: ImVec2
-  display_size.x = 1920
-  display_size.y = 1080
-  io.displaySize = display_size
+  io.displaySize.x = 1920
+  io.displaySize.y = 1080
   io.deltaTime = 1.0f / 60.0f
   igNewFrame()
 

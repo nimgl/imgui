@@ -39,10 +39,10 @@ if FREETYPE_GENERATION then
 end
 
 if COMPILER == "gcc" or COMPILER == "clang" or COMPILER == "zig cc" then
-    CPRE = COMPILER..[[ -E -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS -DIMGUI_API="" -DIMGUI_IMPL_API=""  ]] .. CFLAGS
+    CPRE = COMPILER..[[ -E -dD -DIM_NODEBUGSTEP="" -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS -DIMGUI_API="" -DIMGUI_IMPL_API=""  ]] .. CFLAGS
     CTEST = COMPILER.." --version"
 elseif COMPILER == "cl" then
-    CPRE = COMPILER..[[ /E /DIMGUI_DISABLE_OBSOLETE_FUNCTIONS /DIMGUI_DEBUG_PARANOID /DIMGUI_API="" /DIMGUI_IMPL_API="" ]] .. CFLAGS
+    CPRE = COMPILER..[[ /E /d1PP /DIM_NODEBUGSTEP="" /DIMGUI_DISABLE_OBSOLETE_FUNCTIONS /DIMGUI_DEBUG_PARANOID /DIMGUI_API="" /DIMGUI_IMPL_API="" ]] .. CFLAGS
     CTEST = COMPILER
 else
     print("Working without compiler ")
@@ -78,7 +78,7 @@ print("CPRE",CPRE)
 --this table has the functions to be skipped in generation
 --------------------------------------------------------------------------
 local cimgui_manuals = {
-    igLogText = true,
+   -- igLogText = true,
     ImGuiTextBuffer_appendf = true,
     --igColorConvertRGBtoHSV = true,
     --igColorConvertHSVtoRGB = true
@@ -120,14 +120,21 @@ local save_data = cpp2ffi.save_data
 local copyfile = cpp2ffi.copyfile
 local serializeTableF = cpp2ffi.serializeTableF
 
-local function func_header_impl_generate(FP)
+local function func_header_impl_generate(FP, defines)
 
     local outtab = {}
-    
-    for _,t in ipairs(FP.funcdefs) do
-        if t.cimguiname then
-            local cimf = FP.defsT[t.cimguiname]
-            local def = cimf[t.signature]
+	--may be key sorting is not enough and declaration order needed 
+    cpp2ffi.table_do_sorted(defines, function(k,v)
+		table.insert(outtab,"#define "..k.." "..v.."\n")
+	end)
+    -- for _,t in ipairs(FP.funcdefs) do
+        -- if t.cimguiname then
+            -- local cimf = FP.defsT[t.cimguiname]
+            -- local def = cimf[t.signature]
+		--for k,defs in pairs(FP.defsT) do
+		cpp2ffi.table_do_sorted(FP.defsT, function(i,defs)
+		   if true then
+		   for i, def in ipairs(defs) do
 			local addcoment = def.comment or ""
 			local empty = def.args:match("^%(%)") --no args
 			if def.constructor then
@@ -147,10 +154,11 @@ local function func_header_impl_generate(FP)
                     error("class function in implementations")
                 end
             end
+		end
         else --not cimguiname
             table.insert(outtab,t.comment:gsub("%%","%%%%").."\n")-- %% substitution for gsub
         end
-    end
+    end)
     local cfuncsstr = table.concat(outtab)
     cfuncsstr = cfuncsstr:gsub("\n+","\n") --several empty lines to one empty line
     return cfuncsstr
@@ -181,7 +189,7 @@ local function get_defines(t)
     end
     pipe:close()
     --require"anima.utils"
-    --prtable(defines)
+    --cpp2ffi.prtable(defines)
 	assert(next(defines), table.concat(compiler_output, "\n"))
     local ret = {}
     for i,v in ipairs(t) do
@@ -271,13 +279,17 @@ local function cimgui_generation(parser)
 --]]
 	--------------------------------------------------
     local hstrfile = read_data"./cimgui_template.h"
-
+	
+	
+	--hstrfile = hstrfile:gsub([[PLACE_STRUCTS_C]],parser:gen_structs_c())
+	
 	local outpre,outpost = parser.structs_and_enums[1],parser.structs_and_enums[2]
 	cpp2ffi.prtable(parser.templates)
 	cpp2ffi.prtable(parser.typenames)
 	
 
 	local  tdt = parser:generate_templates()
+	cpp2ffi.prtable("generate_templates",tdt)
 	local cstructsstr = outpre..tdt..outpost 
     
 	if gdefines.IMGUI_HAS_DOCK then
@@ -285,6 +297,9 @@ local function cimgui_generation(parser)
 	end
 	if gdefines.ImDrawCallback_ResetRenderState then
 		cstructsstr = cstructsstr.."\n#define ImDrawCallback_ResetRenderState       "..gdefines.ImDrawCallback_ResetRenderState.."\n"
+	end
+	if gdefines.ImTextureID_Invalid then
+		cstructsstr = cstructsstr.."\n#define ImTextureID_Invalid       "..gdefines.ImTextureID_Invalid.."\n"
 	end
 	if gdefines.IMGUI_HAS_IMSTR then
 		if not (NOCHAR or NOIMSTRV) then
@@ -295,6 +310,7 @@ local function cimgui_generation(parser)
 	cstructsstr = colapse_defines(cstructsstr, "IMGUI_ENABLE_FREETYPE")
 	
     hstrfile = hstrfile:gsub([[#include "imgui_structs%.h"]],cstructsstr)
+	hstrfile = hstrfile:gsub([[PLACE_STRUCTS_C]],parser:gen_structs_c())
     local cfuncsstr = func_header_generate(parser)
 	cfuncsstr = colapse_defines(cfuncsstr, "IMGUI_ENABLE_FREETYPE")
     hstrfile = hstrfile:gsub([[#include "auto_funcs%.h"]],cfuncsstr)
@@ -310,7 +326,7 @@ local function cimgui_generation(parser)
     local cimplem = func_implementation(parser)
 	cimplem = colapse_defines(cimplem, "IMGUI_ENABLE_FREETYPE")
     local hstrfile = read_data"./cimgui_template.cpp"
-
+	
     hstrfile = hstrfile:gsub([[#include "auto_funcs%.cpp"]],cimplem)
 	local ftdef = "" --FREETYPE_GENERATION and "#define IMGUI_ENABLE_FREETYPE\n" or ""
     save_data("./output/cimgui.cpp",cimgui_header, ftdef, hstrfile)
@@ -321,7 +337,7 @@ end
 --------------------------------------------------------
 --get imgui.h version and IMGUI_HAS_DOCK--------------------------
 --defines for the cl compiler must be present in the print_defines.cpp file
-gdefines = get_defines{"IMGUI_VERSION","IMGUI_VERSION_NUM","FLT_MAX","FLT_MIN","IMGUI_HAS_DOCK","IMGUI_HAS_IMSTR","ImDrawCallback_ResetRenderState","IMGUI_HAS_TEXTURES"}
+gdefines = get_defines{"IMGUI_VERSION","IMGUI_VERSION_NUM","FLT_MAX","FLT_MIN","IMGUI_HAS_DOCK","IMGUI_HAS_IMSTR","ImDrawCallback_ResetRenderState","IMGUI_HAS_TEXTURES","ImTextureID_Invalid"}
 cpp2ffi.prtable(gdefines)
 if gdefines.IMGUI_HAS_DOCK then gdefines.IMGUI_HAS_DOCK = true end
 if gdefines.IMGUI_HAS_IMSTR then gdefines.IMGUI_HAS_IMSTR = true end
@@ -367,16 +383,15 @@ end
 local function parseImGuiHeader(header,names)
 	--prepare parser
 	local parser = cpp2ffi.Parser()
-	
+	parser.modulename = "cimgui"
 	parser.getCname = function(stname,funcname,namespace)
 		local pre = (stname == "") and (namespace and (namespace=="ImGui" and "ig" or namespace.."_") or "ig") or stname.."_"
 		return pre..funcname
 	end
 	parser.cname_overloads = cimgui_overloads
-	--parser.manuals = cimgui_manuals
 	parser:set_manuals(cimgui_manuals, "cimgui")
 	parser.skipped = cimgui_skipped
-	parser.UDTs = {"ImVec2","ImVec4","ImColor","ImRect"}
+	--parser.UDTs = {"ImVec2","ImVec4","ImColor","ImRect"}
 	--parser.gen_template_typedef = gen_template_typedef --use auto
 	parser.COMMENTS_GENERATION = COMMENTS_GENERATION
 	parser.CONSTRUCTORS_GENERATION = CONSTRUCTORS_GENERATION
@@ -386,25 +401,26 @@ local function parseImGuiHeader(header,names)
 	parser.custom_function_post = custom_function_post
 	parser.header_text_insert = header_text_insert
 	local defines = parser:take_lines(CPRE..header,names,COMPILER)
-	
+	--cpp2ffi.prtable("defines",defines)
 	return parser
 end
 --generation
 print("------------------generation with "..COMPILER.."------------------------")
 local parser1
-local headers = [[#include "]]..IMGUI_PATH..[[/imgui.h" 
+local headers = [[#include "]]..IMGUI_PATH..[[/imgui.h"
 ]]
 local headersT = {[[imgui]]}
 if INTERNAL_GENERATION then
 	headers = headers .. [[#include "]]..IMGUI_PATH..[[/imgui_internal.h"
-	]]
+]]
+	headers = headers .. [[#include "]]..IMGUI_PATH..[[/imstb_textedit.h"
+]]
 	headersT[#headersT + 1] = [[imgui_internal]]
 	headersT[#headersT + 1] = [[imstb_textedit]]
 end
 if FREETYPE_GENERATION then
-	headers = headers .. [[
-	#include "]]..IMGUI_PATH..[[/misc/freetype/imgui_freetype.h"
-	]]
+	headers = headers .. [[#include "]]..IMGUI_PATH..[[/misc/freetype/imgui_freetype.h"
+]]
 	headersT[#headersT + 1] = [[imgui_freetype]]
 end
 save_data("headers.h",headers)
@@ -425,14 +441,9 @@ local structs_and_enums_table = parser1.structs_and_enums_table
 structs_and_enums_table.templated_structs = parser1.templated_structs
 structs_and_enums_table.typenames = parser1.typenames
 structs_and_enums_table.templates_done = parser1.templates_done
-
-save_data("./output/structs_and_enums.lua",serializeTableF(structs_and_enums_table))
-save_data("./output/typedefs_dict.lua",serializeTableF(parser1.typedefs_dict))
-
-----------save fundefs in definitions.lua for using in bindings
---DefsByStruct(pFP)
+--structs_and_enums_table.nonPOD_used = parser1.nP_used
 set_defines(parser1.defsT) 
-save_data("./output/definitions.lua",serializeTableF(parser1.defsT))
+parser1:save_output()
 
 --check every function has ov_cimguiname
 -- for k,v in pairs(parser1.defsT) do
@@ -450,7 +461,11 @@ if ff then
 else
 	backends_folder = IMGUI_PATH .. "/backends/"
 end
- 
+local function getCname(stname,funcname, namespace)
+		if #stname == 0 then return funcname end --top level
+		local pre = stname.."_"
+		return pre..funcname
+	end
 local parser2
 
 if #implementations > 0 then
@@ -460,9 +475,10 @@ if #implementations > 0 then
     parser2 = cpp2ffi.Parser()
 	
 	local config = dofile(CONFIG_GENERATOR_PATH) --"./config_generator.lua"
-    local impl_str = ""
+    local impl_str = "#ifndef CIMGUI_IMPL_DEFINED\n#define CIMGUI_IMPL_DEFINED\n"
 	local impl_str_cpp = {}
     for i,impl in ipairs(implementations) do
+		print("------------implementation:",impl)
 		table.insert(impl_str_cpp, "\n#ifdef CIMGUI_USE_" .. string.upper(impl))
 		table.insert(impl_str_cpp, [[#include "imgui_impl_]]..impl..[[.h"]])
 		table.insert(impl_str_cpp, "#endif")
@@ -480,14 +496,16 @@ if #implementations > 0 then
 				extra_includes = extra_includes .. include_cmd .. inc .. " "
 			end
 		end
-		parser2.cimgui_inherited =  dofile([[../../cimgui/generator/output/structs_and_enums.lua]])
+		parser2.cimgui_inherited =  dofile([[./output/structs_and_enums.lua]])
+		parser2.getCname = getCname
 		local defines = parser2:take_lines(CPRE..extra_defines..extra_includes..source, {locati}, COMPILER)
-		
+
 		local parser3 = cpp2ffi.Parser()
-		parser3.cimgui_inherited =  dofile([[../../cimgui/generator/output/structs_and_enums.lua]])
-		parser3:take_lines(CPRE..extra_defines..extra_includes..source, {locati}, COMPILER)
+		parser3.getCname = getCname
+		parser3.cimgui_inherited =  dofile([[./output/structs_and_enums.lua]])
+		local defines = parser3:take_lines(CPRE..extra_defines..extra_includes..source, {locati}, COMPILER)
 		parser3:do_parse()
-		local cfuncsstr = func_header_impl_generate(parser3) 
+		local cfuncsstr = func_header_impl_generate(parser3, defines) 
 		local cstructstr1,cstructstr2 = parser3.structs_and_enums[1], parser3.structs_and_enums[2]
 		local cstru = cstructstr1 .. cstructstr2
 		if cstru ~="" then
@@ -501,7 +519,7 @@ if #implementations > 0 then
 		end
 		impl_str = impl_str.. table.concat(outtab)..cfuncsstr .. "\n#endif\n"
     end
-	
+	impl_str = impl_str .. "#endif //CIMGUI_IMPL_DEFINED\n"
     parser2:do_parse()
 	save_data("./output/cimgui_impl.h",impl_str)
 
@@ -512,6 +530,11 @@ if #implementations > 0 then
 	local cppstr = read_data"./cimgui_impl_template.cpp"
 	cppstr = cppstr:gsub("GENERATED_PLACEHOLDER", impl_str_cpp)
 	save_data("./output/cimgui_impl.cpp",cppstr)
+	
+	copyfile("./output/cimgui_impl.h", "../cimgui_impl.h")
+	copyfile("./output/cimgui_impl.cpp", "../cimgui_impl.cpp")
+	os.remove("./output/cimgui_impl.h")
+	os.remove("./output/cimgui_impl.cpp")
 
 end -- #implementations > 0 then
 
@@ -530,24 +553,9 @@ local function json_prepare(defs)
 end
 ---[[
 local json = require"json"
-save_data("./output/definitions.json",json.encode(json_prepare(parser1.defsT),{dict_on_empty={defaults=true}}))
---delete extra info for json
---structs_and_enums_table.templated_structs = nil
---structs_and_enums_table.typenames = nil
---structs_and_enums_table.templates_done = nil
-save_data("./output/structs_and_enums.json",json.encode(structs_and_enums_table))
-save_data("./output/typedefs_dict.json",json.encode(parser1.typedefs_dict))
 if parser2 then
     save_data("./output/impl_definitions.json",json.encode(json_prepare(parser2.defsT),{dict_on_empty={defaults=true}}))
 end
 --]]
--------------------copy C files to repo root
-copyfile("./output/cimgui.h", "../cimgui.h")
-copyfile("./output/cimgui_impl.h", "../cimgui_impl.h")
-copyfile("./output/cimgui_impl.cpp", "../cimgui_impl.cpp")
-copyfile("./output/cimgui.cpp", "../cimgui.cpp")
-os.remove("./output/cimgui.h")
-os.remove("./output/cimgui_impl.h")
-os.remove("./output/cimgui_impl.cpp")
-os.remove("./output/cimgui.cpp")
+
 print"all done!!"

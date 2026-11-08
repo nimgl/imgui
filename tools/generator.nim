@@ -1,6 +1,6 @@
 # Written by Leonardo Mariscal <leo@ldmd.mx>, 2019
 
-import strutils, json, strformat, tables,
+import strutils, sequtils, json, strformat, tables,
        algorithm, sets, re, ./utils
 
 var enums: HashSet[string]
@@ -65,6 +65,13 @@ proc translateArray(name: string): tuple[size: string, name: string] =
   arraySize = arraySize[0 ..< arraySize.len - 1]
   if arraySize.contains("COUNT"):
     arraySize = $enumsCount[arraySize]
+  elif (block:
+         var ok = true
+         for c in arraySize:
+           if not c.isDigit(): ok = false
+         not ok):
+    # expressions like (0xFFFF+1)/8192/8 evaluate to float in Nim
+    arraySize = "({arraySize}).int".fmt
   if arraySize == "(0xFFFF+1)/4096/8": # If more continue to appear automate it
     arraySize = "2"
   result.size = arraySize
@@ -126,6 +133,11 @@ proc translateType(name: string): string =
 
   result = result.replace("ImChunkStream_T", "ImChunkStream")
 
+  # cimgui emits C-compatible aliases like ImVec2_c / ImColor_c for the
+  # C++ types; map them back to the Nim-imported names.
+  if result.startsWith("Im") and result.endsWith("_c") and result.len > 2:
+    result = result[0 ..< result.len - 2]
+
   result = result.replace("ImGuiStorageImPair", "ImGuiStoragePair")
 
   for d in 0 ..< depth:
@@ -135,6 +147,8 @@ proc translateType(name: string): string =
 
   if result == "":
     result = "void"
+
+const cSuffixTypes = ["ImVec2", "ImVec2i", "ImVec4", "ImColor", "ImRect", "ImTextureRef"]
 
 proc genEnums(output: var string) =
   let file = readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json")
@@ -182,6 +196,16 @@ proc genEnums(output: var string) =
     for k, v in tableNamedKeys.pairs:
       output.add("const {k}* = {v}\n".fmt)
 
+  # cimgui names the C-compatible versions of C++ value types with a "_c"
+  # suffix (ImVec2_c, ImRect_c, ...); in C mode a typedef hides the suffix,
+  # in C++ mode the Nim types must import the "_c" name directly.
+  output.add("\nwhen not defined(cpp) or defined(cimguiDLL):\n")
+  for t in cSuffixTypes:
+    output.add("  const cimguiType_{t} = \"{t}\"\n".fmt)
+  output.add("else:\n")
+  for t in cSuffixTypes:
+    output.add("  const cimguiType_{t} = \"{t}_c\"\n".fmt)
+
 proc genTypeDefs(output: var string) =
   # Must be run after genEnums
   let file = readFile("src/imgui/private/cimgui/generator/output/typedefs_dict.json")
@@ -193,7 +217,22 @@ proc genTypeDefs(output: var string) =
     let ignorable = ["const_iterator", "iterator", "value_type", "ImS8",
                      "ImS16", "ImS32", "ImS64", "ImU8", "ImU16", "ImU32",
                      "ImU64", "ImBitArrayForNamedKeys"]
-    if obj.getStr().startsWith("struct") or enums.contains(name) or ignorable.contains(name):
+    if enums.contains(name) or ignorable.contains(name):
+      continue
+    if "::" in obj.getStr():
+      # C++ qualified type (e.g. "ImStb::STB_TexteditState") is not expressible
+      # in Nim; declare an opaque object (it is only used through pointers).
+      output.add("  {name}* = object\n".fmt)
+      continue
+    if obj.getStr().startsWith("struct"):
+      # typedef struct X X; -> import the struct type directly,
+      # but only when genTypes does not define it with full members.
+      let structName = obj.getStr()["struct ".len ..< obj.getStr().len]
+      if parseJson(readFile("src/imgui/private/cimgui/generator/output/structs_and_enums.json"))["structs"].hasKey(name):
+        continue
+      if name in ["ImGuiDockRequest", "ImGuiDockNodeSettings"]:
+        continue
+      output.add("  {name}* {{.importc: \"{structName}\", imgui_header.}} = object\n".fmt)
       continue
     if name == "ImDrawIdx": # delete and define in "utils.nim"
       continue
@@ -216,9 +255,24 @@ proc genTypes(output: var string) =
       output.add("  ImDrawChannel* {.importc: \"ImDrawChannel\", imgui_header.} = ptr object\n")
       continue
 
-    output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
+    # cimgui names the C-compatible versions of C++ value types with a "_c"
+    # suffix (ImVec2_c, ImRect_c, ...); in C mode a typedef hides the suffix,
+    # in C++ mode the Nim type must import the "_c" name directly.
+    let typeStart = output.len
+    if name in cSuffixTypes:
+      output.add("  {name}* {{.importc: cimguiType_{name}, imgui_header.}} = object\n".fmt)
+    else:
+      output.add("  {name}* {{.importc: \"{name}\", imgui_header.}} = object\n".fmt)
     for member in obj:
       var memberName = member["name"].getStr()
+      # cpp2ffi can emit malformed array members (name/type split across
+      # brackets, e.g. name "1)*(4)+1)]"); skip only those, keeping well-formed
+      # "Field[size]" array members. Skipping is safe since importc objects do
+      # not need every C field.
+      if memberName.len > 0 and not memberName[0].isAlphaAscii() and memberName[0] != '_':
+        continue
+      if member["type"].getStr().contains("__"):
+        continue
       if memberName == "Ptr":
         memberName = "`ptr`"
       if memberName == "Type":
@@ -269,6 +323,10 @@ proc genProcs(output: var string) =
         nonUDTNumber.inc
         isNonUDT = true
       if blackListProc.contains(variation["cimguiname"].getStr()):
+        continue
+      # Skip methods of template-instantiated C types (stname ends with "_"),
+      # their Nim type is never generated.
+      if variation.contains("stname") and variation["stname"].getStr().endsWith("_"):
         continue
 
       # Name
@@ -332,6 +390,10 @@ proc genProcs(output: var string) =
           argDefault = argDefault.replace("ImGuiNavHighlightFlags_TypeDefault", "ImGuiNavHighlightFlags.TypeDefault")
           argDefault = argDefault.replace("ImGuiTypingSelectFlags_None","ImGuiTypingSelectFlags.None")
           argDefault = argDefault.replace("ImGuiNavHighlightFlags_None","ImGuiNavHighlightFlags.None")
+          argDefault = argDefault.replace("ImGuiNavRenderCursorFlags_None","ImGuiNavRenderCursorFlags.None")
+          argDefault = argDefault.replace("nullptr", "nil")
+          if argDefault.endsWith(".f"):
+            argDefault = argDefault[0 ..< argDefault.len - 2] & ".0f"
 
           if argDefault.startsWith("ImVec"):
             let letters = ['x', 'y', 'z', 'w']

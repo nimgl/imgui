@@ -117,6 +117,7 @@ const notDefinedStructs* = """
   ImSpanAllocator* = object # A little lost here. It is referenced in imgui_internal.h
   ImSpan* = object # ^^
   ImVectorImGuiColumns* {.importc: "ImVector_ImGuiColumns".} = object
+  ImStableVector* = object # C++ template (ImStableVector_<T, N>), only used opaquely
 
   #
 """

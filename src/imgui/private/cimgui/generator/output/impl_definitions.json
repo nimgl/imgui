@@ -1,4 +1,151 @@
 {
+  "ImGui_ImplDX11_CreateDeviceObjects": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplDX11_CreateDeviceObjects",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_CreateDeviceObjects",
+      "location": "imgui_impl_dx11:35",
+      "ov_cimguiname": "ImGui_ImplDX11_CreateDeviceObjects",
+      "ret": "bool",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_GetRenderState": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplDX11_GetRenderState",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_GetRenderState",
+      "location": "imgui_impl_dx11:52",
+      "ov_cimguiname": "ImGui_ImplDX11_GetRenderState",
+      "ret": "ImGui_ImplDX11_RenderState*",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_Init": [
+    {
+      "args": "(ID3D11Device* device,ID3D11DeviceContext* device_context)",
+      "argsT": [
+        {
+          "name": "device",
+          "type": "ID3D11Device*"
+        },
+        {
+          "name": "device_context",
+          "type": "ID3D11DeviceContext*"
+        }
+      ],
+      "argsoriginal": "(ID3D11Device* device,ID3D11DeviceContext* device_context)",
+      "call_args": "(device,device_context)",
+      "cimguiname": "ImGui_ImplDX11_Init",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_Init",
+      "location": "imgui_impl_dx11:29",
+      "ov_cimguiname": "ImGui_ImplDX11_Init",
+      "ret": "bool",
+      "signature": "(ID3D11Device*,ID3D11DeviceContext*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_InvalidateDeviceObjects": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplDX11_InvalidateDeviceObjects",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_InvalidateDeviceObjects",
+      "location": "imgui_impl_dx11:36",
+      "ov_cimguiname": "ImGui_ImplDX11_InvalidateDeviceObjects",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_NewFrame": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplDX11_NewFrame",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_NewFrame",
+      "location": "imgui_impl_dx11:31",
+      "ov_cimguiname": "ImGui_ImplDX11_NewFrame",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_RenderDrawData": [
+    {
+      "args": "(ImDrawData* draw_data)",
+      "argsT": [
+        {
+          "name": "draw_data",
+          "type": "ImDrawData*"
+        }
+      ],
+      "argsoriginal": "(ImDrawData* draw_data)",
+      "call_args": "(draw_data)",
+      "cimguiname": "ImGui_ImplDX11_RenderDrawData",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_RenderDrawData",
+      "location": "imgui_impl_dx11:32",
+      "ov_cimguiname": "ImGui_ImplDX11_RenderDrawData",
+      "ret": "void",
+      "signature": "(ImDrawData*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_Shutdown": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplDX11_Shutdown",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_Shutdown",
+      "location": "imgui_impl_dx11:30",
+      "ov_cimguiname": "ImGui_ImplDX11_Shutdown",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplDX11_UpdateTexture": [
+    {
+      "args": "(ImTextureData* tex)",
+      "argsT": [
+        {
+          "name": "tex",
+          "type": "ImTextureData*"
+        }
+      ],
+      "argsoriginal": "(ImTextureData* tex)",
+      "call_args": "(tex)",
+      "cimguiname": "ImGui_ImplDX11_UpdateTexture",
+      "defaults": {},
+      "funcname": "ImGui_ImplDX11_UpdateTexture",
+      "location": "imgui_impl_dx11:39",
+      "ov_cimguiname": "ImGui_ImplDX11_UpdateTexture",
+      "ret": "void",
+      "signature": "(ImTextureData*)",
+      "stname": ""
+    }
+  ],
   "ImGui_ImplGlfw_CharCallback": [
     {
       "args": "(GLFWwindow* window,unsigned int c)",
@@ -17,7 +164,7 @@
       "cimguiname": "ImGui_ImplGlfw_CharCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_CharCallback",
-      "location": "imgui_impl_glfw:63",
+      "location": "imgui_impl_glfw:64",
       "ov_cimguiname": "ImGui_ImplGlfw_CharCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,unsigned int)",
@@ -42,7 +189,7 @@
       "cimguiname": "ImGui_ImplGlfw_CursorEnterCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_CursorEnterCallback",
-      "location": "imgui_impl_glfw:58",
+      "location": "imgui_impl_glfw:59",
       "ov_cimguiname": "ImGui_ImplGlfw_CursorEnterCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,int)",
@@ -71,10 +218,52 @@
       "cimguiname": "ImGui_ImplGlfw_CursorPosCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_CursorPosCallback",
-      "location": "imgui_impl_glfw:59",
+      "location": "imgui_impl_glfw:60",
       "ov_cimguiname": "ImGui_ImplGlfw_CursorPosCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,double,double)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGlfw_GetContentScaleForMonitor": [
+    {
+      "args": "(GLFWmonitor* monitor)",
+      "argsT": [
+        {
+          "name": "monitor",
+          "type": "GLFWmonitor*"
+        }
+      ],
+      "argsoriginal": "(GLFWmonitor* monitor)",
+      "call_args": "(monitor)",
+      "cimguiname": "ImGui_ImplGlfw_GetContentScaleForMonitor",
+      "defaults": {},
+      "funcname": "ImGui_ImplGlfw_GetContentScaleForMonitor",
+      "location": "imgui_impl_glfw:70",
+      "ov_cimguiname": "ImGui_ImplGlfw_GetContentScaleForMonitor",
+      "ret": "float",
+      "signature": "(GLFWmonitor*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplGlfw_GetContentScaleForWindow": [
+    {
+      "args": "(GLFWwindow* window)",
+      "argsT": [
+        {
+          "name": "window",
+          "type": "GLFWwindow*"
+        }
+      ],
+      "argsoriginal": "(GLFWwindow* window)",
+      "call_args": "(window)",
+      "cimguiname": "ImGui_ImplGlfw_GetContentScaleForWindow",
+      "defaults": {},
+      "funcname": "ImGui_ImplGlfw_GetContentScaleForWindow",
+      "location": "imgui_impl_glfw:69",
+      "ov_cimguiname": "ImGui_ImplGlfw_GetContentScaleForWindow",
+      "ret": "float",
+      "signature": "(GLFWwindow*)",
       "stname": ""
     }
   ],
@@ -96,7 +285,7 @@
       "cimguiname": "ImGui_ImplGlfw_InitForOpenGL",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_InitForOpenGL",
-      "location": "imgui_impl_glfw:34",
+      "location": "imgui_impl_glfw:35",
       "ov_cimguiname": "ImGui_ImplGlfw_InitForOpenGL",
       "ret": "bool",
       "signature": "(GLFWwindow*,bool)",
@@ -121,7 +310,7 @@
       "cimguiname": "ImGui_ImplGlfw_InitForOther",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_InitForOther",
-      "location": "imgui_impl_glfw:36",
+      "location": "imgui_impl_glfw:37",
       "ov_cimguiname": "ImGui_ImplGlfw_InitForOther",
       "ret": "bool",
       "signature": "(GLFWwindow*,bool)",
@@ -146,7 +335,7 @@
       "cimguiname": "ImGui_ImplGlfw_InitForVulkan",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_InitForVulkan",
-      "location": "imgui_impl_glfw:35",
+      "location": "imgui_impl_glfw:36",
       "ov_cimguiname": "ImGui_ImplGlfw_InitForVulkan",
       "ret": "bool",
       "signature": "(GLFWwindow*,bool)",
@@ -167,7 +356,7 @@
       "cimguiname": "ImGui_ImplGlfw_InstallCallbacks",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_InstallCallbacks",
-      "location": "imgui_impl_glfw:49",
+      "location": "imgui_impl_glfw:50",
       "ov_cimguiname": "ImGui_ImplGlfw_InstallCallbacks",
       "ret": "void",
       "signature": "(GLFWwindow*)",
@@ -204,7 +393,7 @@
       "cimguiname": "ImGui_ImplGlfw_KeyCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_KeyCallback",
-      "location": "imgui_impl_glfw:62",
+      "location": "imgui_impl_glfw:63",
       "ov_cimguiname": "ImGui_ImplGlfw_KeyCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,int,int,int,int)",
@@ -229,7 +418,7 @@
       "cimguiname": "ImGui_ImplGlfw_MonitorCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_MonitorCallback",
-      "location": "imgui_impl_glfw:64",
+      "location": "imgui_impl_glfw:65",
       "ov_cimguiname": "ImGui_ImplGlfw_MonitorCallback",
       "ret": "void",
       "signature": "(GLFWmonitor*,int)",
@@ -262,7 +451,7 @@
       "cimguiname": "ImGui_ImplGlfw_MouseButtonCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_MouseButtonCallback",
-      "location": "imgui_impl_glfw:60",
+      "location": "imgui_impl_glfw:61",
       "ov_cimguiname": "ImGui_ImplGlfw_MouseButtonCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,int,int,int)",
@@ -278,7 +467,7 @@
       "cimguiname": "ImGui_ImplGlfw_NewFrame",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_NewFrame",
-      "location": "imgui_impl_glfw:38",
+      "location": "imgui_impl_glfw:39",
       "ov_cimguiname": "ImGui_ImplGlfw_NewFrame",
       "ret": "void",
       "signature": "()",
@@ -299,7 +488,7 @@
       "cimguiname": "ImGui_ImplGlfw_RestoreCallbacks",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_RestoreCallbacks",
-      "location": "imgui_impl_glfw:50",
+      "location": "imgui_impl_glfw:51",
       "ov_cimguiname": "ImGui_ImplGlfw_RestoreCallbacks",
       "ret": "void",
       "signature": "(GLFWwindow*)",
@@ -328,7 +517,7 @@
       "cimguiname": "ImGui_ImplGlfw_ScrollCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_ScrollCallback",
-      "location": "imgui_impl_glfw:61",
+      "location": "imgui_impl_glfw:62",
       "ov_cimguiname": "ImGui_ImplGlfw_ScrollCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,double,double)",
@@ -349,7 +538,7 @@
       "cimguiname": "ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
-      "location": "imgui_impl_glfw:54",
+      "location": "imgui_impl_glfw:55",
       "ov_cimguiname": "ImGui_ImplGlfw_SetCallbacksChainForAllWindows",
       "ret": "void",
       "signature": "(bool)",
@@ -365,7 +554,7 @@
       "cimguiname": "ImGui_ImplGlfw_Shutdown",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_Shutdown",
-      "location": "imgui_impl_glfw:37",
+      "location": "imgui_impl_glfw:38",
       "ov_cimguiname": "ImGui_ImplGlfw_Shutdown",
       "ret": "void",
       "signature": "()",
@@ -386,7 +575,7 @@
       "cimguiname": "ImGui_ImplGlfw_Sleep",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_Sleep",
-      "location": "imgui_impl_glfw:67",
+      "location": "imgui_impl_glfw:68",
       "ov_cimguiname": "ImGui_ImplGlfw_Sleep",
       "ret": "void",
       "signature": "(int)",
@@ -411,7 +600,7 @@
       "cimguiname": "ImGui_ImplGlfw_WindowFocusCallback",
       "defaults": {},
       "funcname": "ImGui_ImplGlfw_WindowFocusCallback",
-      "location": "imgui_impl_glfw:57",
+      "location": "imgui_impl_glfw:58",
       "ov_cimguiname": "ImGui_ImplGlfw_WindowFocusCallback",
       "ret": "void",
       "signature": "(GLFWwindow*,int)",
@@ -434,22 +623,6 @@
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_CreateFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_CreateFontsTexture",
-      "defaults": {},
-      "funcname": "ImGui_ImplOpenGL2_CreateFontsTexture",
-      "location": "imgui_impl_opengl2:37",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_CreateFontsTexture",
-      "ret": "bool",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
   "ImGui_ImplOpenGL2_DestroyDeviceObjects": [
     {
       "args": "()",
@@ -466,22 +639,6 @@
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL2_DestroyFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
-      "defaults": {},
-      "funcname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
-      "location": "imgui_impl_opengl2:38",
-      "ov_cimguiname": "ImGui_ImplOpenGL2_DestroyFontsTexture",
-      "ret": "void",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
   "ImGui_ImplOpenGL2_Init": [
     {
       "args": "()",
@@ -491,7 +648,7 @@
       "cimguiname": "ImGui_ImplOpenGL2_Init",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL2_Init",
-      "location": "imgui_impl_opengl2:31",
+      "location": "imgui_impl_opengl2:33",
       "ov_cimguiname": "ImGui_ImplOpenGL2_Init",
       "ret": "bool",
       "signature": "()",
@@ -507,7 +664,7 @@
       "cimguiname": "ImGui_ImplOpenGL2_NewFrame",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL2_NewFrame",
-      "location": "imgui_impl_opengl2:33",
+      "location": "imgui_impl_opengl2:35",
       "ov_cimguiname": "ImGui_ImplOpenGL2_NewFrame",
       "ret": "void",
       "signature": "()",
@@ -528,7 +685,7 @@
       "cimguiname": "ImGui_ImplOpenGL2_RenderDrawData",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL2_RenderDrawData",
-      "location": "imgui_impl_opengl2:34",
+      "location": "imgui_impl_opengl2:36",
       "ov_cimguiname": "ImGui_ImplOpenGL2_RenderDrawData",
       "ret": "void",
       "signature": "(ImDrawData*)",
@@ -544,10 +701,31 @@
       "cimguiname": "ImGui_ImplOpenGL2_Shutdown",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL2_Shutdown",
-      "location": "imgui_impl_opengl2:32",
+      "location": "imgui_impl_opengl2:34",
       "ov_cimguiname": "ImGui_ImplOpenGL2_Shutdown",
       "ret": "void",
       "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplOpenGL2_UpdateTexture": [
+    {
+      "args": "(ImTextureData* tex)",
+      "argsT": [
+        {
+          "name": "tex",
+          "type": "ImTextureData*"
+        }
+      ],
+      "argsoriginal": "(ImTextureData* tex)",
+      "call_args": "(tex)",
+      "cimguiname": "ImGui_ImplOpenGL2_UpdateTexture",
+      "defaults": {},
+      "funcname": "ImGui_ImplOpenGL2_UpdateTexture",
+      "location": "imgui_impl_opengl2:43",
+      "ov_cimguiname": "ImGui_ImplOpenGL2_UpdateTexture",
+      "ret": "void",
+      "signature": "(ImTextureData*)",
       "stname": ""
     }
   ],
@@ -562,22 +740,6 @@
       "funcname": "ImGui_ImplOpenGL3_CreateDeviceObjects",
       "location": "imgui_impl_opengl3:42",
       "ov_cimguiname": "ImGui_ImplOpenGL3_CreateDeviceObjects",
-      "ret": "bool",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplOpenGL3_CreateFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_CreateFontsTexture",
-      "defaults": {},
-      "funcname": "ImGui_ImplOpenGL3_CreateFontsTexture",
-      "location": "imgui_impl_opengl3:40",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_CreateFontsTexture",
       "ret": "bool",
       "signature": "()",
       "stname": ""
@@ -599,18 +761,18 @@
       "stname": ""
     }
   ],
-  "ImGui_ImplOpenGL3_DestroyFontsTexture": [
+  "ImGui_ImplOpenGL3_GetRenderState": [
     {
       "args": "()",
       "argsT": [],
       "argsoriginal": "()",
       "call_args": "()",
-      "cimguiname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
+      "cimguiname": "ImGui_ImplOpenGL3_GetRenderState",
       "defaults": {},
-      "funcname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
-      "location": "imgui_impl_opengl3:41",
-      "ov_cimguiname": "ImGui_ImplOpenGL3_DestroyFontsTexture",
-      "ret": "void",
+      "funcname": "ImGui_ImplOpenGL3_GetRenderState",
+      "location": "imgui_impl_opengl3:83",
+      "ov_cimguiname": "ImGui_ImplOpenGL3_GetRenderState",
+      "ret": "ImGui_ImplOpenGL3_RenderState*",
       "signature": "()",
       "stname": ""
     }
@@ -631,7 +793,7 @@
         "glsl_version": "nullptr"
       },
       "funcname": "ImGui_ImplOpenGL3_Init",
-      "location": "imgui_impl_opengl3:34",
+      "location": "imgui_impl_opengl3:36",
       "ov_cimguiname": "ImGui_ImplOpenGL3_Init",
       "ret": "bool",
       "signature": "(const char*)",
@@ -647,7 +809,7 @@
       "cimguiname": "ImGui_ImplOpenGL3_NewFrame",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL3_NewFrame",
-      "location": "imgui_impl_opengl3:36",
+      "location": "imgui_impl_opengl3:38",
       "ov_cimguiname": "ImGui_ImplOpenGL3_NewFrame",
       "ret": "void",
       "signature": "()",
@@ -668,10 +830,31 @@
       "cimguiname": "ImGui_ImplOpenGL3_RenderDrawData",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL3_RenderDrawData",
-      "location": "imgui_impl_opengl3:37",
+      "location": "imgui_impl_opengl3:39",
       "ov_cimguiname": "ImGui_ImplOpenGL3_RenderDrawData",
       "ret": "void",
       "signature": "(ImDrawData*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplOpenGL3_SetClipOrigin": [
+    {
+      "args": "(unsigned int gl_clip_origin)",
+      "argsT": [
+        {
+          "name": "gl_clip_origin",
+          "type": "unsigned int"
+        }
+      ],
+      "argsoriginal": "(unsigned int gl_clip_origin)",
+      "call_args": "(gl_clip_origin)",
+      "cimguiname": "ImGui_ImplOpenGL3_SetClipOrigin",
+      "defaults": {},
+      "funcname": "ImGui_ImplOpenGL3_SetClipOrigin",
+      "location": "imgui_impl_opengl3:49",
+      "ov_cimguiname": "ImGui_ImplOpenGL3_SetClipOrigin",
+      "ret": "void",
+      "signature": "(unsigned int)",
       "stname": ""
     }
   ],
@@ -684,10 +867,73 @@
       "cimguiname": "ImGui_ImplOpenGL3_Shutdown",
       "defaults": {},
       "funcname": "ImGui_ImplOpenGL3_Shutdown",
-      "location": "imgui_impl_opengl3:35",
+      "location": "imgui_impl_opengl3:37",
       "ov_cimguiname": "ImGui_ImplOpenGL3_Shutdown",
       "ret": "void",
       "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplOpenGL3_UpdateTexture": [
+    {
+      "args": "(ImTextureData* tex)",
+      "argsT": [
+        {
+          "name": "tex",
+          "type": "ImTextureData*"
+        }
+      ],
+      "argsoriginal": "(ImTextureData* tex)",
+      "call_args": "(tex)",
+      "cimguiname": "ImGui_ImplOpenGL3_UpdateTexture",
+      "defaults": {},
+      "funcname": "ImGui_ImplOpenGL3_UpdateTexture",
+      "location": "imgui_impl_opengl3:46",
+      "ov_cimguiname": "ImGui_ImplOpenGL3_UpdateTexture",
+      "ret": "void",
+      "signature": "(ImTextureData*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplSDL2_GetContentScaleForDisplay": [
+    {
+      "args": "(int display_index)",
+      "argsT": [
+        {
+          "name": "display_index",
+          "type": "int"
+        }
+      ],
+      "argsoriginal": "(int display_index)",
+      "call_args": "(display_index)",
+      "cimguiname": "ImGui_ImplSDL2_GetContentScaleForDisplay",
+      "defaults": {},
+      "funcname": "ImGui_ImplSDL2_GetContentScaleForDisplay",
+      "location": "imgui_impl_sdl2:47",
+      "ov_cimguiname": "ImGui_ImplSDL2_GetContentScaleForDisplay",
+      "ret": "float",
+      "signature": "(int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplSDL2_GetContentScaleForWindow": [
+    {
+      "args": "(SDL_Window* window)",
+      "argsT": [
+        {
+          "name": "window",
+          "type": "SDL_Window*"
+        }
+      ],
+      "argsoriginal": "(SDL_Window* window)",
+      "call_args": "(window)",
+      "cimguiname": "ImGui_ImplSDL2_GetContentScaleForWindow",
+      "defaults": {},
+      "funcname": "ImGui_ImplSDL2_GetContentScaleForWindow",
+      "location": "imgui_impl_sdl2:46",
+      "ov_cimguiname": "ImGui_ImplSDL2_GetContentScaleForWindow",
+      "ret": "float",
+      "signature": "(SDL_Window*)",
       "stname": ""
     }
   ],
@@ -887,10 +1133,31 @@
         "manual_gamepads_count": "-1"
       },
       "funcname": "ImGui_ImplSDL2_SetGamepadMode",
-      "location": "imgui_impl_sdl2:48",
+      "location": "imgui_impl_sdl2:52",
       "ov_cimguiname": "ImGui_ImplSDL2_SetGamepadMode",
       "ret": "void",
       "signature": "(ImGui_ImplSDL2_GamepadMode,struct _SDL_GameController**,int)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplSDL2_SetMouseCaptureMode": [
+    {
+      "args": "(ImGui_ImplSDL2_MouseCaptureMode mode)",
+      "argsT": [
+        {
+          "name": "mode",
+          "type": "ImGui_ImplSDL2_MouseCaptureMode"
+        }
+      ],
+      "argsoriginal": "(ImGui_ImplSDL2_MouseCaptureMode mode)",
+      "call_args": "(mode)",
+      "cimguiname": "ImGui_ImplSDL2_SetMouseCaptureMode",
+      "defaults": {},
+      "funcname": "ImGui_ImplSDL2_SetMouseCaptureMode",
+      "location": "imgui_impl_sdl2:59",
+      "ov_cimguiname": "ImGui_ImplSDL2_SetMouseCaptureMode",
+      "ret": "void",
+      "signature": "(ImGui_ImplSDL2_MouseCaptureMode)",
       "stname": ""
     }
   ],
@@ -1134,6 +1401,27 @@
       "stname": ""
     }
   ],
+  "ImGui_ImplSDL3_SetMouseCaptureMode": [
+    {
+      "args": "(ImGui_ImplSDL3_MouseCaptureMode mode)",
+      "argsT": [
+        {
+          "name": "mode",
+          "type": "ImGui_ImplSDL3_MouseCaptureMode"
+        }
+      ],
+      "argsoriginal": "(ImGui_ImplSDL3_MouseCaptureMode mode)",
+      "call_args": "(mode)",
+      "cimguiname": "ImGui_ImplSDL3_SetMouseCaptureMode",
+      "defaults": {},
+      "funcname": "ImGui_ImplSDL3_SetMouseCaptureMode",
+      "location": "imgui_impl_sdl3:55",
+      "ov_cimguiname": "ImGui_ImplSDL3_SetMouseCaptureMode",
+      "ret": "void",
+      "signature": "(ImGui_ImplSDL3_MouseCaptureMode)",
+      "stname": ""
+    }
+  ],
   "ImGui_ImplSDL3_Shutdown": [
     {
       "args": "()",
@@ -1152,7 +1440,7 @@
   ],
   "ImGui_ImplVulkanH_CreateOrResizeWindow": [
     {
-      "args": "(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count)",
+      "args": "(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count,VkImageUsageFlags image_usage)",
       "argsT": [
         {
           "name": "instance",
@@ -1189,17 +1477,21 @@
         {
           "name": "min_image_count",
           "type": "uint32_t"
+        },
+        {
+          "name": "image_usage",
+          "type": "VkImageUsageFlags"
         }
       ],
-      "argsoriginal": "(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count)",
-      "call_args": "(instance,physical_device,device,wd,queue_family,allocator,w,h,min_image_count)",
+      "argsoriginal": "(VkInstance instance,VkPhysicalDevice physical_device,VkDevice device,ImGui_ImplVulkanH_Window* wd,uint32_t queue_family,const VkAllocationCallbacks* allocator,int w,int h,uint32_t min_image_count,VkImageUsageFlags image_usage)",
+      "call_args": "(instance,physical_device,device,wd,queue_family,allocator,w,h,min_image_count,image_usage)",
       "cimguiname": "ImGui_ImplVulkanH_CreateOrResizeWindow",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_CreateOrResizeWindow",
-      "location": "imgui_impl_vulkan:166",
+      "location": "imgui_impl_vulkan:214",
       "ov_cimguiname": "ImGui_ImplVulkanH_CreateOrResizeWindow",
       "ret": "void",
-      "signature": "(VkInstance,VkPhysicalDevice,VkDevice,ImGui_ImplVulkanH_Window*,uint32_t,const VkAllocationCallbacks*,int,int,uint32_t)",
+      "signature": "(VkInstance,VkPhysicalDevice,VkDevice,ImGui_ImplVulkanH_Window*,uint32_t,const VkAllocationCallbacks*,int,int,uint32_t,VkImageUsageFlags)",
       "stname": ""
     }
   ],
@@ -1229,7 +1521,7 @@
       "cimguiname": "ImGui_ImplVulkanH_DestroyWindow",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_DestroyWindow",
-      "location": "imgui_impl_vulkan:167",
+      "location": "imgui_impl_vulkan:215",
       "ov_cimguiname": "ImGui_ImplVulkanH_DestroyWindow",
       "ret": "void",
       "signature": "(VkInstance,VkDevice,ImGui_ImplVulkanH_Window*,const VkAllocationCallbacks*)",
@@ -1250,10 +1542,31 @@
       "cimguiname": "ImGui_ImplVulkanH_GetMinImageCountFromPresentMode",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_GetMinImageCountFromPresentMode",
-      "location": "imgui_impl_vulkan:172",
+      "location": "imgui_impl_vulkan:220",
       "ov_cimguiname": "ImGui_ImplVulkanH_GetMinImageCountFromPresentMode",
       "ret": "int",
       "signature": "(VkPresentModeKHR)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplVulkanH_GetWindowDataFromViewport": [
+    {
+      "args": "(ImGuiViewport* viewport)",
+      "argsT": [
+        {
+          "name": "viewport",
+          "type": "ImGuiViewport*"
+        }
+      ],
+      "argsoriginal": "(ImGuiViewport* viewport)",
+      "call_args": "(viewport)",
+      "cimguiname": "ImGui_ImplVulkanH_GetWindowDataFromViewport",
+      "defaults": {},
+      "funcname": "ImGui_ImplVulkanH_GetWindowDataFromViewport",
+      "location": "imgui_impl_vulkan:221",
+      "ov_cimguiname": "ImGui_ImplVulkanH_GetWindowDataFromViewport",
+      "ret": "ImGui_ImplVulkanH_Window*",
+      "signature": "(ImGuiViewport*)",
       "stname": ""
     }
   ],
@@ -1271,7 +1584,7 @@
       "cimguiname": "ImGui_ImplVulkanH_SelectPhysicalDevice",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_SelectPhysicalDevice",
-      "location": "imgui_impl_vulkan:170",
+      "location": "imgui_impl_vulkan:218",
       "ov_cimguiname": "ImGui_ImplVulkanH_SelectPhysicalDevice",
       "ret": "VkPhysicalDevice",
       "signature": "(VkInstance)",
@@ -1304,7 +1617,7 @@
       "cimguiname": "ImGui_ImplVulkanH_SelectPresentMode",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_SelectPresentMode",
-      "location": "imgui_impl_vulkan:169",
+      "location": "imgui_impl_vulkan:217",
       "ov_cimguiname": "ImGui_ImplVulkanH_SelectPresentMode",
       "ret": "VkPresentModeKHR",
       "signature": "(VkPhysicalDevice,VkSurfaceKHR,const VkPresentModeKHR*,int)",
@@ -1325,7 +1638,7 @@
       "cimguiname": "ImGui_ImplVulkanH_SelectQueueFamilyIndex",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_SelectQueueFamilyIndex",
-      "location": "imgui_impl_vulkan:171",
+      "location": "imgui_impl_vulkan:219",
       "ov_cimguiname": "ImGui_ImplVulkanH_SelectQueueFamilyIndex",
       "ret": "uint32_t",
       "signature": "(VkPhysicalDevice)",
@@ -1362,7 +1675,7 @@
       "cimguiname": "ImGui_ImplVulkanH_SelectSurfaceFormat",
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_SelectSurfaceFormat",
-      "location": "imgui_impl_vulkan:168",
+      "location": "imgui_impl_vulkan:216",
       "ov_cimguiname": "ImGui_ImplVulkanH_SelectSurfaceFormat",
       "ret": "VkSurfaceFormatKHR",
       "signature": "(VkPhysicalDevice,VkSurfaceKHR,const VkFormat*,int,VkColorSpaceKHR)",
@@ -1379,7 +1692,8 @@
       "constructor": true,
       "defaults": {},
       "funcname": "ImGui_ImplVulkanH_Window",
-      "location": "imgui_impl_vulkan:214",
+      "location": "imgui_impl_vulkan:266",
+      "namespace": "ImGui_ImplVulkanH_Window",
       "ov_cimguiname": "ImGui_ImplVulkanH_Window_ImGui_ImplVulkanH_Window",
       "signature": "()",
       "stname": "ImGui_ImplVulkanH_Window"
@@ -1398,7 +1712,7 @@
       "cimguiname": "ImGui_ImplVulkanH_Window_destroy",
       "defaults": {},
       "destructor": true,
-      "location": "imgui_impl_vulkan:214",
+      "location": "imgui_impl_vulkan:266",
       "ov_cimguiname": "ImGui_ImplVulkanH_Window_destroy",
       "ret": "void",
       "signature": "(ImGui_ImplVulkanH_Window*)",
@@ -1407,12 +1721,8 @@
   ],
   "ImGui_ImplVulkan_AddTexture": [
     {
-      "args": "(VkSampler sampler,VkImageView image_view,VkImageLayout image_layout)",
+      "args": "(VkImageView image_view,VkImageLayout image_layout)",
       "argsT": [
-        {
-          "name": "sampler",
-          "type": "VkSampler"
-        },
         {
           "name": "image_view",
           "type": "VkImageView"
@@ -1422,46 +1732,51 @@
           "type": "VkImageLayout"
         }
       ],
-      "argsoriginal": "(VkSampler sampler,VkImageView image_view,VkImageLayout image_layout)",
-      "call_args": "(sampler,image_view,image_layout)",
+      "argsoriginal": "(VkImageView image_view,VkImageLayout image_layout)",
+      "call_args": "(image_view,image_layout)",
       "cimguiname": "ImGui_ImplVulkan_AddTexture",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_AddTexture",
-      "location": "imgui_impl_vulkan:123",
+      "location": "imgui_impl_vulkan:166",
       "ov_cimguiname": "ImGui_ImplVulkan_AddTexture",
       "ret": "VkDescriptorSet",
-      "signature": "(VkSampler,VkImageView,VkImageLayout)",
+      "signature": "(VkImageView,VkImageLayout)",
       "stname": ""
     }
   ],
-  "ImGui_ImplVulkan_CreateFontsTexture": [
+  "ImGui_ImplVulkan_CreateMainPipeline": [
     {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplVulkan_CreateFontsTexture",
+      "args": "(const ImGui_ImplVulkan_PipelineInfo* info)",
+      "argsT": [
+        {
+          "name": "info",
+          "type": "const ImGui_ImplVulkan_PipelineInfo*"
+        }
+      ],
+      "argsoriginal": "(const ImGui_ImplVulkan_PipelineInfo* info)",
+      "call_args": "(info)",
+      "cimguiname": "ImGui_ImplVulkan_CreateMainPipeline",
       "defaults": {},
-      "funcname": "ImGui_ImplVulkan_CreateFontsTexture",
-      "location": "imgui_impl_vulkan:116",
-      "ov_cimguiname": "ImGui_ImplVulkan_CreateFontsTexture",
-      "ret": "bool",
-      "signature": "()",
-      "stname": ""
-    }
-  ],
-  "ImGui_ImplVulkan_DestroyFontsTexture": [
-    {
-      "args": "()",
-      "argsT": [],
-      "argsoriginal": "()",
-      "call_args": "()",
-      "cimguiname": "ImGui_ImplVulkan_DestroyFontsTexture",
-      "defaults": {},
-      "funcname": "ImGui_ImplVulkan_DestroyFontsTexture",
-      "location": "imgui_impl_vulkan:117",
-      "ov_cimguiname": "ImGui_ImplVulkan_DestroyFontsTexture",
+      "funcname": "ImGui_ImplVulkan_CreateMainPipeline",
+      "location": "imgui_impl_vulkan:160",
+      "ov_cimguiname": "ImGui_ImplVulkan_CreateMainPipeline",
       "ret": "void",
+      "signature": "(const ImGui_ImplVulkan_PipelineInfo*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplVulkan_GetRenderState": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplVulkan_GetRenderState",
+      "defaults": {},
+      "funcname": "ImGui_ImplVulkan_GetRenderState",
+      "location": "imgui_impl_vulkan:187",
+      "ov_cimguiname": "ImGui_ImplVulkan_GetRenderState",
+      "ret": "ImGui_ImplVulkan_RenderState*",
       "signature": "()",
       "stname": ""
     }
@@ -1480,7 +1795,7 @@
       "cimguiname": "ImGui_ImplVulkan_Init",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_Init",
-      "location": "imgui_impl_vulkan:112",
+      "location": "imgui_impl_vulkan:151",
       "ov_cimguiname": "ImGui_ImplVulkan_Init",
       "ret": "bool",
       "signature": "(ImGui_ImplVulkan_InitInfo*)",
@@ -1511,7 +1826,7 @@
         "user_data": "nullptr"
       },
       "funcname": "ImGui_ImplVulkan_LoadFunctions",
-      "location": "imgui_impl_vulkan:128",
+      "location": "imgui_impl_vulkan:175",
       "ov_cimguiname": "ImGui_ImplVulkan_LoadFunctions",
       "ret": "bool",
       "signature": "(uint32_t,PFN_vkVoidFunction(*loader_func)(const char* function_name,void*,void*)",
@@ -1527,7 +1842,7 @@
       "cimguiname": "ImGui_ImplVulkan_NewFrame",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_NewFrame",
-      "location": "imgui_impl_vulkan:114",
+      "location": "imgui_impl_vulkan:153",
       "ov_cimguiname": "ImGui_ImplVulkan_NewFrame",
       "ret": "void",
       "signature": "()",
@@ -1548,7 +1863,7 @@
       "cimguiname": "ImGui_ImplVulkan_RemoveTexture",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_RemoveTexture",
-      "location": "imgui_impl_vulkan:124",
+      "location": "imgui_impl_vulkan:167",
       "ov_cimguiname": "ImGui_ImplVulkan_RemoveTexture",
       "ret": "void",
       "signature": "(VkDescriptorSet)",
@@ -1572,14 +1887,14 @@
           "type": "VkPipeline"
         }
       ],
-      "argsoriginal": "(ImDrawData* draw_data,VkCommandBuffer command_buffer,VkPipeline pipeline=0ULL)",
+      "argsoriginal": "(ImDrawData* draw_data,VkCommandBuffer command_buffer,VkPipeline pipeline=((void*)0))",
       "call_args": "(draw_data,command_buffer,pipeline)",
       "cimguiname": "ImGui_ImplVulkan_RenderDrawData",
       "defaults": {
-        "pipeline": "0ULL"
+        "pipeline": "NULL"
       },
       "funcname": "ImGui_ImplVulkan_RenderDrawData",
-      "location": "imgui_impl_vulkan:115",
+      "location": "imgui_impl_vulkan:154",
       "ov_cimguiname": "ImGui_ImplVulkan_RenderDrawData",
       "ret": "void",
       "signature": "(ImDrawData*,VkCommandBuffer,VkPipeline)",
@@ -1600,7 +1915,7 @@
       "cimguiname": "ImGui_ImplVulkan_SetMinImageCount",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_SetMinImageCount",
-      "location": "imgui_impl_vulkan:118",
+      "location": "imgui_impl_vulkan:155",
       "ov_cimguiname": "ImGui_ImplVulkan_SetMinImageCount",
       "ret": "void",
       "signature": "(uint32_t)",
@@ -1616,8 +1931,182 @@
       "cimguiname": "ImGui_ImplVulkan_Shutdown",
       "defaults": {},
       "funcname": "ImGui_ImplVulkan_Shutdown",
-      "location": "imgui_impl_vulkan:113",
+      "location": "imgui_impl_vulkan:152",
       "ov_cimguiname": "ImGui_ImplVulkan_Shutdown",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplVulkan_UpdateTexture": [
+    {
+      "args": "(ImTextureData* tex)",
+      "argsT": [
+        {
+          "name": "tex",
+          "type": "ImTextureData*"
+        }
+      ],
+      "argsoriginal": "(ImTextureData* tex)",
+      "call_args": "(tex)",
+      "cimguiname": "ImGui_ImplVulkan_UpdateTexture",
+      "defaults": {},
+      "funcname": "ImGui_ImplVulkan_UpdateTexture",
+      "location": "imgui_impl_vulkan:163",
+      "ov_cimguiname": "ImGui_ImplVulkan_UpdateTexture",
+      "ret": "void",
+      "signature": "(ImTextureData*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_EnableAlphaCompositing": [
+    {
+      "args": "(void* hwnd)",
+      "argsT": [
+        {
+          "name": "hwnd",
+          "type": "void*"
+        }
+      ],
+      "argsoriginal": "(void* hwnd)",
+      "call_args": "(hwnd)",
+      "cimguiname": "ImGui_ImplWin32_EnableAlphaCompositing",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_EnableAlphaCompositing",
+      "location": "imgui_impl_win32:52",
+      "ov_cimguiname": "ImGui_ImplWin32_EnableAlphaCompositing",
+      "ret": "void",
+      "signature": "(void*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_EnableDpiAwareness": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplWin32_EnableDpiAwareness",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_EnableDpiAwareness",
+      "location": "imgui_impl_win32:45",
+      "ov_cimguiname": "ImGui_ImplWin32_EnableDpiAwareness",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_GetDpiScaleForHwnd": [
+    {
+      "args": "(void* hwnd)",
+      "argsT": [
+        {
+          "name": "hwnd",
+          "type": "void*"
+        }
+      ],
+      "argsoriginal": "(void* hwnd)",
+      "call_args": "(hwnd)",
+      "cimguiname": "ImGui_ImplWin32_GetDpiScaleForHwnd",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_GetDpiScaleForHwnd",
+      "location": "imgui_impl_win32:46",
+      "ov_cimguiname": "ImGui_ImplWin32_GetDpiScaleForHwnd",
+      "ret": "float",
+      "signature": "(void*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_GetDpiScaleForMonitor": [
+    {
+      "args": "(void* monitor)",
+      "argsT": [
+        {
+          "name": "monitor",
+          "type": "void*"
+        }
+      ],
+      "argsoriginal": "(void* monitor)",
+      "call_args": "(monitor)",
+      "cimguiname": "ImGui_ImplWin32_GetDpiScaleForMonitor",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_GetDpiScaleForMonitor",
+      "location": "imgui_impl_win32:47",
+      "ov_cimguiname": "ImGui_ImplWin32_GetDpiScaleForMonitor",
+      "ret": "float",
+      "signature": "(void*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_Init": [
+    {
+      "args": "(void* hwnd)",
+      "argsT": [
+        {
+          "name": "hwnd",
+          "type": "void*"
+        }
+      ],
+      "argsoriginal": "(void* hwnd)",
+      "call_args": "(hwnd)",
+      "cimguiname": "ImGui_ImplWin32_Init",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_Init",
+      "location": "imgui_impl_win32:25",
+      "ov_cimguiname": "ImGui_ImplWin32_Init",
+      "ret": "bool",
+      "signature": "(void*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_InitForOpenGL": [
+    {
+      "args": "(void* hwnd)",
+      "argsT": [
+        {
+          "name": "hwnd",
+          "type": "void*"
+        }
+      ],
+      "argsoriginal": "(void* hwnd)",
+      "call_args": "(hwnd)",
+      "cimguiname": "ImGui_ImplWin32_InitForOpenGL",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_InitForOpenGL",
+      "location": "imgui_impl_win32:26",
+      "ov_cimguiname": "ImGui_ImplWin32_InitForOpenGL",
+      "ret": "bool",
+      "signature": "(void*)",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_NewFrame": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplWin32_NewFrame",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_NewFrame",
+      "location": "imgui_impl_win32:28",
+      "ov_cimguiname": "ImGui_ImplWin32_NewFrame",
+      "ret": "void",
+      "signature": "()",
+      "stname": ""
+    }
+  ],
+  "ImGui_ImplWin32_Shutdown": [
+    {
+      "args": "()",
+      "argsT": [],
+      "argsoriginal": "()",
+      "call_args": "()",
+      "cimguiname": "ImGui_ImplWin32_Shutdown",
+      "defaults": {},
+      "funcname": "ImGui_ImplWin32_Shutdown",
+      "location": "imgui_impl_win32:27",
+      "ov_cimguiname": "ImGui_ImplWin32_Shutdown",
       "ret": "void",
       "signature": "()",
       "stname": ""

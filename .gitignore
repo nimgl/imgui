@@ -1,3 +1,11 @@
+.nimblehome/
+src/imgui/private/cimgui/build/
+AGENTS.md
+AGENTS.html
+.sandbox
+.nimcache*/
+org.html
+README.html
 ### C ###
 # Prerequisites
 *.d

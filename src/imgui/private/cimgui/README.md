@@ -11,11 +11,15 @@ History:
 Initially cimgui was developed by Stephan Dilly as hand-written code but lately turned into an auto-generated version by sonoro1234 in order to keep up with imgui more easily (letting the user select the desired branch and commit)
 
 Notes:
-* currently this wrapper is based on version [1.91.9 of Dear ImGui with internal api]
+* currently this wrapper is based on version [1.92.9b of Dear ImGui with internal api]
 * only functions, structs and enums from imgui.h (an optionally imgui_internal.h) are wrapped.
 * if you are interested in imgui backends you should look [LuaJIT-ImGui](https://github.com/sonoro1234/LuaJIT-ImGui) project.
 * All naming is algorithmic except for those names that were coded in cimgui_overloads table (https://github.com/cimgui/cimgui/blob/master/generator/generator.lua#L60). In the official version this table is empty.
 * Current overloaded function names can be found in (https://github.com/cimgui/cimgui/blob/master/generator/output/overloads.txt)
+
+# changes
+
+* 10/11/2025: Functions returning and taking as argument no POD structs is now doing a conversion internally to allow ARM64 compilation. In structs_and_enums.json under key nonPOD_used we get a collection where keys are types non usable from C that appear as returns or args to funtions. value can be true or "inherited" when type comes from cimgui and appears in a cimgui extension (cimplot ...). The C names have suffix _c.
 
 # compilation
 
@@ -24,7 +28,7 @@ Notes:
   * `git submodule update --init --recursive` (If already cloned)
 * compile 
   * using makefile on linux/macOS/mingw (Or use CMake to generate project)
-  * cmake options are IMGUI_STATIC (compiling as static library), IMGUI_FREETYPE (for using Freetype2) and FREETYPE_PATH (Freetype2 cmake install location) and IMGUI_WCHAR32
+  * cmake options are IMGUI_STATIC (compiling as static library), IMGUI_FREETYPE (for using Freetype2) and FREETYPE_PATH (Freetype2 cmake install location), IMGUI_WCHAR32 and CIMGUI_VARGS0 for compiling a function version without varargs for vararg functions (function name with 0 sufix)
   * or as in https://github.com/sonoro1234/LuaJIT-ImGui/tree/master/build
   
   For compiling with backends there are now examples with SDL2 and opengl3/vulkan in folder backend_test.
@@ -37,7 +41,7 @@ Notes:
 * you will need LuaJIT (https://github.com/LuaJIT/LuaJIT.git better 2.1 branch) or precompiled for linux/macOS/windows in https://luapower.com/luajit/download
 * you need to use also a C++ compiler for doing preprocessing: gcc (In windows MinGW-W64-builds for example), clang or cl (MSVC). (this repo was done with gcc)
 * update `imgui` folder to the version you desire.
-* edit `generator/generator.bat` on windows, or `generator/generator.sh` on linux, to choose between gcc, clang, or cl and to choose desired backends and whether imgui_internal is generated or not, comments are generated or not and if constructors are generated also with versions performing just initialization of structs provided by yourself (_Construct is added to the constructor names)
+* edit `generator/generator.bat` on windows, or `generator/generator.sh` on linux, to choose between gcc, clang, or cl and to choose desired backends and whether imgui_internal is generated or not, comments are generated or not and if constructors are generated also with versions performing just initialization of structs provided by yourself (uses IM_PLACEMENT_NEW and _Construct is added to the constructor names)
 * the defaults of generator are gcc as compiler, imgui_internal included and sdl, glfw, vulkan, opengl2 and opengl3 as backends.
 * edit config_generator.lua for adding includes needed by your chosen backends (vulkan needs that).
 * Run generator.bat or generator.sh with gcc, clang or cl and LuaJIT on your PATH.
@@ -60,17 +64,18 @@ Notes:
   * retref : is set if original return type is a reference. (will be a pointer in cimgui)
   * argsT : an array of collections (each one with type: argument type and name: the argument name, when the argument is a function pointer also ret: return type and signature: the function signature)
   * args : a string of argsT concatenated and separated by commas
-  * call_args : a string with the argument names separated by commas for calling imgui function
+  * call_args_old : a string with the argument names separated by commas for calling imgui function
+  * call_args : call_args_old with conversion added.
   * defaults : a collection in which key is argument name and value is the default value.
   * manual : will be true if this function is hand-written (not generated)
   * skipped : will be true if this function is not generated (and not hand-written)
   * isvararg : is set if some argument is a vararg
-  * constructor : is set if the function is a constructor for a class.
+  * constructor : is set if the function is a constructor for a class. (another destructor function with _destroy postfix will be created)
   * destructor : is set if the function is a destructor for a class but not just a default destructor.
   * realdestructor : is set if the function is a destructor for a class
   * templated : is set if the function belongs to a templated class (ImVector)
   * templatedgen: is set if the function belongs to a struct generated from template (ImVector_ImWchar)
-  * nonUDT : if present the original function was returning a user defined type so that signature has been changed to accept a pointer to the UDT as first argument.
+  * nonUDT : if present the original function was returning a user defined type.
   * location : name of the header file and linenumber this function comes from. (imgui:000, internal:123, imgui_impl_xxx:123)
   * is_static_function : is setted when it is an struct static function.
 ### structs_and_enums description
@@ -86,12 +91,12 @@ Notes:
     * size : the number of array elements (when it is an array)
     * bitfield : the bitfield width (in case it is a bitfield)
   * under key locations we get the locations collection in which each key is the enum tagname or the struct name and the value is the name of the header file and line number this comes from.
+  * under key nonPOD_used we get a collection where keys are types non usable from C that appear as returns or args to funtions. value can be true or "inherited" when type comes from cimgui and appears in a cimgui extension (cimplot ...). The C names have suffix _c.
 # usage
 
 * use whatever method is in ImGui c++ namespace in the original [imgui.h](https://github.com/ocornut/imgui/blob/master/imgui.h) by prepending `ig`
 * methods have the same parameter list and return values (where possible)
 * functions that belong to a struct have an extra first argument with a pointer to the struct.
-* where a function returns UDT (user defined type) by value some compilers complain so the function is generated accepting a pointer to the UDT type as the first argument (or second if belongs to a struct).
 * constructors return pointer to struct and has been named Struct_name_Struct_name
 # usage with backends
 
@@ -101,10 +106,15 @@ Notes:
 # example bindings based on cimgui
 
 * [LuaJIT-ImGui](https://github.com/sonoro1234/LuaJIT-ImGui)
+* [cimgui-go](https://github.com/AllenDang/cimgui-go)
+* [Hexa.NET.ImGui](https://github.com/HexaEngine/Hexa.NET.ImGui)
+* [EvergineTeam/ImGui](https://github.com/EvergineTeam/ImGui.Net)
+* [dear-imgui-rs](https://github.com/Latias94/dear-imgui-rs)
+* [CImGui.jl](https://github.com/Gnimuc/CImGui.jl)
 * [ImGui.NET](https://github.com/mellinoe/ImGui.NET)
+* [Zig-ImGui](https://github.com/SpexGuy/Zig-ImGui)
 * [nimgl/imgui](https://github.com/nimgl/imgui)
 * [kotlin-imgui](https://github.com/Dominaezzz/kotlin-imgui)
-* [CImGui.jl](https://github.com/Gnimuc/CImGui.jl)
 * [odin-imgui](https://github.com/ThisDrunkDane/odin-imgui)
 * [DerelictImgui](https://github.com/Extrawurst/DerelictImgui)
 * [BindBC-CimGui](https://github.com/MrcSnm/bindbc-cimgui)
